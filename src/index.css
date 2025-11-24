@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+
+:root {
+  --color-ni-black: #0c0c0c; /* Slightly softer black for modern feel */
+  --color-ni-white: #ffffff;
+  --color-ni-neon: #08708D; /* Electric Blue */
+  --color-ni-purple: #bc13fe; /* Neon Purple */
+  --color-ni-red: #ff3333;
+  --color-ni-gray: #f4f4f5;
+
+  --font-primary: "Space Grotesk", sans-serif;
+
+  --shadow-hard: 4px 4px 0px 0px #000000;
+  --shadow-hard-lg: 8px 8px 0px 0px #000000;
+  --shadow-hard-sm: 2px 2px 0px 0px #000000;
+}
+
+@theme {
+  --font-sans: "Space Grotesk", sans-serif;
+
+  --color-ni-black: var(--color-ni-black);
+  --color-ni-white: var(--color-ni-white);
+  --color-ni-neon: var(--color-ni-neon);
+  --color-ni-purple: var(--color-ni-purple);
+  --color-ni-red: var(--color-ni-red);
+  --color-ni-gray: var(--color-ni-gray);
+
+  --shadow-hard: var(--shadow-hard);
+  --shadow-hard-lg: var(--shadow-hard-lg);
+  --shadow-hard-sm: var(--shadow-hard-sm);
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--color-ni-white);
+  color: var(--color-ni-black);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-ni-white);
+  border-left: 2px solid var(--color-ni-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ni-black);
+  border: 2px solid var(--color-ni-white);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ni-neon);
+}
+
+/* Utility classes for brutalism */
+.border-brutal {
+  border: 3px solid var(--color-ni-black);
+}
+
+.shadow-brutal {
+  box-shadow: var(--shadow-hard);
+}
+
+.shadow-brutal-lg {
+  box-shadow: var(--shadow-hard-lg);
+}
+
+.shadow-brutal-sm {
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.hover-brutal:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #000000;
+}
+
+.active-brutal:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px 0px #000000;
+}
