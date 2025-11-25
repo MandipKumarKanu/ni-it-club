@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
-import Button from '../ui/Button';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import Button from "../ui/Button";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Events', path: '/events' },
-    { name: 'Gallery', path: '/gallery' },
-    { name: 'Showcase', path: '/showcase' },
-    { name: 'Contact', path: '/contact' },
+    { name: "Home", path: "/" },
+    { name: "Events", path: "/events" },
+    { name: "Gallery", path: "/gallery" },
+    { name: "Showcase", path: "/showcase" },
+    { name: "Contact", path: "/contact" },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -23,10 +23,12 @@ const Navbar = () => {
         <div className="flex justify-between h-20 items-center">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-ni-black text-ni-neon flex items-center justify-center font-bold text-xl border-2 border-transparent group-hover:bg-ni-neon group-hover:text-ni-black group-hover:border-ni-black transition-colors">
+            <div className="w-10 h-10 bg-[#076F8C] text-ni-neon flex items-center justify-center font-bold text-xl border-2 border-transparent group-hover:bg-ni-neon group-hover:text-[#076F8C] group-hover:border-ni-black transition-colors">
               NI
             </div>
-            <span className="font-bold text-2xl tracking-tighter uppercase">IT Club</span>
+            <span className="font-bold text-2xl tracking-tighter uppercase">
+              IT Club
+            </span>
           </Link>
 
           {/* Desktop Menu */}
@@ -36,7 +38,9 @@ const Navbar = () => {
                 key={link.name}
                 to={link.path}
                 className={`text-lg font-bold uppercase tracking-wide hover:text-ni-red transition-colors ${
-                  isActive(link.path) ? 'text-ni-red underline decoration-4 underline-offset-4' : 'text-ni-black'
+                  isActive(link.path)
+                    ? "text-ni-red underline decoration-4 underline-offset-4"
+                    : "text-ni-black"
                 }`}
               >
                 {link.name}
@@ -53,7 +57,11 @@ const Navbar = () => {
               onClick={() => setIsOpen(!isOpen)}
               className="text-ni-black hover:text-ni-red focus:outline-none"
             >
-              {isOpen ? <X size={32} strokeWidth={3} /> : <Menu size={32} strokeWidth={3} />}
+              {isOpen ? (
+                <X size={32} strokeWidth={3} />
+              ) : (
+                <Menu size={32} strokeWidth={3} />
+              )}
             </button>
           </div>
         </div>
@@ -69,7 +77,9 @@ const Navbar = () => {
                 to={link.path}
                 onClick={() => setIsOpen(false)}
                 className={`block px-3 py-3 text-xl font-bold uppercase border-2 border-transparent hover:bg-ni-neon hover:border-ni-black transition-all ${
-                  isActive(link.path) ? 'bg-ni-black text-ni-neon' : 'text-ni-black'
+                  isActive(link.path)
+                    ? "bg-ni-black text-ni-neon"
+                    : "text-ni-black"
                 }`}
               >
                 {link.name}

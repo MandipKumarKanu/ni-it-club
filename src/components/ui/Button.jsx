@@ -1,24 +1,27 @@
-import React from 'react';
+import React from "react";
 
-const Button = ({ 
-  children, 
-  variant = 'primary', 
-  className = '', 
-  onClick, 
-  type = 'button',
-  ...props 
+const Button = ({
+  children,
+  variant = "primary",
+  className = "",
+  onClick,
+  type = "button",
+  ...props
 }) => {
-  const baseStyles = "font-bold py-3 px-6 border-3 border-ni-black transition-all duration-200 cursor-pointer flex items-center justify-center gap-2";
-  
+  const baseStyles =
+    "font-bold py-3 px-6 border-brutal transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 hover-wiggle active:translate-y-1 active:shadow-none";
+
   const variants = {
-    primary: "bg-ni-neon text-ni-black shadow-brutal hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_#000000] active:translate-x-[0px] active:translate-y-[0px] active:shadow-none",
-    secondary: "bg-ni-white text-ni-black shadow-brutal hover:bg-ni-gray hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_#000000] active:translate-x-[0px] active:translate-y-[0px] active:shadow-none",
-    outline: "bg-transparent text-ni-black border-ni-black hover:bg-ni-black hover:text-ni-white",
-    danger: "bg-ni-red text-white shadow-brutal hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_#000000] active:translate-x-[0px] active:translate-y-[0px] active:shadow-none"
+    primary: "bg-ni-neon text-ni-black shadow-brutal hover:bg-ni-cyan",
+    secondary:
+      "bg-ni-white text-ni-black shadow-brutal hover:bg-ni-pink hover:text-ni-white",
+    outline:
+      "bg-transparent text-ni-black border-brutal hover:bg-ni-black hover:text-ni-white shadow-brutal-sm",
+    danger: "bg-ni-red text-white shadow-brutal hover:bg-ni-black",
   };
 
   return (
-    <button 
+    <button
       type={type}
       className={`${baseStyles} ${variants[variant]} ${className}`}
       onClick={onClick}

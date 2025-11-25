@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X, ZoomIn } from "lucide-react";
 import Button from "../components/ui/Button";
+import { AngleBracket, Star, Dots, Zigzag } from "../components/ui/Doodles";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -54,26 +55,29 @@ const Gallery = () => {
       : images.filter((img) => img.category === category);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
+      <Dots className="absolute top-0 left-0 w-full h-full text-ni-black opacity-5 pointer-events-none" />
+
+      <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 relative z-10">
         <div>
-          <h1 className="text-6xl font-black uppercase tracking-tighter mb-4">
+          <h1 className="text-7xl font-black uppercase tracking-tighter mb-4 relative inline-block">
             Gallery
+            <Star className="absolute -top-8 -right-8 w-16 h-16 text-ni-neon animate-spin-slow" />
           </h1>
-          <p className="text-xl font-medium max-w-xl">
+          <p className="text-xl font-bold max-w-xl bg-ni-white border-brutal p-4 transform -rotate-1 shadow-brutal">
             Capturing the chaos and creativity of our community.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
+        <div className="flex flex-wrap gap-3">
+          {categories.map((cat, index) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-4 py-2 font-bold uppercase border-2 border-ni-black transition-all ${
+              className={`px-6 py-3 font-black uppercase border-brutal transition-all transform hover:-translate-y-1 ${
                 category === cat
-                  ? "bg-ni-black text-ni-neon shadow-brutal"
-                  : "bg-ni-white text-ni-black hover:bg-ni-gray"
+                  ? "bg-ni-black text-ni-neon shadow-brutal rotate-2"
+                  : "bg-ni-white text-ni-black hover:bg-ni-pink hover:text-ni-white hover:rotate-2"
               }`}
             >
               {cat}
@@ -82,24 +86,34 @@ const Gallery = () => {
         </div>
       </div>
 
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-        {filteredImages.map((image) => (
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+        {filteredImages.map((image, index) => (
           <div
             key={image.id}
-            className="break-inside-avoid relative group cursor-pointer border-3 border-ni-black bg-ni-black"
+            className="break-inside-avoid relative group cursor-pointer p-2 bg-ni-white border-brutal shadow-brutal hover:shadow-brutal-lg transition-all duration-300"
+            style={{ transform: `rotate(${index % 2 === 0 ? -2 : 2}deg)` }}
             onClick={() => setSelectedImage(image)}
           >
-            <img
-              src={image.src}
-              alt={image.title}
-              className="w-full h-auto grayscale group-hover:grayscale-0 transition-all duration-300 opacity-90 group-hover:opacity-100"
-            />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 pointer-events-none">
-              <div className="bg-ni-neon text-ni-black p-2 border-2 border-ni-black shadow-brutal transform rotate-3">
-                <ZoomIn size={24} />
+            <div className="absolute -top-3 -left-3 w-6 h-6 bg-ni-black border-2 border-ni-white z-20"></div>
+            <div className="absolute -top-3 -right-3 w-6 h-6 bg-ni-black border-2 border-ni-white z-20"></div>
+            <div className="absolute -bottom-3 -left-3 w-6 h-6 bg-ni-black border-2 border-ni-white z-20"></div>
+            <div className="absolute -bottom-3 -right-3 w-6 h-6 bg-ni-black border-2 border-ni-white z-20"></div>
+
+            <div className="overflow-hidden border-2 border-ni-black">
+              <img
+                src={image.src}
+                alt={image.title}
+                className="w-full h-auto grayscale group-hover:grayscale-0 transition-all duration-300 group-hover:scale-110"
+              />
+            </div>
+
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              <div className="bg-ni-neon text-ni-black p-3 border-brutal shadow-brutal transform rotate-12 scale-125">
+                <ZoomIn size={32} strokeWidth={3} />
               </div>
             </div>
-            <div className="absolute bottom-0 left-0 bg-ni-white border-t-3 border-r-3 border-ni-black px-4 py-2 font-bold uppercase text-sm transform translate-y-full group-hover:translate-y-0 transition-transform duration-200">
+
+            <div className="mt-3 text-center font-black uppercase bg-ni-black text-ni-white py-1 transform -rotate-1">
               {image.title}
             </div>
           </div>
@@ -113,25 +127,26 @@ const Gallery = () => {
           onClick={() => setSelectedImage(null)}
         >
           <div
-            className="relative max-w-5xl w-full max-h-[90vh] flex flex-col"
+            className="relative max-w-5xl w-full max-h-[90vh] flex flex-col animate-float"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center bg-ni-neon border-3 border-ni-black p-4 mb-4 shadow-brutal">
-              <h3 className="text-xl font-black uppercase">
+            <div className="flex justify-between items-center bg-ni-neon border-brutal p-4 mb-4 shadow-brutal transform -rotate-1">
+              <h3 className="text-2xl font-black uppercase">
                 {selectedImage.title}
               </h3>
               <button
                 onClick={() => setSelectedImage(null)}
-                className="hover:bg-ni-black hover:text-ni-neon p-1 transition-colors border-2 border-transparent hover:border-ni-neon"
+                className="bg-ni-black text-ni-white hover:bg-ni-pink p-2 transition-colors border-2 border-ni-white shadow-sm"
               >
-                <X size={24} strokeWidth={3} />
+                <X size={24} strokeWidth={4} />
               </button>
             </div>
-            <div className="border-3 border-ni-black bg-ni-white p-2 shadow-brutal-lg overflow-hidden">
+            <div className="border-brutal bg-ni-white p-4 shadow-brutal-lg overflow-hidden transform rotate-1 relative">
+              <Zigzag className="absolute top-0 left-0 w-full text-ni-gray opacity-20" />
               <img
                 src={selectedImage.src}
                 alt={selectedImage.title}
-                className="w-full h-full object-contain max-h-[70vh]"
+                className="w-full h-full object-contain max-h-[70vh] border-2 border-ni-black"
               />
             </div>
           </div>
