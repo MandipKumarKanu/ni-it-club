@@ -14,24 +14,24 @@ import niitLogo from "../../assets/niit-c.png";
 
 const Hero = () => {
   return (
-    <section className="relative bg-ni-white border-b-4 border-ni-black py-24 lg:py overflow-hidden">
+    <section className="relative  border-b-4 border-ni-black py-24 lg:py overflow-hidden">
       {/* Background Doodles */}
       <Binary className="absolute top-10 left-10 text-ni-neon transform -rotate-12 scale-150" />
       <Binary className="absolute bottom-20 right-10 text-ni-pink transform rotate-12 scale-150" />
       <Chip className="absolute top-20 right-20 text-ni-cyan w-24 h-24 animate-float" />
       <Dots className="absolute bottom-10 left-1/4 text-ni-black w-32 h-32 opacity-20" />
 
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-24">
         <div className="max-w-5xl relative flex-1">
-          <CurlyBrace className="absolute -left-16 top-0 h-48 text-ni-black hidden lg:block" />
+          {/* <CurlyBrace className="absolute -left-16 top-0 h-48 text-ni-black hidden lg:block" /> */}
 
-          <h1 className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-8 text-ni-black drop-shadow-[8px_8px_0px_rgba(204,255,0,1)] relative">
+          <h1 className="text-7xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-8 text-ni-black drop-shadow-[8px_8px_0px_rgba(204,255,0,1)] relative">
             Welcome to <br />
             <span className="relative inline-block">
               <span className="text-ni-white bg-ni-black px-6 transform -rotate-2 inline-block border-brutal shadow-brutal-sm">
                 NI IT Club
               </span>
-              <Star className="absolute -top-12 -right-12 text-ni-pink w-24 h-24 animate-spin-slow" />
+              {/* <Star className="absolute -top-12 -right-12 text-ni-pink w-24 h-24 animate-spin-slow" /> */}
             </span>
           </h1>
 

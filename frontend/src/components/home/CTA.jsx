@@ -21,7 +21,7 @@ const CTA = () => {
           variant="primary"
           className="bg-ni-white text-ni-black hover:text-ni-white text-2xl px-16 py-6 mx-auto border-ni-white relative z-10 shadow-[8px_8px_0px_0px_#ffffff]"
         >
-          Sign Up Now
+          Hmm...
         </Button>
       </div>
     </section>

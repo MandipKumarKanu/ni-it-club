@@ -9,10 +9,10 @@ const Button = ({
   ...props
 }) => {
   const baseStyles =
-    "font-bold py-3 px-6 border-brutal transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 hover-wiggle active:translate-y-1 active:shadow-none";
+    "font-bold py-3 px-6 border-brutal transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 active:translate-y-1 active:shadow-none";
 
   const variants = {
-    primary: "bg-ni-neon text-ni-black shadow-brutal hover:bg-ni-cyan",
+    primary: "bg-ni-neon text-ni-black shadow-brutal hover:bg-ni-blue",
     secondary:
       "bg-ni-white text-ni-black shadow-brutal hover:bg-ni-pink hover:text-ni-white",
     outline:

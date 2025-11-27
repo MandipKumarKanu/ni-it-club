@@ -4,10 +4,10 @@
 :root {
   --color-ni-black: #000000;
   --color-ni-white: hsl(0, 0%, 100%);
-  --color-ni-neon: #FABB0E; /* Lime Green */
-  --color-ni-cyan: #087FEF; /* Cyan */
+  --color-ni-neon: #fabb0e; /* Lime Green */
+  --color-ni-cyan: #087fef; /* Cyan */
   --color-ni-pink: #ff00ff; /* Hot Pink */
-  --color-ni-blue: #08708D; /* Bright Blue */
+  --color-ni-blue: #08708d; /* Bright Blue */
 
   --font-primary: "Space Grotesk", sans-serif;
 
@@ -54,6 +54,10 @@
   }
 }
 
+* {
+  user-select: none;
+}
+
 body {
   font-family: var(--font-primary);
   background-color: var(--color-ni-white);
@@ -79,7 +83,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-ni-pink);
+  background: var(--color-ni-blue);
 }
 
 /* Utility classes for doodle brutalism */

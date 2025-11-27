@@ -41,9 +41,23 @@ const Team = () => {
               <span className="text-ni-pink font-bold uppercase mb-4 tracking-widest">
                 {member.role}
               </span>
-              <p className="mb-6 font-medium border-t-4 border-ni-black pt-4 w-full">
-                {member.description}
-              </p>
+              {/* Skills/Description Tags */}
+              <div className="flex flex-wrap justify-center gap-2 mb-6 border-t-4 border-ni-black pt-4 w-full">
+                {Array.isArray(member.description) ? (
+                  member.description.map((skill, idx) => (
+                    <span
+                      key={idx}
+                      className="bg-ni-black text-ni-white px-3 py-1 text-sm font-bold uppercase"
+                    >
+                      {skill}
+                    </span>
+                  ))
+                ) : (
+                  <span className="bg-ni-black text-ni-white px-3 py-1 text-sm font-bold uppercase">
+                    {member.description}
+                  </span>
+                )}
+              </div>
               <div className="flex gap-4 mt-auto">
                 <button className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110">
                   <Github size={20} />
