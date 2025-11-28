@@ -1,0 +1,39 @@
+name: Deploy Client to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "client/**" # Run only when files in client/ change
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: client # Run commands inside client/
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20 # Change as needed
+
+      - name: Install Dependencies
+        run: npm install # Use yarn or pnpm if needed
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_NI_ITCLUB }}
+          channelId: live
+          projectId: ni-itclub

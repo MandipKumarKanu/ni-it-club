@@ -18,8 +18,8 @@ app.use(
       "http://localhost:5174",
       "http://localhost:5173",
       process.env.CLIENT_URL,
-      "https://ni-itclub.web.app/",
-      "https://ni-it-club-c6lq.vercel.app/",
+      "https://ni-itclub.web.app",
+      "https://ni-it-club-c6lq.vercel.app",
     ],
     credentials: true,
   })
