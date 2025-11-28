@@ -2,8 +2,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 // Use environment variable or default to local backend
-export const baseURL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+export const baseURL ="https://ni-it-club.vercel.app/api";
 
 export const customAxios = axios.create({
   baseURL,
