@@ -1,24 +1,30 @@
 const mongoose = require("mongoose");
 
-let isConnected = false; // Track connection status
+let cachedConnection = null;
 
 const connectDB = async () => {
-  if (isConnected) {
-    console.log("MongoDB is already connected");
-    return;
+  // If we have a cached connection and it's ready, use it
+  if (cachedConnection && mongoose.connection.readyState === 1) {
+    console.log("Using cached MongoDB connection");
+    return cachedConnection;
   }
 
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    // Set mongoose options for serverless
+    mongoose.set("strictQuery", false);
 
-    isConnected = true;
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000,
+    });
+
+    cachedConnection = conn;
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+    return conn;
   } catch (error) {
-    console.error(`Error: ${error.message}`);
-    // Don't exit process in serverless environment, just log error
-    if (process.env.NODE_ENV !== "production") {
-      process.exit(1);
-    }
+    console.error(`MongoDB Connection Error: ${error.message}`);
+    cachedConnection = null;
+    throw error;
   }
 };
 

@@ -23,9 +23,13 @@ const EventsList = () => {
   const fetchEvents = async () => {
     try {
       const { data } = await api.get("/events");
-      setEvents(data);
+      // Handle both paginated (data.docs) and non-paginated (data) responses
+      const eventsData = Array.isArray(data) ? data : data.docs || [];
+      setEvents(eventsData);
     } catch (error) {
+      console.error("Failed to fetch events:", error);
       toast.error("Failed to fetch events");
+      setEvents([]); // Set empty array on error
     }
   };
 
@@ -70,49 +74,61 @@ const EventsList = () => {
         </Button>
       </div>
 
-      <Table headers={["Image", "Name", "Date", "Location", "Actions"]}>
-        {events.map((event) => (
-          <TableRow key={event._id}>
-            <TableCell>
-              <img
-                src={event.image?.thumb || event.image?.url || event.image}
-                alt={event.name}
-                className="w-16 h-16 object-cover border-2 border-black"
-              />
-            </TableCell>
-            <TableCell className="font-bold">{event.name}</TableCell>
-            <TableCell>
-              {format(new Date(event.date), "MMM dd, yyyy")}
-            </TableCell>
-            <TableCell>{event.location}</TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => handleView(event._id)}
-                  className="p-2"
-                >
-                  <Eye size={16} />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => handleEdit(event)}
-                  className="p-2"
-                >
-                  <Pencil size={16} />
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => handleDelete(event._id)}
-                  className="p-2"
-                >
-                  <Trash2 size={16} />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </Table>
+      {events.length === 0 ? (
+        <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
+          <p className="text-gray-500 text-lg mb-4">No events found</p>
+          <Button
+            onClick={handleAdd}
+            className="flex items-center gap-2 mx-auto"
+          >
+            <Plus size={20} /> Add Your First Event
+          </Button>
+        </div>
+      ) : (
+        <Table headers={["Image", "Name", "Date", "Location", "Actions"]}>
+          {events.map((event) => (
+            <TableRow key={event._id}>
+              <TableCell>
+                <img
+                  src={event.image?.thumb || event.image?.url || event.image}
+                  alt={event.name}
+                  className="w-16 h-16 object-cover border-2 border-black"
+                />
+              </TableCell>
+              <TableCell className="font-bold">{event.name}</TableCell>
+              <TableCell>
+                {format(new Date(event.date), "MMM dd, yyyy")}
+              </TableCell>
+              <TableCell>{event.location}</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => handleView(event._id)}
+                    className="p-2"
+                  >
+                    <Eye size={16} />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleEdit(event)}
+                    className="p-2"
+                  >
+                    <Pencil size={16} />
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(event._id)}
+                    className="p-2"
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </Table>
+      )}
 
       <Modal
         isOpen={isModalOpen}

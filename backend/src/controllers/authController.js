@@ -32,9 +32,10 @@ const registerUser = async (req, res) => {
 
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
+
     });
 
     res.status(201).json({
@@ -66,9 +67,10 @@ const loginUser = async (req, res) => {
 
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
+
     });
 
     res.json({

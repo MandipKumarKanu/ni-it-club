@@ -31,9 +31,13 @@ const TeamList = () => {
   const fetchTeam = async () => {
     try {
       const { data } = await api.get("/team");
-      setTeam(data);
+      // Handle both paginated (data.docs) and non-paginated (data) responses
+      const teamData = Array.isArray(data) ? data : data.docs || [];
+      setTeam(teamData);
     } catch (error) {
+      console.error("Failed to fetch team members:", error);
       toast.error("Failed to fetch team members");
+      setTeam([]); // Set empty array on error
     }
   };
 
@@ -78,8 +82,16 @@ const TeamList = () => {
         </Button>
       </div>
 
-      <Table headers={["Image", "Name", "Role", "Socials", "Actions"]}>
-        {team.map((member) => (
+      {team.length === 0 ? (
+        <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
+          <p className="text-gray-500 text-lg mb-4">No team members found</p>
+          <Button onClick={handleAdd} className="flex items-center gap-2 mx-auto">
+            <Plus size={20} /> Add Your First Team Member
+          </Button>
+        </div>
+      ) : (
+        <Table headers={["Image", "Name", "Role", "Socials", "Actions"]}>
+          {team.map((member) => (
           <TableRow key={member._id}>
             <TableCell>
               <img

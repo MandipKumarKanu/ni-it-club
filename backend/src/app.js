@@ -8,7 +8,11 @@ require("dotenv").config();
 const app = express();
 
 // Connect to Database
-connectDB();
+// Note: In serverless (Vercel), connection is handled in api/index.js
+// For local development, uncomment the line below:
+if (process.env.NODE_ENV !== 'production') {
+  connectDB();
+}
 
 // Middleware
 app.use(helmet());

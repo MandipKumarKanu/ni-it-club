@@ -23,9 +23,13 @@ const GalleryList = () => {
   const fetchGalleries = async () => {
     try {
       const { data } = await api.get("/gallery");
-      setGalleries(data);
+      // Handle both paginated (data.docs) and non-paginated (data) responses
+      const galleriesData = Array.isArray(data) ? data : data.docs || [];
+      setGalleries(galleriesData);
     } catch (error) {
+      console.error("Failed to fetch galleries:", error);
       toast.error("Failed to fetch galleries");
+      setGalleries([]); // Set empty array on error
     }
   };
 
@@ -70,49 +74,61 @@ const GalleryList = () => {
         </Button>
       </div>
 
-      <Table headers={["Featured", "Title", "Date", "Images", "Actions"]}>
-        {galleries.map((gallery) => (
-          <TableRow key={gallery._id}>
-            <TableCell>
-              <img
-                src={gallery.featuredImage?.url || gallery.featuredImage}
-                alt={gallery.title}
-                className="w-16 h-16 object-cover border-2 border-black"
-              />
-            </TableCell>
-            <TableCell className="font-bold">{gallery.title}</TableCell>
-            <TableCell>
-              {format(new Date(gallery.date), "MMM dd, yyyy")}
-            </TableCell>
-            <TableCell>{gallery.images?.length || 0} images</TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => handleView(gallery._id)}
-                  className="p-2"
-                >
-                  <Eye size={16} />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => handleEdit(gallery)}
-                  className="p-2"
-                >
-                  <Pencil size={16} />
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => handleDelete(gallery._id)}
-                  className="p-2"
-                >
-                  <Trash2 size={16} />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </Table>
+      {galleries.length === 0 ? (
+        <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
+          <p className="text-gray-500 text-lg mb-4">No galleries found</p>
+          <Button
+            onClick={handleAdd}
+            className="flex items-center gap-2 mx-auto"
+          >
+            <Plus size={20} /> Add Your First Gallery
+          </Button>
+        </div>
+      ) : (
+        <Table headers={["Featured", "Title", "Date", "Images", "Actions"]}>
+          {galleries.map((gallery) => (
+            <TableRow key={gallery._id}>
+              <TableCell>
+                <img
+                  src={gallery.featuredImage?.url || gallery.featuredImage}
+                  alt={gallery.title}
+                  className="w-16 h-16 object-cover border-2 border-black"
+                />
+              </TableCell>
+              <TableCell className="font-bold">{gallery.title}</TableCell>
+              <TableCell>
+                {format(new Date(gallery.date), "MMM dd, yyyy")}
+              </TableCell>
+              <TableCell>{gallery.images?.length || 0} images</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => handleView(gallery._id)}
+                    className="p-2"
+                  >
+                    <Eye size={16} />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleEdit(gallery)}
+                    className="p-2"
+                  >
+                    <Pencil size={16} />
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(gallery._id)}
+                    className="p-2"
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </Table>
+      )}
 
       <Modal
         isOpen={isModalOpen}
