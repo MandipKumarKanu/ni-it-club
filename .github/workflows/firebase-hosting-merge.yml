@@ -1,11 +1,11 @@
-name: Deploy Client to Firebase Hosting
+name: Deploy Frontend to Firebase Hosting
 
 on:
   push:
     branches:
       - main
     paths:
-      - "client/**" # Run only when files in client/ change
+      - "frontend/**" # Run only when files in frontend/ change
 
 jobs:
   build_and_deploy:
@@ -13,7 +13,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: client # Run commands inside client/
+        working-directory: frontend # Run commands inside frontend/
 
     steps:
       - name: Checkout Repository
@@ -22,10 +22,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20 # Change as needed
+          node-version: 20
 
       - name: Install Dependencies
-        run: npm install # Use yarn or pnpm if needed
+        run: npm install
 
       - name: Build Project
         run: npm run build
@@ -37,3 +37,5 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_NI_ITCLUB }}
           channelId: live
           projectId: ni-itclub
+          entryPoint: frontend
+
