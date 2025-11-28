@@ -10,7 +10,7 @@ import {
   Star,
   Arrow,
 } from "../ui/Doodles";
-import niitLogo from "../../assets/niit-c.png";
+// import niitLogo from "../../assets/niit-c.png";
 import api from "../../services/api";
 
 const Hero = () => {
@@ -93,7 +93,7 @@ const Hero = () => {
 
         <div className="flex-1 flex justify-center items-center">
           <img
-            src={niitLogo}
+            src="/niit-c.png"
             alt="NI IT Club Logo"
             className="max-w-10/12 h-auto"
           />
