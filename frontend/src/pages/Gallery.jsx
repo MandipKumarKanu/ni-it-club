@@ -293,7 +293,7 @@ const Gallery = () => {
             {/* Album Viewer Modal */}
             {selectedAlbum &&
               createPortal(
-                <div className="fixed inset-0 z-[9999] flex flex-col bg-ni-black/95 animate-in fade-in duration-200">
+                <div className="fixed inset-0 z-9999 flex flex-col bg-ni-black/95 animate-in fade-in duration-200">
                   {/* Toolbar */}
                   <div className="flex justify-between items-center p-4 bg-ni-black text-ni-white border-b border-ni-gray-800">
                     <div className="flex items-center gap-4">

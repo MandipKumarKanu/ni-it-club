@@ -197,7 +197,7 @@ const Settings = () => {
   return (
     <div className="flex gap-6">
       {/* Sidebar */}
-      <div className="w-64 flex-shrink-0">
+      <div className="w-64 shrink-0">
         <Card className="sticky top-6">
           <h2 className="text-xl font-bold mb-4 pb-3 border-b-2 border-black">
             App Settings
