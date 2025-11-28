@@ -37,6 +37,8 @@ import {
   CurlyBrace,
 } from "../components/ui/Doodles";
 
+import api from "../services/api";
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -51,6 +53,19 @@ const Contact = () => {
   const [activeTab, setActiveTab] = useState("general");
   const [openFaq, setOpenFaq] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await api.get("/settings");
+        setSettings(data);
+      } catch (error) {
+        console.error("Failed to fetch settings", error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -161,16 +176,16 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email Us",
-      value: "contact@niitclub.com",
+      value: settings?.contactEmail || "contact@niitclub.com",
       subtitle: "We reply within 24 hours",
-      href: "mailto:contact@niitclub.com",
+      href: `mailto:${settings?.contactEmail || "contact@niitclub.com"}`,
       gradient: "from-ni-cyan to-ni-blue",
       iconBg: "bg-ni-cyan",
     },
     {
       icon: MapPin,
       title: "Visit Us",
-      value: "National Infotech College",
+      value: settings?.address || "National Infotech College",
       subtitle: "Birgunj, Nepal",
       href: "https://maps.app.goo.gl/i78sAWgpooFtQAA99",
       gradient: "from-ni-pink to-purple-500",
@@ -179,9 +194,9 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Call Us",
-      value: "+977 980-000-0000",
+      value: settings?.contactPhone || "+977 980-000-0000",
       subtitle: "Sun-Fri, 10AM-5PM",
-      href: "tel:+977980000000",
+      href: `tel:${settings?.contactPhone || "+977980000000"}`,
       gradient: "from-ni-neon to-yellow-500",
       iconBg: "bg-ni-neon",
     },

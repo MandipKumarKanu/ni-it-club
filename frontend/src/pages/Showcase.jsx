@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Github,
   ExternalLink,
@@ -21,7 +21,7 @@ import {
   Dots,
   CircleScribble,
 } from "../components/ui/Doodles";
-import { projects } from "../data/mockData";
+import api from "../services/api";
 import SEO from "../components/SEO";
 
 const WindowHeader = ({
@@ -54,6 +54,34 @@ const WindowHeader = ({
 );
 
 const Showcase = () => {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const { data } = await api.get("/projects");
+        setProjects(data);
+      } catch (error) {
+        console.error("Failed to fetch projects", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-ni-white">
+        <div className="text-2xl font-black uppercase animate-pulse">
+          Loading Projects...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <SEO
@@ -102,7 +130,7 @@ const Showcase = () => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
           {projects.map((project, index) => (
-            <div key={project.id} className="group">
+            <div key={project._id} className="group">
               <div className="bg-ni-white border-4 border-ni-black shadow-brutal hover:shadow-brutal-lg hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
                 <WindowHeader
                   title={`PROJ_0${index + 1}.js`}
@@ -114,21 +142,21 @@ const Showcase = () => {
                   <div className="absolute inset-0 bg-ni-black opacity-0 group-hover:opacity-20 transition-opacity z-10"></div>
                   <img
                     src={project.image}
-                    alt={project.title}
+                    alt={project.name}
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                   />
                 </div>
 
                 <div className="p-6 flex flex-col grow">
                   <h3 className="text-xl sm:text-2xl font-black uppercase mb-3 font-mono">
-                    {project.title}
+                    {project.name}
                   </h3>
                   <p className="font-bold mb-6 grow text-ni-gray-800 font-mono text-sm leading-relaxed">
-                    // {project.description}
+                    // {project.shortDescription}
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tech.map((tech) => (
+                    {project.techstack.map((tech) => (
                       <span
                         key={tech}
                         className="border-2 border-ni-black px-2 py-1 text-xs font-bold uppercase bg-ni-gray-100 font-mono"
@@ -139,18 +167,26 @@ const Showcase = () => {
                   </div>
 
                   <div className="flex gap-3 mt-auto pt-4 border-t-2 border-dashed border-ni-gray-300">
-                    <a
-                      href="#"
-                      className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-black text-ni-white font-bold hover:bg-ni-white hover:text-ni-black transition-colors text-sm font-mono flex items-center justify-center gap-2"
-                    >
-                      <ExternalLink size={14} /> RUN
-                    </a>
-                    <a
-                      href="#"
-                      className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors text-sm font-mono flex items-center justify-center gap-2"
-                    >
-                      <Github size={14} /> SRC
-                    </a>
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-black text-ni-white font-bold hover:bg-ni-white hover:text-ni-black transition-colors text-sm font-mono flex items-center justify-center gap-2"
+                      >
+                        <ExternalLink size={14} /> RUN
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors text-sm font-mono flex items-center justify-center gap-2"
+                      >
+                        <Github size={14} /> SRC
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

@@ -1,5 +1,8 @@
 const Settings = require("../models/Settings");
 const TeamMember = require("../models/TeamMember");
+const Event = require("../models/Event");
+const Gallery = require("../models/Gallery");
+const Project = require("../models/Project");
 
 // @desc    Get home page data (public)
 // @route   GET /api/home
@@ -13,6 +16,32 @@ const getHomeData = async (req, res) => {
     const teamMembers = await TeamMember.find({ status: "active" })
       .sort({ position: 1 })
       .select("name role image socialLinks skills");
+
+    // Get upcoming events (limit 3)
+    const events = await Event.find({
+      status: { $in: ["upcoming", "ongoing"] },
+      date: { $gte: new Date() },
+    })
+      .sort({ date: 1 })
+      .limit(3)
+      .select(
+        "name category date timeFrom timeTo shortDetails location image registrationLink isRegisterable"
+      );
+
+    // Get recent gallery albums (limit 4)
+    const gallery = await Gallery.find({ status: "published" })
+      .sort({ date: -1 })
+      .limit(4)
+      .select("title description date category featuredImage images");
+
+    // Get featured projects (limit 3)
+    const projects = await Project.find({
+      status: "active",
+      isFeatured: true,
+    })
+      .sort({ position: 1, createdAt: -1 })
+      .limit(3)
+      .select("name shortDescription techstack link github image category");
 
     // Prepare response
     const homeData = {
@@ -36,10 +65,20 @@ const getHomeData = async (req, res) => {
       about: {
         title: settings.aboutTitle,
         description: settings.aboutDescription,
+        description2: settings.aboutDescription2,
       },
 
       // Team members
       teamMembers,
+
+      // Events
+      events,
+
+      // Gallery
+      gallery,
+
+      // Projects
+      projects,
     };
 
     res.json(homeData);

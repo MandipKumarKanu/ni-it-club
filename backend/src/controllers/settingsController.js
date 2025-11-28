@@ -54,6 +54,7 @@ const updateSettings = async (req, res) => {
       heroSubtitle,
       aboutTitle,
       aboutDescription,
+      aboutDescription2,
       features,
       seo,
     } = req.body;
@@ -73,6 +74,8 @@ const updateSettings = async (req, res) => {
     if (aboutTitle !== undefined) settings.aboutTitle = aboutTitle;
     if (aboutDescription !== undefined)
       settings.aboutDescription = aboutDescription;
+    if (aboutDescription2 !== undefined)
+      settings.aboutDescription2 = aboutDescription2;
 
     // Update social links
     if (socialLinks) {

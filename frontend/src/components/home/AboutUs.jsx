@@ -8,6 +8,8 @@ const AboutUs = () => {
     title: "About Us",
     description:
       "NI IT Club is the premier student organization dedicated to fostering a culture of technical excellence and innovation. We bridge the gap between academic learning and industry requirements through hands-on workshops, hackathons, and collaborative projects.",
+    description2:
+      "Our mission is to empower every student with the tools and community they need to succeed in the tech world.",
   });
 
   useEffect(() => {
@@ -20,6 +22,9 @@ const AboutUs = () => {
             description:
               data.about.description ||
               "NI IT Club is the premier student organization dedicated to fostering a culture of technical excellence and innovation.",
+            description2:
+              data.about.description2 ||
+              "Our mission is to empower every student with the tools and community they need to succeed in the tech world.",
           });
         }
       } catch (error) {
@@ -47,10 +52,11 @@ const AboutUs = () => {
             <p className="text-xl leading-relaxed font-bold mb-6">
               {aboutData.description}
             </p>
-            <p className="text-xl leading-relaxed font-bold">
-              Our mission is to empower every student with the tools and
-              community they need to succeed in the tech world.
-            </p>
+            {aboutData.description2 && (
+              <p className="text-xl leading-relaxed font-bold">
+                {aboutData.description2}
+              </p>
+            )}
           </div>
         </div>
 

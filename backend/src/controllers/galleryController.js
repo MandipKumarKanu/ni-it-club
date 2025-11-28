@@ -1,5 +1,9 @@
 const Gallery = require("../models/Gallery");
-const { uploadToCloudinary, deleteFromCloudinary, deleteMultipleFromCloudinary } = require("../utils/cloudinaryUpload");
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+  deleteMultipleFromCloudinary,
+} = require("../utils/cloudinaryUpload");
 
 // Helper to transform gallery with thumbnail URLs
 const transformGallery = (g) => {
@@ -18,8 +22,8 @@ const transformGallery = (g) => {
       url: img.url,
       public_id: img.public_id,
       caption: img.caption || "",
-      thumb: img.public_id 
-        ? `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_400,h_300/${img.public_id}.jpg` 
+      thumb: img.public_id
+        ? `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_400,h_300/${img.public_id}.jpg`
         : img.url,
     })),
   };
@@ -33,7 +37,10 @@ const parseArrayField = (field) => {
     try {
       return JSON.parse(field);
     } catch {
-      return field.split(",").map((item) => item.trim()).filter(Boolean);
+      return field
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
     }
   }
   return [];
@@ -44,25 +51,42 @@ const parseArrayField = (field) => {
 // @access  Public
 const getGalleries = async (req, res) => {
   try {
-    const { category, status } = req.query;
+    const { category, status, page = 1, limit = 9 } = req.query;
     const filter = {};
-    
+
     // By default, only show published galleries
     if (status) {
       filter.status = status;
     } else {
       filter.status = "published";
     }
-    
+
     if (category && category !== "All") {
       filter.category = category;
     }
 
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const totalDocs = await Gallery.countDocuments(filter);
     const galleries = await Gallery.find(filter)
       .sort({ date: -1 })
+      .skip(skip)
+      .limit(limitNum)
       .populate("event", "name category");
-    
-    res.json(galleries.map(transformGallery));
+
+    const totalPages = Math.ceil(totalDocs / limitNum);
+
+    res.json({
+      docs: galleries.map(transformGallery),
+      totalDocs,
+      limit: limitNum,
+      totalPages,
+      page: pageNum,
+      hasPrevPage: pageNum > 1,
+      hasNextPage: pageNum < totalPages,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -87,14 +111,16 @@ const getAllGalleriesAdmin = async (req, res) => {
 // @access  Public
 const getGalleryById = async (req, res) => {
   try {
-    const gallery = await Gallery.findById(req.params.id)
-      .populate("event", "name category date");
-    
+    const gallery = await Gallery.findById(req.params.id).populate(
+      "event",
+      "name category date"
+    );
+
     if (gallery) {
       // Increment view count
       gallery.viewCount = (gallery.viewCount || 0) + 1;
       await gallery.save();
-      
+
       res.json(transformGallery(gallery));
     } else {
       res.status(404).json({ message: "Gallery not found" });
@@ -109,12 +135,15 @@ const getGalleryById = async (req, res) => {
 // @access  Private/Admin
 const createGallery = async (req, res) => {
   try {
-    const { title, description, date, category, tags, event, status } = req.body;
+    const { title, description, date, category, tags, event, status } =
+      req.body;
 
     // Handle featured image
     let featuredImage = { url: "", public_id: "" };
     if (req.files && req.files.featuredImage) {
-      const result = await uploadToCloudinary(req.files.featuredImage[0].buffer);
+      const result = await uploadToCloudinary(
+        req.files.featuredImage[0].buffer
+      );
       featuredImage = { url: result.secure_url, public_id: result.public_id };
     }
 
@@ -125,8 +154,8 @@ const createGallery = async (req, res) => {
         uploadToCloudinary(file.buffer)
       );
       const results = await Promise.all(uploadPromises);
-      imagesArr = results.map((result) => ({ 
-        url: result.secure_url, 
+      imagesArr = results.map((result) => ({
+        url: result.secure_url,
         public_id: result.public_id,
         caption: "",
       }));
@@ -156,18 +185,20 @@ const createGallery = async (req, res) => {
 // @access  Private/Admin
 const updateGallery = async (req, res) => {
   try {
-    const { title, description, date, category, tags, event, status } = req.body;
+    const { title, description, date, category, tags, event, status } =
+      req.body;
 
     const gallery = await Gallery.findById(req.params.id);
 
     if (gallery) {
       gallery.title = title || gallery.title;
-      gallery.description = description !== undefined ? description : gallery.description;
+      gallery.description =
+        description !== undefined ? description : gallery.description;
       gallery.date = date || gallery.date;
       gallery.category = category || gallery.category;
       gallery.event = event !== undefined ? event : gallery.event;
       gallery.status = status || gallery.status;
-      
+
       if (tags !== undefined) {
         gallery.tags = parseArrayField(tags);
       }
@@ -177,8 +208,13 @@ const updateGallery = async (req, res) => {
         if (gallery.featuredImage?.public_id) {
           deleteFromCloudinary(gallery.featuredImage.public_id);
         }
-        const result = await uploadToCloudinary(req.files.featuredImage[0].buffer);
-        gallery.featuredImage = { url: result.secure_url, public_id: result.public_id };
+        const result = await uploadToCloudinary(
+          req.files.featuredImage[0].buffer
+        );
+        gallery.featuredImage = {
+          url: result.secure_url,
+          public_id: result.public_id,
+        };
       }
 
       // Handle new images (append to existing)
@@ -187,8 +223,8 @@ const updateGallery = async (req, res) => {
           uploadToCloudinary(file.buffer)
         );
         const results = await Promise.all(uploadPromises);
-        const newImages = results.map((result) => ({ 
-          url: result.secure_url, 
+        const newImages = results.map((result) => ({
+          url: result.secure_url,
           public_id: result.public_id,
           caption: "",
         }));
@@ -326,14 +362,14 @@ const getGalleryStats = async (req, res) => {
     const total = await Gallery.countDocuments();
     const published = await Gallery.countDocuments({ status: "published" });
     const draft = await Gallery.countDocuments({ status: "draft" });
-    
+
     const totalImages = await Gallery.aggregate([
       { $project: { imageCount: { $size: "$images" } } },
-      { $group: { _id: null, total: { $sum: "$imageCount" } } }
+      { $group: { _id: null, total: { $sum: "$imageCount" } } },
     ]);
 
     const byCategory = await Gallery.aggregate([
-      { $group: { _id: "$category", count: { $sum: 1 } } }
+      { $group: { _id: "$category", count: { $sum: 1 } } },
     ]);
 
     res.json({

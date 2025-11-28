@@ -1,5 +1,8 @@
 const Event = require("../models/Event");
-const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/cloudinaryUpload");
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/cloudinaryUpload");
 const { format } = require("date-fns");
 
 // Helper to generate Google Calendar Link
@@ -48,7 +51,10 @@ const parseArrayField = (field) => {
     try {
       return JSON.parse(field);
     } catch {
-      return field.split(",").map((item) => item.trim()).filter(Boolean);
+      return field
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
     }
   }
   return [];
@@ -67,27 +73,61 @@ const parseBool = (val) => {
 // @access  Public
 const getEvents = async (req, res) => {
   try {
-    const { status, category, featured, upcoming } = req.query;
+    const {
+      status,
+      category,
+      featured,
+      upcoming,
+      page = 1,
+      limit = 9,
+      search,
+    } = req.query;
     const filter = {};
-    
+
     // By default for public, only show non-draft events
     if (status) {
       filter.status = status;
     } else {
       filter.status = { $ne: "draft" };
     }
-    
-    if (category) filter.category = category;
+
+    if (category && category !== "All") filter.category = category;
     if (featured === "true") filter.isFeatured = true;
     if (upcoming === "true") {
       filter.date = { $gte: new Date() };
       filter.status = { $in: ["upcoming", "ongoing"] };
     }
 
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { details: { $regex: search, $options: "i" } },
+        { shortDetails: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const totalDocs = await Event.countDocuments(filter);
     const events = await Event.find(filter)
       .sort({ isFeatured: -1, date: 1 })
+      .skip(skip)
+      .limit(limitNum)
       .populate("organizer", "name email");
-    res.json(events.map(transformEvent));
+
+    const totalPages = Math.ceil(totalDocs / limitNum);
+
+    res.json({
+      docs: events.map(transformEvent),
+      totalDocs,
+      limit: limitNum,
+      totalPages,
+      page: pageNum,
+      hasPrevPage: pageNum > 1,
+      hasNextPage: pageNum < totalPages,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -112,8 +152,10 @@ const getAllEventsAdmin = async (req, res) => {
 // @access  Public
 const getEventById = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id)
-      .populate("organizer", "name email");
+    const event = await Event.findById(req.params.id).populate(
+      "organizer",
+      "name email"
+    );
     if (event) {
       res.json(transformEvent(event));
     } else {
@@ -221,7 +263,7 @@ const updateEvent = async (req, res) => {
       event.details = details || event.details;
       event.shortDetails = shortDetails || event.shortDetails;
       event.location = location || event.location;
-      
+
       if (isRegisterable !== undefined) {
         event.isRegisterable = parseBool(isRegisterable);
       }
@@ -336,18 +378,18 @@ const deleteEvent = async (req, res) => {
 const getEventStats = async (req, res) => {
   try {
     const total = await Event.countDocuments();
-    const upcoming = await Event.countDocuments({ 
+    const upcoming = await Event.countDocuments({
       status: { $in: ["upcoming", "ongoing"] },
-      date: { $gte: new Date() }
+      date: { $gte: new Date() },
     });
     const completed = await Event.countDocuments({ status: "completed" });
-    
+
     const byCategory = await Event.aggregate([
-      { $group: { _id: "$category", count: { $sum: 1 } } }
+      { $group: { _id: "$category", count: { $sum: 1 } } },
     ]);
 
     const byStatus = await Event.aggregate([
-      { $group: { _id: "$status", count: { $sum: 1 } } }
+      { $group: { _id: "$status", count: { $sum: 1 } } },
     ]);
 
     res.json({

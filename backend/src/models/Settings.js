@@ -119,6 +119,10 @@ const settingsSchema = mongoose.Schema(
       type: String,
       default: "",
     },
+    aboutDescription2: {
+      type: String,
+      default: "",
+    },
 
     // Logo and branding
     logo: {

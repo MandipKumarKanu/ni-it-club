@@ -345,7 +345,8 @@ const Settings = () => {
                   error={errors.heroSubtitle}
                 />
                 <p className="text-sm text-gray-600 p-3 bg-gray-50 border-l-4 border-ni-neon">
-                  The hero title is split into two parts for better styling. Part 1 appears first, followed by Part 2.
+                  The hero title is split into two parts for better styling.
+                  Part 1 appears first, followed by Part 2.
                 </p>
               </div>
             </Card>
@@ -363,13 +364,24 @@ const Settings = () => {
                 />
                 <div>
                   <label className="font-bold text-sm block mb-1">
-                    About Description
+                    About Description Paragraph 1
                   </label>
                   <textarea
                     className="w-full p-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-ni-neon"
-                    rows="6"
-                    placeholder="Tell your story..."
+                    rows="4"
+                    placeholder="First paragraph..."
                     {...register("aboutDescription")}
+                  ></textarea>
+                </div>
+                <div>
+                  <label className="font-bold text-sm block mb-1">
+                    About Description Paragraph 2
+                  </label>
+                  <textarea
+                    className="w-full p-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-ni-neon"
+                    rows="4"
+                    placeholder="Second paragraph..."
+                    {...register("aboutDescription2")}
                   ></textarea>
                 </div>
               </div>
