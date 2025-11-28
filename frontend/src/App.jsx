@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,6 +17,10 @@ import useResetScrollPosition from "./components/hook/useResetScrollPosition";
 function App() {
   const location = useLocation();
   useResetScrollPosition(location);
+
+  useEffect(() => {
+    console.log("Hello!!!");
+  }, []);
 
   return (
     <Layout>
