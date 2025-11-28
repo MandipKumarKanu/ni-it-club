@@ -34,7 +34,7 @@ const registerUser = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(201).json({
@@ -42,7 +42,7 @@ const registerUser = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      token: accessToken,
+      accessToken,
     });
   } else {
     res.status(400).json({ message: "Invalid user data" });
@@ -76,7 +76,7 @@ const loginUser = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      token: accessToken,
+      accessToken,
     });
   } else {
     res.status(401).json({ message: "Invalid email or password" });
@@ -129,7 +129,7 @@ const refreshAccessToken = async (req, res) => {
       return res.status(403).json({ message: "Forbidden" });
 
     const accessToken = generateAccessToken(user._id);
-    res.json({ token: accessToken });
+    res.json({ accessToken });
   });
 };
 
@@ -138,7 +138,9 @@ const refreshAccessToken = async (req, res) => {
 // @access  Private
 const getCurrentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password -refreshToken");
+    const user = await User.findById(req.user._id).select(
+      "-password -refreshToken"
+    );
     if (user) {
       res.json({
         _id: user._id,

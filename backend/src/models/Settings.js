@@ -31,7 +31,19 @@ const socialLinkSchema = new mongoose.Schema({
   platform: {
     type: String,
     required: true,
-    enum: ["facebook", "instagram", "twitter", "linkedin", "github", "youtube", "discord", "telegram", "whatsapp", "email", "website"],
+    enum: [
+      "facebook",
+      "instagram",
+      "twitter",
+      "linkedin",
+      "github",
+      "youtube",
+      "discord",
+      "telegram",
+      "whatsapp",
+      "email",
+      "website",
+    ],
   },
   url: {
     type: String,
@@ -56,9 +68,14 @@ const settingsSchema = mongoose.Schema(
     },
     siteDescription: {
       type: String,
-      default: "NI-IT Club is a community of passionate tech enthusiasts dedicated to learning, building, and sharing knowledge.",
+      default:
+        "NI-IT Club is a community of passionate tech enthusiasts dedicated to learning, building, and sharing knowledge.",
     },
-    
+    website: {
+      type: String,
+      default: "",
+    },
+
     // Contact information
     contactEmail: {
       type: String,
@@ -72,23 +89,27 @@ const settingsSchema = mongoose.Schema(
       type: String,
       default: "",
     },
-    
+
     // Social links
     socialLinks: [socialLinkSchema],
-    
+
     // Stats (can be auto-calculated or manually set)
     stats: statsSchema,
-    
+
     // Hero section settings
-    heroTitle: {
+    heroTitle1: {
       type: String,
-      default: "Welcome to NI-IT Club",
+      default: "Welcome to",
+    },
+    heroTitle2: {
+      type: String,
+      default: "NI-IT Club",
     },
     heroSubtitle: {
       type: String,
       default: "Where Innovation Meets Technology",
     },
-    
+
     // About section
     aboutTitle: {
       type: String,
@@ -98,7 +119,7 @@ const settingsSchema = mongoose.Schema(
       type: String,
       default: "",
     },
-    
+
     // Logo and branding
     logo: {
       url: { type: String, default: "" },
@@ -108,7 +129,7 @@ const settingsSchema = mongoose.Schema(
       url: { type: String, default: "" },
       public_id: { type: String, default: "" },
     },
-    
+
     // Feature flags
     features: {
       enableRegistrations: { type: Boolean, default: true },
@@ -117,7 +138,7 @@ const settingsSchema = mongoose.Schema(
       showTeamSection: { type: Boolean, default: true },
       maintenanceMode: { type: Boolean, default: false },
     },
-    
+
     // SEO settings
     seo: {
       metaTitle: { type: String, default: "" },

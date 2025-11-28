@@ -13,7 +13,7 @@ const sendEmail = async (options) => {
 
   const message = {
     from: `${process.env.FROM_NAME || "NI-IT Club"} <${
-      process.env.FROM_EMAIL || "noreply@niitclub.com"
+      process.env.FROM_EMAIL || "info_pustakbazzar@mandipkk.com.np"
     }>`,
     to: options.email,
     subject: options.subject,

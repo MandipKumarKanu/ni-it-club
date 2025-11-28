@@ -1,8 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../ui/Card";
 import { CircleScribble, Dots } from "../ui/Doodles";
+import api from "../../services/api";
 
 const AboutUs = () => {
+  const [aboutData, setAboutData] = useState({
+    title: "About Us",
+    description:
+      "NI IT Club is the premier student organization dedicated to fostering a culture of technical excellence and innovation. We bridge the gap between academic learning and industry requirements through hands-on workshops, hackathons, and collaborative projects.",
+  });
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const { data } = await api.get("/home");
+        if (data.about) {
+          setAboutData({
+            title: data.about.title || "About Us",
+            description:
+              data.about.description ||
+              "NI IT Club is the premier student organization dedicated to fostering a culture of technical excellence and innovation.",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch about data, using defaults", error);
+        // Fallback data is already set in initial state
+      }
+    };
+
+    fetchAboutData();
+  }, []);
+
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
       <CircleScribble className="absolute -top-20 right-0 w-64 h-64 text-ni-neon opacity-50" />
@@ -10,18 +38,14 @@ const AboutUs = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div className="relative">
           <h2 className="text-6xl font-black uppercase mb-8 relative inline-block">
-            About Us
+            {aboutData.title}
             <div className="absolute -bottom-2 left-0 w-full h-4 bg-ni-pink transform -skew-x-12 -z-10"></div>
           </h2>
           <div className="bg-ni-white text-ni-black p-8 shadow-brutal-lg border-brutal relative transform rotate-1">
             <div className="absolute -top-4 -left-4 w-8 h-8 bg-ni-black"></div>
             <div className="absolute -bottom-4 -right-4 w-8 h-8 bg-ni-black"></div>
             <p className="text-xl leading-relaxed font-bold mb-6">
-              NI IT Club is the premier student organization dedicated to
-              fostering a culture of technical excellence and innovation. We
-              bridge the gap between academic learning and industry requirements
-              through hands-on workshops, hackathons, and collaborative
-              projects.
+              {aboutData.description}
             </p>
             <p className="text-xl leading-relaxed font-bold">
               Our mission is to empower every student with the tools and

@@ -3,7 +3,10 @@ const TeamMember = require("../models/TeamMember");
 const Project = require("../models/Project");
 const Event = require("../models/Event");
 const Gallery = require("../models/Gallery");
-const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/cloudinaryUpload");
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/cloudinaryUpload");
 
 // @desc    Get site settings
 // @route   GET /api/settings
@@ -40,12 +43,14 @@ const updateSettings = async (req, res) => {
       siteName,
       siteTagline,
       siteDescription,
+      website,
       contactEmail,
       contactPhone,
       address,
       socialLinks,
       stats,
-      heroTitle,
+      heroTitle1,
+      heroTitle2,
       heroSubtitle,
       aboutTitle,
       aboutDescription,
@@ -56,31 +61,70 @@ const updateSettings = async (req, res) => {
     // Update fields if provided
     if (siteName !== undefined) settings.siteName = siteName;
     if (siteTagline !== undefined) settings.siteTagline = siteTagline;
-    if (siteDescription !== undefined) settings.siteDescription = siteDescription;
+    if (siteDescription !== undefined)
+      settings.siteDescription = siteDescription;
+    if (website !== undefined) settings.website = website;
     if (contactEmail !== undefined) settings.contactEmail = contactEmail;
     if (contactPhone !== undefined) settings.contactPhone = contactPhone;
     if (address !== undefined) settings.address = address;
-    if (heroTitle !== undefined) settings.heroTitle = heroTitle;
+    if (heroTitle1 !== undefined) settings.heroTitle1 = heroTitle1;
+    if (heroTitle2 !== undefined) settings.heroTitle2 = heroTitle2;
     if (heroSubtitle !== undefined) settings.heroSubtitle = heroSubtitle;
     if (aboutTitle !== undefined) settings.aboutTitle = aboutTitle;
-    if (aboutDescription !== undefined) settings.aboutDescription = aboutDescription;
+    if (aboutDescription !== undefined)
+      settings.aboutDescription = aboutDescription;
 
     // Update social links
     if (socialLinks) {
-      const parsedLinks = typeof socialLinks === "string" ? JSON.parse(socialLinks) : socialLinks;
+      const parsedLinks =
+        typeof socialLinks === "string" ? JSON.parse(socialLinks) : socialLinks;
       settings.socialLinks = parsedLinks;
     }
 
-    // Update stats
+    // Update stats - handle both JSON string and individual fields from FormData
     if (stats) {
       const parsedStats = typeof stats === "string" ? JSON.parse(stats) : stats;
+      if (!settings.stats) {
+        settings.stats = {};
+      }
       settings.stats = { ...settings.stats.toObject(), ...parsedStats };
+    } else if (
+      req.body["stats[membersCount]"] ||
+      req.body["stats[projectsCount]"] ||
+      req.body["stats[eventsCount]"]
+    ) {
+      // Handle stats sent as individual FormData fields
+      if (!settings.stats) {
+        settings.stats = {};
+      }
+      if (req.body["stats[membersCount]"])
+        settings.stats.membersCount = parseInt(req.body["stats[membersCount]"]);
+      if (req.body["stats[projectsCount]"])
+        settings.stats.projectsCount = parseInt(
+          req.body["stats[projectsCount]"]
+        );
+      if (req.body["stats[eventsCount]"])
+        settings.stats.eventsCount = parseInt(req.body["stats[eventsCount]"]);
+      if (req.body["stats[partnersCount]"])
+        settings.stats.partnersCount = parseInt(
+          req.body["stats[partnersCount]"]
+        );
+      if (req.body["stats[workshopsCount]"])
+        settings.stats.workshopsCount = parseInt(
+          req.body["stats[workshopsCount]"]
+        );
+      if (req.body["stats[yearsActive]"])
+        settings.stats.yearsActive = parseInt(req.body["stats[yearsActive]"]);
     }
 
     // Update features
     if (features) {
-      const parsedFeatures = typeof features === "string" ? JSON.parse(features) : features;
-      settings.features = { ...settings.features.toObject(), ...parsedFeatures };
+      const parsedFeatures =
+        typeof features === "string" ? JSON.parse(features) : features;
+      settings.features = {
+        ...settings.features.toObject(),
+        ...parsedFeatures,
+      };
     }
 
     // Update SEO
@@ -104,7 +148,10 @@ const updateSettings = async (req, res) => {
         await deleteFromCloudinary(settings.favicon.public_id);
       }
       const result = await uploadToCloudinary(req.files.favicon[0].buffer);
-      settings.favicon = { url: result.secure_url, public_id: result.public_id };
+      settings.favicon = {
+        url: result.secure_url,
+        public_id: result.public_id,
+      };
     }
 
     // Handle OG image upload
@@ -113,7 +160,10 @@ const updateSettings = async (req, res) => {
         await deleteFromCloudinary(settings.seo.ogImage.public_id);
       }
       const result = await uploadToCloudinary(req.files.ogImage[0].buffer);
-      settings.seo.ogImage = { url: result.secure_url, public_id: result.public_id };
+      settings.seo.ogImage = {
+        url: result.secure_url,
+        public_id: result.public_id,
+      };
     }
 
     const updatedSettings = await settings.save();
@@ -129,13 +179,23 @@ const updateSettings = async (req, res) => {
 const updateStats = async (req, res) => {
   try {
     const settings = await Settings.getSettings();
-    const { membersCount, projectsCount, eventsCount, partnersCount, workshopsCount, yearsActive } = req.body;
+    const {
+      membersCount,
+      projectsCount,
+      eventsCount,
+      partnersCount,
+      workshopsCount,
+      yearsActive,
+    } = req.body;
 
     if (membersCount !== undefined) settings.stats.membersCount = membersCount;
-    if (projectsCount !== undefined) settings.stats.projectsCount = projectsCount;
+    if (projectsCount !== undefined)
+      settings.stats.projectsCount = projectsCount;
     if (eventsCount !== undefined) settings.stats.eventsCount = eventsCount;
-    if (partnersCount !== undefined) settings.stats.partnersCount = partnersCount;
-    if (workshopsCount !== undefined) settings.stats.workshopsCount = workshopsCount;
+    if (partnersCount !== undefined)
+      settings.stats.partnersCount = partnersCount;
+    if (workshopsCount !== undefined)
+      settings.stats.workshopsCount = workshopsCount;
     if (yearsActive !== undefined) settings.stats.yearsActive = yearsActive;
 
     const updatedSettings = await settings.save();
@@ -153,12 +213,19 @@ const recalculateStats = async (req, res) => {
     const settings = await Settings.getSettings();
 
     // Calculate stats from actual data
-    const membersCount = await TeamMember.countDocuments({ status: "active" });
-    const projectsCount = await Project.countDocuments({ status: { $in: ["active", "completed"] } });
-    const eventsCount = await Event.countDocuments({ status: { $ne: "draft" } });
+    const projectsCount = await Project.countDocuments({
+      status: { $in: ["active", "completed"] },
+    });
+    const eventsCount = await Event.countDocuments({
+      status: { $ne: "draft" },
+    });
 
-    // Update stats
-    settings.stats.membersCount = membersCount;
+    // Initialize stats if undefined
+    if (!settings.stats) {
+      settings.stats = {};
+    }
+
+    // Update stats (membersCount is not tracked as all college members are considered members)
     settings.stats.projectsCount = projectsCount;
     settings.stats.eventsCount = eventsCount;
 
@@ -211,7 +278,8 @@ const updateSocialLink = async (req, res) => {
 
     if (platform) settings.socialLinks[linkIndex].platform = platform;
     if (url) settings.socialLinks[linkIndex].url = url;
-    if (isActive !== undefined) settings.socialLinks[linkIndex].isActive = isActive;
+    if (isActive !== undefined)
+      settings.socialLinks[linkIndex].isActive = isActive;
 
     const updatedSettings = await settings.save();
     res.json(updatedSettings.socialLinks);

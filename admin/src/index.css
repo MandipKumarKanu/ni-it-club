@@ -1,1 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
+
+:root {
+  --color-ni-black: #000000;
+  --color-ni-white: hsl(0, 0%, 100%);
+  --color-ni-neon: #fabb0e; /* Lime Green */
+  --color-ni-cyan: #087fef; /* Cyan */
+  --color-ni-pink: #ff00ff; /* Hot Pink */
+  --color-ni-blue: #08708d; /* Bright Blue */
+
+  --font-primary: "Space Grotesk", sans-serif;
+
+  --shadow-hard: 8px 8px 0px 0px #000000;
+  --shadow-hard-lg: 16px 16px 0px 0px #000000;
+  --shadow-hard-sm: 4px 4px 0px 0px #000000;
+}
+
+@theme {
+  --font-sans: "Space Grotesk", sans-serif;
+
+  --color-ni-black: var(--color-ni-black);
+  --color-ni-white: var(--color-ni-white);
+  --color-ni-neon: var(--color-ni-neon);
+  --color-ni-cyan: var(--color-ni-cyan);
+  --color-ni-pink: var(--color-ni-pink);
+  --color-ni-blue: var(--color-ni-blue);
+
+  --shadow-hard: var(--shadow-hard);
+  --shadow-hard-lg: var(--shadow-hard-lg);
+  --shadow-hard-sm: var(--shadow-hard-sm);
+}
+
+* {
+  user-select: none;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: #f0f0f0;
+  color: var(--color-ni-black);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-ni-white);
+  border-left: 2px solid var(--color-ni-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ni-black);
+  border: 2px solid var(--color-ni-white);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ni-blue);
+}
+
+/* Utility classes for doodle brutalism */
+.border-brutal {
+  border: 3px solid var(--color-ni-black);
+}
+
+.shadow-brutal {
+  box-shadow: var(--shadow-hard);
+}
+
+.shadow-brutal-sm {
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.hover-brutal:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #000000;
+}
+
+.active-brutal:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px 0px #000000;
+}

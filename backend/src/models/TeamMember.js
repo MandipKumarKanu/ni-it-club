@@ -6,13 +6,24 @@ const teamMemberSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    role: {
-      type: String,
-      required: true,
-    },
+    role: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     jobType: {
       type: String,
-      enum: ["Frontend", "Backend", "Fullstack", "DevOps", "UI/UX", "Mobile", "Data", "Other"],
+      enum: [
+        "Frontend",
+        "Backend",
+        "Fullstack",
+        "DevOps",
+        "UI/UX",
+        "Mobile",
+        "Data",
+        "Other",
+      ],
       default: "Other",
     },
     bio: {

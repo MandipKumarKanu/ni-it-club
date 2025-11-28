@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import Button from "../ui/Button";
 import {
@@ -11,8 +11,35 @@ import {
   Arrow,
 } from "../ui/Doodles";
 import niitLogo from "../../assets/niit-c.png";
+import api from "../../services/api";
 
 const Hero = () => {
+  const [heroData, setHeroData] = useState({
+    title1: "Welcome to",
+    title2: "NI IT Club",
+    subtitle: "Where Innovation Meets Community.",
+  });
+
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const { data } = await api.get("/home");
+        if (data.hero) {
+          setHeroData({
+            title1: data.hero.title1 || "Welcome to",
+            title2: data.hero.title2 || "NI IT Club",
+            subtitle: data.hero.subtitle || "Where Innovation Meets Community.",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch hero data, using defaults", error);
+        // Fallback data is already set in initial state
+      }
+    };
+
+    fetchHeroData();
+  }, []);
+
   return (
     <section className="relative  border-b-4 border-ni-black py-24 lg:py overflow-hidden">
       {/* Background Doodles */}
@@ -26,10 +53,10 @@ const Hero = () => {
           {/* <CurlyBrace className="absolute -left-16 top-0 h-48 text-ni-black hidden lg:block" /> */}
 
           <h1 className="text-7xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-8 text-ni-black drop-shadow-[8px_8px_0px_rgba(204,255,0,1)] relative">
-            Welcome to <br />
+            {heroData.title1} <br />
             <span className="relative inline-block">
               <span className="text-ni-white bg-ni-black px-6 transform -rotate-2 inline-block border-brutal shadow-brutal-sm">
-                NI IT Club
+                {heroData.title2}
               </span>
               {/* <Star className="absolute -top-12 -right-12 text-ni-pink w-24 h-24 animate-spin-slow" /> */}
             </span>
@@ -37,7 +64,7 @@ const Hero = () => {
 
           <div className="relative inline-block">
             <p className="text-3xl md:text-4xl font-bold mb-10 bg-ni-neon inline-block px-4 py-2 border-brutal transform rotate-1">
-              Where Innovation Meets Community.
+              {heroData.subtitle}
             </p>
             <HandDrawnArrow className="absolute -right-32 top-0 w-24 text-ni-black transform rotate-12 hidden md:block" />
           </div>

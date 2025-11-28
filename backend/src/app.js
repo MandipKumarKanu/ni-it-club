@@ -14,7 +14,11 @@ connectDB();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: [
+      "http://localhost:5174",
+      "http://localhost:5173",
+      process.env.CLIENT_URL,
+    ],
     credentials: true,
   })
 );
@@ -22,6 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
+app.use("/api/home", require("./routes/homeRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/gallery", require("./routes/galleryRoutes"));

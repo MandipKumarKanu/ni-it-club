@@ -1,5 +1,8 @@
 const TeamMember = require("../models/TeamMember");
-const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/cloudinaryUpload");
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/cloudinaryUpload");
 
 // Helper to add thumb URL to team member response
 const transformMember = (member) => {
@@ -21,7 +24,10 @@ const parseArrayField = (field) => {
   if (!field) return [];
   if (Array.isArray(field)) return field;
   if (typeof field === "string") {
-    return field.split(",").map((item) => item.trim()).filter(Boolean);
+    return field
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
   }
   return [];
 };
@@ -33,7 +39,7 @@ const getTeamMembers = async (req, res) => {
   try {
     const { status, jobType } = req.query;
     const filter = {};
-    
+
     // By default, only show active members on public routes
     if (status) {
       filter.status = status;
@@ -41,8 +47,11 @@ const getTeamMembers = async (req, res) => {
     if (jobType) {
       filter.jobType = jobType;
     }
-    
-    const team = await TeamMember.find(filter).sort({ position: 1, createdAt: 1 });
+
+    const team = await TeamMember.find(filter).sort({
+      position: 1,
+      createdAt: 1,
+    });
     res.json(team.map(transformMember));
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -82,9 +91,21 @@ const getTeamMemberById = async (req, res) => {
 // @access  Private/Admin
 const createTeamMember = async (req, res) => {
   try {
-    const { 
-      name, role, jobType, bio, skills, description, email, position, status,
-      linkedin, github, twitter, instagram, portfolio 
+    const {
+      name,
+      role,
+      jobType,
+      bio,
+      skills,
+      description,
+      email,
+      position,
+      status,
+      linkedin,
+      github,
+      twitter,
+      instagram,
+      portfolio,
     } = req.body;
 
     let image = { url: "", public_id: "" };
@@ -95,7 +116,7 @@ const createTeamMember = async (req, res) => {
 
     const teamMember = new TeamMember({
       name,
-      role,
+      role: parseArrayField(role),
       jobType: jobType || "Other",
       bio: bio || "",
       skills: parseArrayField(skills),
@@ -125,22 +146,37 @@ const createTeamMember = async (req, res) => {
 // @access  Private/Admin
 const updateTeamMember = async (req, res) => {
   try {
-    const { 
-      name, role, jobType, bio, skills, description, email, position, status,
-      linkedin, github, twitter, instagram, portfolio 
+    const {
+      name,
+      role,
+      jobType,
+      bio,
+      skills,
+      description,
+      email,
+      position,
+      status,
+      linkedin,
+      github,
+      twitter,
+      instagram,
+      portfolio,
     } = req.body;
 
     const member = await TeamMember.findById(req.params.id);
 
     if (member) {
       member.name = name || member.name;
-      member.role = role || member.role;
       member.jobType = jobType || member.jobType;
       member.bio = bio !== undefined ? bio : member.bio;
       member.email = email !== undefined ? email : member.email;
-      member.position = position !== undefined ? parseInt(position) : member.position;
+      member.position =
+        position !== undefined ? parseInt(position) : member.position;
       member.status = status || member.status;
 
+      if (role !== undefined) {
+        member.role = parseArrayField(role);
+      }
       if (skills !== undefined) {
         member.skills = parseArrayField(skills);
       }
@@ -180,7 +216,7 @@ const updateTeamMember = async (req, res) => {
 const reorderTeamMembers = async (req, res) => {
   try {
     const { positions } = req.body; // Array of { id, position }
-    
+
     if (!Array.isArray(positions)) {
       return res.status(400).json({ message: "Positions array required" });
     }
@@ -190,7 +226,7 @@ const reorderTeamMembers = async (req, res) => {
     );
 
     await Promise.all(updatePromises);
-    
+
     const team = await TeamMember.find({}).sort({ position: 1 });
     res.json(team.map(transformMember));
   } catch (error) {
