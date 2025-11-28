@@ -1,8 +1,11 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-// Use environment variable or default to local backend
-export const baseURL ="https://ni-it-club.vercel.app/api";
+// Use proxy in development, Vercel in production
+export const baseURL =
+  import.meta.env.MODE === "development"
+    ? "/api" // Uses Vite proxy
+    : "https://ni-it-club.vercel.app/api";
 
 export const customAxios = axios.create({
   baseURL,
