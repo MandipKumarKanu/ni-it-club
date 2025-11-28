@@ -85,112 +85,116 @@ const TeamList = () => {
       {team.length === 0 ? (
         <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
           <p className="text-gray-500 text-lg mb-4">No team members found</p>
-          <Button onClick={handleAdd} className="flex items-center gap-2 mx-auto">
+          <Button
+            onClick={handleAdd}
+            className="flex items-center gap-2 mx-auto"
+          >
             <Plus size={20} /> Add Your First Team Member
           </Button>
         </div>
       ) : (
         <Table headers={["Image", "Name", "Role", "Socials", "Actions"]}>
           {team.map((member) => (
-          <TableRow key={member._id}>
-            <TableCell>
-              <img
-                src={member.image?.thumb || member.image?.url || member.image}
-                alt={member.name}
-                className="w-16 h-16 object-cover border-2 border-black rounded-full"
-              />
-            </TableCell>
-            <TableCell className="font-bold">{member.name}</TableCell>
-            <TableCell>
-              <div className="flex flex-wrap gap-1">
-                {Array.isArray(member.role) ? (
-                  member.role.map((r, index) => (
-                    <span
-                      key={index}
-                      className="bg-ni-neon px-2 py-0.5 text-xs font-bold border border-black"
-                    >
-                      {r}
+            <TableRow key={member._id}>
+              <TableCell>
+                <img
+                  src={member.image?.thumb || member.image?.url || member.image}
+                  alt={member.name}
+                  className="w-16 h-16 object-cover border-2 border-black rounded-full"
+                />
+              </TableCell>
+              <TableCell className="font-bold">{member.name}</TableCell>
+              <TableCell>
+                <div className="flex flex-wrap gap-1">
+                  {Array.isArray(member.role) ? (
+                    member.role.map((r, index) => (
+                      <span
+                        key={index}
+                        className="bg-ni-neon px-2 py-0.5 text-xs font-bold border border-black"
+                      >
+                        {r}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="bg-ni-neon px-2 py-0.5 text-xs font-bold border border-black">
+                      {member.role}
                     </span>
-                  ))
-                ) : (
-                  <span className="bg-ni-neon px-2 py-0.5 text-xs font-bold border border-black">
-                    {member.role}
-                  </span>
-                )}
-              </div>
-            </TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                {member.socialLinks?.linkedin && (
-                  <a
-                    href={member.socialLinks.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ni-cyan"
+                  )}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  {member.socialLinks?.linkedin && (
+                    <a
+                      href={member.socialLinks.linkedin}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-ni-cyan"
+                    >
+                      <Linkedin size={20} />
+                    </a>
+                  )}
+                  {member.socialLinks?.github && (
+                    <a
+                      href={member.socialLinks.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-ni-cyan"
+                    >
+                      <Github size={20} />
+                    </a>
+                  )}
+                  {member.socialLinks?.twitter && (
+                    <a
+                      href={member.socialLinks.twitter}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-ni-cyan"
+                    >
+                      <Twitter size={20} />
+                    </a>
+                  )}
+                  {member.socialLinks?.instagram && (
+                    <a
+                      href={member.socialLinks.instagram}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-ni-cyan"
+                    >
+                      <Instagram size={20} />
+                    </a>
+                  )}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => handleView(member._id)}
+                    className="p-2"
                   >
-                    <Linkedin size={20} />
-                  </a>
-                )}
-                {member.socialLinks?.github && (
-                  <a
-                    href={member.socialLinks.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ni-cyan"
+                    <Eye size={16} />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleEdit(member)}
+                    className="p-2"
                   >
-                    <Github size={20} />
-                  </a>
-                )}
-                {member.socialLinks?.twitter && (
-                  <a
-                    href={member.socialLinks.twitter}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ni-cyan"
+                    <Pencil size={16} />
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(member._id)}
+                    className="p-2"
                   >
-                    <Twitter size={20} />
-                  </a>
-                )}
-                {member.socialLinks?.instagram && (
-                  <a
-                    href={member.socialLinks.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ni-cyan"
-                  >
-                    <Instagram size={20} />
-                  </a>
-                )}
-              </div>
-            </TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => handleView(member._id)}
-                  className="p-2"
-                >
-                  <Eye size={16} />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => handleEdit(member)}
-                  className="p-2"
-                >
-                  <Pencil size={16} />
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => handleDelete(member._id)}
-                  className="p-2"
-                >
-                  <Trash2 size={16} />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </Table>
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </Table>
+      )}
 
       <Modal
         isOpen={isModalOpen}
