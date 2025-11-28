@@ -22,6 +22,7 @@ import {
   CircleScribble,
 } from "../components/ui/Doodles";
 import { projects } from "../data/mockData";
+import SEO from "../components/SEO";
 
 const WindowHeader = ({
   title,
@@ -32,10 +33,10 @@ const WindowHeader = ({
     className={`${color} ${textColor} border-b-4 border-ni-black p-2 sm:p-3 flex justify-between items-center gap-2`}
   >
     <div className="font-mono font-bold uppercase tracking-wider flex items-center gap-1 sm:gap-2 text-xs sm:text-sm truncate flex-1 min-w-0">
-      <Terminal size={16} className="flex-shrink-0" />
+      <Terminal size={16} className="shrink-0" />
       <span className="truncate">{title}</span>
     </div>
-    <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+    <div className="flex gap-1 sm:gap-2 shrink-0">
       <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-ni-black bg-ni-white flex items-center justify-center hover:bg-ni-gray-200 cursor-pointer">
         <Minus size={12} className="sm:block hidden" />
         <Minus size={10} className="sm:hidden" />
@@ -54,125 +55,133 @@ const WindowHeader = ({
 
 const Showcase = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative overflow-hidden min-h-screen">
-      {/* Background Elements */}
-      <Binary className="absolute top-20 left-0 text-ni-black opacity-5 scale-150" />
-      <Binary className="absolute bottom-20 right-0 text-ni-black opacity-5 scale-150" />
+    <>
+      <SEO
+        title="Showcase"
+        description="Browse through memorable moments from NI IT Club events - hackathons, workshops, social meetups, and more."
+        keywords="NI IT Club projects"
+        url="/showcase"
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative overflow-hidden min-h-screen">
+        {/* Background Elements */}
+        <Binary className="absolute top-20 left-0 text-ni-black opacity-5 scale-150" />
+        <Binary className="absolute bottom-20 right-0 text-ni-black opacity-5 scale-150" />
 
-      {/* Hero Section */}
-      <div className="mb-24 relative z-10 max-w-4xl mx-auto">
-        <div className="bg-ni-white border-4 border-ni-black shadow-brutal-lg">
-          <WindowHeader title="SYSTEM_ROOT/SHOWCASE.EXE" />
-          <div className="p-4 sm:p-8 md:p-12 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-ni-black opacity-10 animate-pulse"></div>
+        {/* Hero Section */}
+        <div className="mb-24 relative z-10 max-w-4xl mx-auto">
+          <div className="bg-ni-white border-4 border-ni-black shadow-brutal-lg">
+            <WindowHeader title="SYSTEM_ROOT/SHOWCASE.EXE" />
+            <div className="p-4 sm:p-8 md:p-12 text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-ni-black opacity-10 animate-pulse"></div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter mb-4 sm:mb-6 font-mono">
-              Project_Showcase
-              <span className="animate-pulse">_</span>
-            </h1>
+              <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter mb-4 sm:mb-6 font-mono">
+                Project_Showcase
+                <span className="animate-pulse">_</span>
+              </h1>
 
-            <p className="text-sm sm:text-xl md:text-2xl font-bold font-mono text-ni-gray-800 mb-6 sm:mb-8">
-              &gt; Initializing creative modules... <br />
-              &gt; Loading student projects... <br />
-              &gt; Status:{" "}
-              <span className="text-ni-neon bg-ni-black px-2">ONLINE</span>
-            </p>
-
-            <div className="inline-block border-2 border-ni-black p-1 bg-ni-gray-100">
-              <p className="font-mono text-sm font-bold px-4 py-2">
-                v2.0.25 [Stable]
+              <p className="text-sm sm:text-xl md:text-2xl font-bold font-mono text-ni-gray-800 mb-6 sm:mb-8">
+                &gt; Initializing creative modules... <br />
+                &gt; Loading student projects... <br />
+                &gt; Status:{" "}
+                <span className="text-ni-neon bg-ni-black px-2">ONLINE</span>
               </p>
+
+              <div className="inline-block border-2 border-ni-black p-1 bg-ni-gray-100">
+                <p className="font-mono text-sm font-bold px-4 py-2">
+                  v2.0.25 [Stable]
+                </p>
+              </div>
             </div>
           </div>
+
+          {/* Decorative elements behind hero */}
+          <Chip className="absolute -top-12 -right-12 w-32 h-32 text-ni-blue opacity-20 -z-10 rotate-12" />
+          <Dots className="absolute -bottom-12 -left-12 w-40 h-40 text-ni-pink opacity-20 -z-10" />
         </div>
 
-        {/* Decorative elements behind hero */}
-        <Chip className="absolute -top-12 -right-12 w-32 h-32 text-ni-blue opacity-20 -z-10 rotate-12" />
-        <Dots className="absolute -bottom-12 -left-12 w-40 h-40 text-ni-pink opacity-20 -z-10" />
-      </div>
-
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
-        {projects.map((project, index) => (
-          <div key={project.id} className="group">
-            <div className="bg-ni-white border-4 border-ni-black shadow-brutal hover:shadow-brutal-lg hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
-              <WindowHeader
-                title={`PROJ_0${index + 1}.js`}
-                color={index % 2 === 0 ? "bg-ni-neon" : "bg-ni-cyan"}
-                textColor="text-ni-black"
-              />
-
-              <div className="relative border-b-4 border-ni-black overflow-hidden h-56 group-hover:h-64 transition-all duration-300">
-                <div className="absolute inset-0 bg-ni-black opacity-0 group-hover:opacity-20 transition-opacity z-10"></div>
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
+          {projects.map((project, index) => (
+            <div key={project.id} className="group">
+              <div className="bg-ni-white border-4 border-ni-black shadow-brutal hover:shadow-brutal-lg hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
+                <WindowHeader
+                  title={`PROJ_0${index + 1}.js`}
+                  color={index % 2 === 0 ? "bg-ni-neon" : "bg-ni-cyan"}
+                  textColor="text-ni-black"
                 />
-              </div>
 
-              <div className="p-6 flex flex-col grow">
-                <h3 className="text-xl sm:text-2xl font-black uppercase mb-3 font-mono">
-                  {project.title}
-                </h3>
-                <p className="font-bold mb-6 grow text-ni-gray-800 font-mono text-sm leading-relaxed">
-                  // {project.description}
+                <div className="relative border-b-4 border-ni-black overflow-hidden h-56 group-hover:h-64 transition-all duration-300">
+                  <div className="absolute inset-0 bg-ni-black opacity-0 group-hover:opacity-20 transition-opacity z-10"></div>
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                  />
+                </div>
+
+                <div className="p-6 flex flex-col grow">
+                  <h3 className="text-xl sm:text-2xl font-black uppercase mb-3 font-mono">
+                    {project.title}
+                  </h3>
+                  <p className="font-bold mb-6 grow text-ni-gray-800 font-mono text-sm leading-relaxed">
+                    // {project.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {project.tech.map((tech) => (
+                      <span
+                        key={tech}
+                        className="border-2 border-ni-black px-2 py-1 text-xs font-bold uppercase bg-ni-gray-100 font-mono"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-3 mt-auto pt-4 border-t-2 border-dashed border-ni-gray-300">
+                    <a
+                      href="#"
+                      className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-black text-ni-white font-bold hover:bg-ni-white hover:text-ni-black transition-colors text-sm font-mono flex items-center justify-center gap-2"
+                    >
+                      <ExternalLink size={14} /> RUN
+                    </a>
+                    <a
+                      href="#"
+                      className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors text-sm font-mono flex items-center justify-center gap-2"
+                    >
+                      <Github size={14} /> SRC
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA Section */}
+        <div className="mt-32 relative max-w-4xl mx-auto">
+          <div className="bg-ni-pink border-4 border-ni-black shadow-brutal-lg">
+            <WindowHeader title="SUBMISSION_FORM.EXE" color="bg-ni-black" />
+            <div className="p-6 sm:p-8 md:p-12 text-center relative">
+              <Binary className="absolute inset-0 text-ni-black opacity-10" />
+
+              <div className="relative z-10">
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-black uppercase mb-4 sm:mb-6 font-mono">
+                  Ready to Deploy?
+                </h2>
+                <p className="text-sm sm:text-xl font-bold mb-6 sm:mb-8 font-mono bg-ni-white inline-block px-3 sm:px-4 py-2 border-2 border-ni-black">
+                  Submit your project for code review and showcase.
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className="border-2 border-ni-black px-2 py-1 text-xs font-bold uppercase bg-ni-gray-100 font-mono"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex gap-3 mt-auto pt-4 border-t-2 border-dashed border-ni-gray-300">
-                  <a
-                    href="#"
-                    className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-black text-ni-white font-bold hover:bg-ni-white hover:text-ni-black transition-colors text-sm font-mono flex items-center justify-center gap-2"
-                  >
-                    <ExternalLink size={14} /> RUN
-                  </a>
-                  <a
-                    href="#"
-                    className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors text-sm font-mono flex items-center justify-center gap-2"
-                  >
-                    <Github size={14} /> SRC
-                  </a>
-                </div>
+                <button className="text-base sm:text-xl px-6 sm:px-10 py-3 sm:py-4 border-4 border-ni-black bg-ni-white text-ni-black font-black hover:bg-ni-black hover:text-ni-white shadow-[8px_8px_0px_0px_#000000] hover:shadow-none hover:translate-x-1 transition-all font-mono uppercase">
+                  &gt; Initialize Submission
+                </button>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* CTA Section */}
-      <div className="mt-32 relative max-w-4xl mx-auto">
-        <div className="bg-ni-pink border-4 border-ni-black shadow-brutal-lg">
-          <WindowHeader title="SUBMISSION_FORM.EXE" color="bg-ni-black" />
-          <div className="p-6 sm:p-8 md:p-12 text-center relative">
-            <Binary className="absolute inset-0 text-ni-black opacity-10" />
-
-            <div className="relative z-10">
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black uppercase mb-4 sm:mb-6 font-mono">
-                Ready to Deploy?
-              </h2>
-              <p className="text-sm sm:text-xl font-bold mb-6 sm:mb-8 font-mono bg-ni-white inline-block px-3 sm:px-4 py-2 border-2 border-ni-black">
-                Submit your project for code review and showcase.
-              </p>
-
-              <button className="text-base sm:text-xl px-6 sm:px-10 py-3 sm:py-4 border-4 border-ni-black bg-ni-white text-ni-black font-black hover:bg-ni-black hover:text-ni-white shadow-[8px_8px_0px_0px_#000000] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all font-mono uppercase">
-                &gt; Initialize Submission
-              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

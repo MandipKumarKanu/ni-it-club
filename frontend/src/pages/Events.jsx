@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Dots, Zigzag, WavyLine } from "../components/ui/Doodles";
 import { events } from "../data/mockData";
+import SEO from "../components/SEO";
 
 const Events = () => {
   const [filter, setFilter] = useState("All");
@@ -73,10 +74,17 @@ const Events = () => {
   const getTypeConfig = (type) => typeConfig[type] || typeConfig["Workshop"];
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-ni-white">
-      {/* Subtle Background Decorations */}
-      <Dots className="absolute top-20 right-10 w-32 h-32 text-ni-black opacity-5" />
-      <Dots className="absolute bottom-40 left-10 w-32 h-32 text-ni-black opacity-5" />
+    <>
+      <SEO
+        title="Events"
+        description="Discover upcoming workshops, hackathons, tech talks, and study groups at NI IT Club. Level up your skills with our exciting events."
+        keywords="tech events, workshops, hackathons, tech talks, coding events, NI IT Club events"
+        url="/events"
+      />
+      <div className="min-h-screen relative overflow-hidden bg-ni-white">
+        {/* Subtle Background Decorations */}
+        <Dots className="absolute top-20 right-10 w-32 h-32 text-ni-black opacity-5" />
+        <Dots className="absolute bottom-40 left-10 w-32 h-32 text-ni-black opacity-5" />
 
       {/* Hero Section - Split Panel */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-10">
@@ -444,7 +452,8 @@ const Events = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

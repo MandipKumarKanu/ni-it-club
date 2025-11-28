@@ -11,6 +11,7 @@ import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Showcase from "./pages/Showcase";
 import Contact from "./pages/Contact";
+import NotFound from "./pages/NotFound";
 import useResetScrollPosition from "./components/hook/useResetScrollPosition";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/showcase" element={<Showcase />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
   );

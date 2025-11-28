@@ -9,6 +9,7 @@ import {
   Camera,
 } from "lucide-react";
 import { Star, Dots, CircleScribble } from "../components/ui/Doodles";
+import SEO from "../components/SEO";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -67,10 +68,17 @@ const Gallery = () => {
       : images.filter((img) => img.category === category);
 
   return (
-    <div className="min-h-screen relative overflow-hidden ">
-      {/* Subtle Background */}
-      <Dots className="absolute top-20 right-10 w-32 h-32 text-ni-black opacity-5" />
-      <Dots className="absolute bottom-40 left-10 w-32 h-32 text-ni-black opacity-5" />
+    <>
+      <SEO
+        title="Gallery"
+        description="Browse through memorable moments from NI IT Club events - hackathons, workshops, social meetups, and more."
+        keywords="NI IT Club gallery, event photos, hackathon photos, workshop images, tech community"
+        url="/gallery"
+      />
+      <div className="min-h-screen relative overflow-hidden ">
+        {/* Subtle Background */}
+        <Dots className="absolute top-20 right-10 w-32 h-32 text-ni-black opacity-5" />
+        <Dots className="absolute bottom-40 left-10 w-32 h-32 text-ni-black opacity-5" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 relative z-10">
         {/* Hero Section */}
@@ -206,7 +214,8 @@ const Gallery = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
