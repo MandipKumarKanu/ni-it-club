@@ -24,6 +24,7 @@ app.use(
       process.env.CLIENT_URL,
       "https://ni-itclub.web.app",
       "https://ni-it-club-c6lq.vercel.app",
+      "https://ni-it-club-admin.vercel.app"
     ],
     credentials: true,
   })
