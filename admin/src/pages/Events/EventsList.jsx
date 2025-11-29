@@ -7,10 +7,12 @@ import Modal from "../../components/ui/Modal";
 import EventForm from "./EventForm";
 import EventDetails from "./EventDetails";
 import toast from "react-hot-toast";
+import Loader from "../../components/ui/Loader";
 import { format } from "date-fns";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -22,6 +24,7 @@ const EventsList = () => {
 
   const fetchEvents = async () => {
     try {
+      setLoading(true);
       const { data } = await api.get("/events");
       // Handle both paginated (data.docs) and non-paginated (data) responses
       const eventsData = Array.isArray(data) ? data : data.docs || [];
@@ -30,6 +33,8 @@ const EventsList = () => {
       console.error("Failed to fetch events:", error);
       toast.error("Failed to fetch events");
       setEvents([]); // Set empty array on error
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,7 +79,9 @@ const EventsList = () => {
         </Button>
       </div>
 
-      {events.length === 0 ? (
+      {loading ? (
+        <Loader />
+      ) : events.length === 0 ? (
         <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
           <p className="text-gray-500 text-lg mb-4">No events found</p>
           <Button

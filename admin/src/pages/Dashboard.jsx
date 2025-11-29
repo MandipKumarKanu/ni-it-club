@@ -27,6 +27,12 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       <h1 className="text-4xl font-bold">Dashboard</h1>
+      
+      <Card title="Welcome to the Admin Panel">
+        <p className="text-lg">
+          Use the sidebar to manage content for the NI-IT Club website.
+        </p>
+      </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="bg-ni-neon">
@@ -108,12 +114,6 @@ const Dashboard = () => {
           )}
         </Card>
       </div>
-
-      <Card title="Welcome to the Admin Panel">
-        <p className="text-lg">
-          Use the sidebar to manage content for the NI-IT Club website.
-        </p>
-      </Card>
     </div>
   );
 };

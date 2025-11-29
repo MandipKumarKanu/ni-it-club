@@ -58,14 +58,7 @@ const ProjectDetails = ({ projectId, onClose }) => {
 
   return (
     <div className="space-y-6 relative">
-      <button
-        onClick={onClose}
-        className="absolute -top-2 -right-2 bg-black text-white p-2 rounded-full hover:bg-ni-neon hover:text-black transition-colors z-10"
-      >
-        <X size={20} />
-      </button>
-
-      <div className="border-b-2 border-black pb-4 pr-10">
+      <div className="sticky top-0 bg-white z-20 border-b-2 border-black pb-4 pr-10">
         <h2 className="text-3xl font-bold">{project.name}</h2>
         <div className="flex flex-wrap gap-2 mt-2">
           {project.techstack?.map((tech, index) => (
@@ -82,10 +75,10 @@ const ProjectDetails = ({ projectId, onClose }) => {
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <div className="border-2 border-black shadow-brutal overflow-hidden mb-6">
-            <img
+            <ImageWithLoader
               src={project.image?.url || project.image}
               alt={project.name}
-              className="w-full h-64 object-cover"
+              className="w-full h-64"
             />
           </div>
 

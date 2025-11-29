@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import Button from "../ui/Button";
 import {
@@ -10,35 +9,15 @@ import {
   Star,
   Arrow,
 } from "../ui/Doodles";
-// import niitLogo from "../../assets/niit-c.png";
-import api from "../../services/api";
 
-const Hero = () => {
-  const [heroData, setHeroData] = useState({
-    title1: "Welcome to",
-    title2: "NI IT Club",
-    subtitle: "Where Innovation Meets Community.",
-  });
+const Hero = ({ data, logo }) => {
+  const heroData = {
+    title1: data?.title1 || "Welcome to",
+    title2: data?.title2 || "NI IT Club",
+    subtitle: data?.subtitle || "Where Innovation Meets Community.",
+  };
 
-  useEffect(() => {
-    const fetchHeroData = async () => {
-      try {
-        const { data } = await api.get("/home");
-        if (data.hero) {
-          setHeroData({
-            title1: data.hero.title1 || "Welcome to",
-            title2: data.hero.title2 || "NI IT Club",
-            subtitle: data.hero.subtitle || "Where Innovation Meets Community.",
-          });
-        }
-      } catch (error) {
-        console.error("Failed to fetch hero data, using defaults", error);
-        // Fallback data is already set in initial state
-      }
-    };
-
-    fetchHeroData();
-  }, []);
+  const logoUrl = logo?.url || "/niit-c.png";
 
   return (
     <section className="relative  border-b-4 border-ni-black py-24 lg:py overflow-hidden">
@@ -93,7 +72,7 @@ const Hero = () => {
 
         <div className="flex-1 flex justify-center items-center">
           <img
-            src="/niit-c.png"
+            src={logoUrl}
             alt="NI IT Club Logo"
             className="max-w-10/12 h-auto"
           />

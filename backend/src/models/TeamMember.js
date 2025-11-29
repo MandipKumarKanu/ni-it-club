@@ -35,6 +35,10 @@ const teamMemberSchema = new mongoose.Schema(
         type: String,
       },
     ],
+    specializedIn: {
+      type: String,
+      default: "",
+    },
     description: [
       {
         type: String,

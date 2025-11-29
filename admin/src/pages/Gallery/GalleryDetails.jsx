@@ -52,14 +52,7 @@ const GalleryDetails = ({ galleryId, onClose }) => {
 
   return (
     <div className="space-y-6 relative">
-      {/* <button
-        onClick={onClose}
-        className="absolute -top-2 -right-2 bg-black text-white p-2 rounded-full hover:bg-ni-neon hover:text-black transition-colors z-10"
-      >
-        <X size={20} />
-      </button> */}
-
-      <div className="border-b-2 border-black pb-4 pr-10">
+      <div className="sticky top-0 bg-white z-20 border-b-2 border-black pb-4 pr-10">
         <h2 className="text-3xl font-bold">{gallery.title}</h2>
         <div className="flex items-center gap-4 mt-2">
           <span className="text-gray-600 font-bold">

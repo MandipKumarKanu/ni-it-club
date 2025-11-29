@@ -6,25 +6,16 @@ import {
   Mail,
   Facebook,
   Instagram,
+  Youtube,
+  Globe,
+  Send,
+  MessageCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import api from "../../services/api";
-// import api from "../services/api";
+import useSettingsStore from "../../store/useSettingsStore";
 
 const Footer = () => {
-  const [settings, setSettings] = useState(null);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const { data } = await api.get("/settings");
-        setSettings(data);
-      } catch (error) {
-        console.error("Failed to fetch settings", error);
-      }
-    };
-    fetchSettings();
-  }, []);
+  const { settings } = useSettingsStore();
 
   const socialIcons = {
     github: Github,
@@ -32,7 +23,12 @@ const Footer = () => {
     linkedin: Linkedin,
     facebook: Facebook,
     instagram: Instagram,
-    mail: Mail,
+    youtube: Youtube,
+    website: Globe,
+    telegram: Send,
+    whatsapp: MessageCircle,
+    discord: MessageCircle, // Fallback
+    email: Mail,
   };
 
   // Default social links if none provided
@@ -44,7 +40,9 @@ const Footer = () => {
   ];
 
   const socials =
-    settings?.socialLinks?.length > 0 ? settings.socialLinks : defaultSocials;
+    settings?.socialLinks?.length > 0
+      ? settings.socialLinks.filter((link) => link.isActive && link.url)
+      : defaultSocials;
 
   return (
     <footer className="bg-ni-black text-ni-white border-t-4 border-ni-neon py-12 mt-auto">

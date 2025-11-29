@@ -8,8 +8,11 @@ import ProjectForm from "./ProjectForm";
 import ProjectDetails from "./ProjectDetails";
 import toast from "react-hot-toast";
 
+import Loader from "../../components/ui/Loader";
+
 const ProjectsList = () => {
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
@@ -21,6 +24,7 @@ const ProjectsList = () => {
 
   const fetchProjects = async () => {
     try {
+      setLoading(true);
       const { data } = await api.get("/projects");
       // Handle both paginated (data.docs) and non-paginated (data) responses
       const projectsData = Array.isArray(data) ? data : data.docs || [];
@@ -29,6 +33,8 @@ const ProjectsList = () => {
       console.error("Failed to fetch projects:", error);
       toast.error("Failed to fetch projects");
       setProjects([]); // Set empty array on error
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,7 +79,9 @@ const ProjectsList = () => {
         </Button>
       </div>
 
-      {projects.length === 0 ? (
+      {loading ? (
+        <Loader />
+      ) : projects.length === 0 ? (
         <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
           <p className="text-gray-500 text-lg mb-4">No projects found</p>
           <Button

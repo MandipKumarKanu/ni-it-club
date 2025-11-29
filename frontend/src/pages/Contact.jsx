@@ -8,6 +8,9 @@ import {
   Linkedin,
   Facebook,
   Instagram,
+  Twitter,
+  Youtube,
+  Globe,
   MessageCircle,
   Clock,
   ChevronDown,
@@ -37,7 +40,7 @@ import {
   CurlyBrace,
 } from "../components/ui/Doodles";
 
-import api from "../services/api";
+import useSettingsStore from "../store/useSettingsStore";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -53,19 +56,7 @@ const Contact = () => {
   const [activeTab, setActiveTab] = useState("general");
   const [openFaq, setOpenFaq] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [settings, setSettings] = useState(null);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const { data } = await api.get("/settings");
-        setSettings(data);
-      } catch (error) {
-        console.error("Failed to fetch settings", error);
-      }
-    };
-    fetchSettings();
-  }, []);
+  const { settings } = useSettingsStore();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -141,66 +132,109 @@ const Contact = () => {
     },
   ];
 
-  const socialLinks = [
-    {
+  const socialConfig = {
+    github: {
       icon: Github,
-      label: "GitHub",
-      href: "https://github.com/ni-it-club",
       bgColor: "bg-[#333]",
       hoverBg: "hover:bg-[#24292e]",
     },
-    {
+    linkedin: {
       icon: Linkedin,
-      label: "LinkedIn",
-      href: "#",
       bgColor: "bg-[#0077B5]",
       hoverBg: "hover:bg-[#005885]",
     },
-    {
+    facebook: {
       icon: Facebook,
-      label: "Facebook",
-      href: "#",
       bgColor: "bg-[#1877F2]",
       hoverBg: "hover:bg-[#0d5bbd]",
     },
-    {
+    instagram: {
       icon: Instagram,
-      label: "Instagram",
-      href: "#",
       bgColor: "bg-gradient-to-br from-[#f09433] via-[#e6683c] to-[#dc2743]",
       hoverBg: "hover:opacity-90",
     },
-  ];
+    twitter: {
+      icon: Twitter,
+      bgColor: "bg-[#1DA1F2]",
+      hoverBg: "hover:bg-[#0c85d0]",
+    },
+    youtube: {
+      icon: Youtube,
+      bgColor: "bg-[#FF0000]",
+      hoverBg: "hover:bg-[#cc0000]",
+    },
+    discord: {
+      icon: MessageCircle, // Fallback
+      bgColor: "bg-[#5865F2]",
+      hoverBg: "hover:bg-[#4752c4]",
+    },
+    telegram: {
+      icon: Send,
+      bgColor: "bg-[#0088cc]",
+      hoverBg: "hover:bg-[#0077b5]",
+    },
+    whatsapp: {
+      icon: MessageCircle,
+      bgColor: "bg-[#25D366]",
+      hoverBg: "hover:bg-[#128c7e]",
+    },
+    website: {
+      icon: Globe,
+      bgColor: "bg-ni-black",
+      hoverBg: "hover:bg-gray-800",
+    },
+    email: {
+      icon: Mail,
+      bgColor: "bg-ni-neon",
+      hoverBg: "hover:bg-yellow-500",
+    },
+  };
+
+  const socialLinks =
+    settings?.socialLinks
+      ?.filter((link) => link.isActive && link.url)
+      .map((link) => {
+        const config = socialConfig[link.platform.toLowerCase()] || {
+          icon: Globe,
+          bgColor: "bg-gray-500",
+          hoverBg: "hover:bg-gray-600",
+        };
+        return {
+          ...config,
+          label: link.platform.charAt(0).toUpperCase() + link.platform.slice(1),
+          href: link.url,
+        };
+      }) || [];
 
   const contactMethods = [
-    {
+    settings?.contactEmail && {
       icon: Mail,
       title: "Email Us",
-      value: settings?.contactEmail || "contact@niitclub.com",
+      value: settings.contactEmail,
       subtitle: "We reply within 24 hours",
-      href: `mailto:${settings?.contactEmail || "contact@niitclub.com"}`,
+      href: `mailto:${settings.contactEmail}`,
       gradient: "from-ni-cyan to-ni-blue",
       iconBg: "bg-ni-cyan",
     },
-    {
+    settings?.address && {
       icon: MapPin,
       title: "Visit Us",
-      value: settings?.address || "National Infotech College",
+      value: settings.address,
       subtitle: "Birgunj, Nepal",
       href: "https://maps.app.goo.gl/i78sAWgpooFtQAA99",
       gradient: "from-ni-pink to-purple-500",
       iconBg: "bg-ni-pink",
     },
-    {
+    settings?.contactPhone && {
       icon: Phone,
       title: "Call Us",
-      value: settings?.contactPhone || "+977 980-000-0000",
+      value: settings.contactPhone,
       subtitle: "Sun-Fri, 10AM-5PM",
-      href: `tel:${settings?.contactPhone || "+977980000000"}`,
+      href: `tel:${settings.contactPhone}`,
       gradient: "from-ni-neon to-yellow-500",
       iconBg: "bg-ni-neon",
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <div className="relative overflow-hidden bg-ni-white">

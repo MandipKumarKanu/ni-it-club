@@ -81,114 +81,124 @@ const ProjectForm = ({ project, onSuccess }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <Input
-        label="Project Name"
-        {...register("name", { required: "Name is required" })}
-        error={errors.name}
-      />
-
-      <div className="flex flex-col gap-1">
-        <label className="font-bold text-sm">Details</label>
-        <textarea
-          className="p-2 border-brutal focus:outline-none focus:ring-2 focus:ring-ni-neon"
-          rows="3"
-          {...register("details", { required: "Details are required" })}
-        ></textarea>
+      {/* Sticky Header */}
+      <div className="sticky top-0 bg-white z-20 border-b-2 border-black pb-4 mb-4 flex justify-between items-center">
+        <h2 className="text-2xl font-bold">
+          {project ? "Edit Project" : "Create New Project"}
+        </h2>
+        <Button type="submit" disabled={isLoading} className="w-auto px-6">
+          {isLoading
+            ? "Saving..."
+            : project
+            ? "Update Project"
+            : "Create Project"}
+        </Button>
       </div>
 
-      <Input
-        label="Tech Stack (comma separated)"
-        placeholder="React, Node.js, MongoDB"
-        {...register("techstack", { required: "Tech stack is required" })}
-        error={errors.techstack}
-      />
-
-      <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-4 px-1">
         <Input
-          label="GitHub URL"
-          {...register("github", { required: "GitHub URL is required" })}
-          error={errors.github}
-        />
-        <Input
-          label="Live Link (Optional)"
-          {...register("link")}
-          error={errors.link}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Input
-          label="Project Image"
-          type="file"
-          accept="image/*"
-          {...register("image", { required: !project && "Image is required" })}
-          error={errors.image}
-        />
-        {project?.image && (
-          <div className="mt-2">
-            <p className="text-sm font-bold mb-1">Current Image:</p>
-            <img
-              src={project.image?.url || project.image}
-              alt="Current Project"
-              className="w-32 h-20 object-cover border-2 border-black"
-            />
-          </div>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Input
-          label="Screenshots (Max 5)"
-          type="file"
-          accept="image/*"
-          multiple
-          {...register("screenshots")}
-          error={errors.screenshots}
+          label="Project Name"
+          {...register("name", { required: "Name is required" })}
+          error={errors.name}
         />
 
-        {existingScreenshots.length > 0 && (
-          <div className="mt-4 p-4 border-2 border-black bg-gray-50">
-            <p className="font-bold mb-3 flex items-center gap-2">
-              Existing Screenshots{" "}
-              <span className="bg-ni-neon px-2 text-xs border border-black">
-                {existingScreenshots.length}
-              </span>
-            </p>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-              {existingScreenshots.map((img) => (
-                <div
-                  key={img._id}
-                  className="relative group border-2 border-black shadow-sm bg-white"
-                >
-                  <div className="aspect-video overflow-hidden">
-                    <img
-                      src={img.thumb || img.url}
-                      alt="Screenshot"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteScreenshot(img._id)}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white p-1.5 rounded-full border-2 border-black shadow-sm hover:bg-red-600 hover:scale-110 transition-all z-10"
-                    title="Remove screenshot"
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              ))}
+        <div className="flex flex-col gap-1">
+          <label className="font-bold text-sm">Details</label>
+          <textarea
+            className="p-2 border-brutal focus:outline-none focus:ring-2 focus:ring-ni-neon"
+            rows="3"
+            {...register("details", { required: "Details are required" })}
+          ></textarea>
+        </div>
+
+        <Input
+          label="Tech Stack (comma separated)"
+          placeholder="React, Node.js, MongoDB"
+          {...register("techstack", { required: "Tech stack is required" })}
+          error={errors.techstack}
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="GitHub URL"
+            {...register("github", { required: "GitHub URL is required" })}
+            error={errors.github}
+          />
+          <Input
+            label="Live Link (Optional)"
+            {...register("link")}
+            error={errors.link}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Input
+            label="Project Image"
+            type="file"
+            accept="image/*"
+            {...register("image", {
+              required: !project && "Image is required",
+            })}
+            error={errors.image}
+          />
+          {project?.image && (
+            <div className="mt-2">
+              <p className="text-sm font-bold mb-1">Current Image:</p>
+              <img
+                src={project.image?.url || project.image}
+                alt="Current Project"
+                className="w-32 h-20 object-cover border-2 border-black"
+              />
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading
-          ? "Saving..."
-          : project
-          ? "Update Project"
-          : "Create Project"}
-      </Button>
+        <div className="space-y-2">
+          <Input
+            label="Screenshots (Max 5)"
+            type="file"
+            accept="image/*"
+            multiple
+            {...register("screenshots")}
+            error={errors.screenshots}
+          />
+
+          {existingScreenshots.length > 0 && (
+            <div className="mt-4 p-4 border-2 border-black bg-gray-50">
+              <p className="font-bold mb-3 flex items-center gap-2">
+                Existing Screenshots{" "}
+                <span className="bg-ni-neon px-2 text-xs border border-black">
+                  {existingScreenshots.length}
+                </span>
+              </p>
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                {existingScreenshots.map((img) => (
+                  <div
+                    key={img._id}
+                    className="relative group border-2 border-black shadow-sm bg-white"
+                  >
+                    <div className="aspect-video overflow-hidden">
+                      <img
+                        src={img.thumb || img.url}
+                        alt="Screenshot"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteScreenshot(img._id)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white p-1.5 rounded-full border-2 border-black shadow-sm hover:bg-red-600 hover:scale-110 transition-all z-10"
+                      title="Remove screenshot"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </form>
   );
 };

@@ -14,13 +14,16 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import useResetScrollPosition from "./components/hook/useResetScrollPosition";
 
+import useSettingsStore from "./store/useSettingsStore";
+
 function App() {
   const location = useLocation();
   useResetScrollPosition(location);
+  const { fetchSettings } = useSettingsStore();
 
   useEffect(() => {
-    console.log("Hello!!!");
-  }, []);
+    fetchSettings();
+  }, [fetchSettings]);
 
   return (
     <Layout>

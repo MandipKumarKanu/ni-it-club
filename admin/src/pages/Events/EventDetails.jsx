@@ -34,14 +34,7 @@ const EventDetails = ({ eventId, onClose }) => {
 
   return (
     <div className="space-y-6 relative">
-      <button
-        onClick={onClose}
-        className="absolute -top-2 -right-2 bg-black text-white p-2 rounded-full hover:bg-ni-neon hover:text-black transition-colors z-10"
-      >
-        <X size={20} />
-      </button>
-
-      <div className="border-b-2 border-black pb-4 pr-10">
+      <div className="sticky top-0 bg-white z-20 border-b-2 border-black pb-4 pr-10">
         <h2 className="text-3xl font-bold">{event.name}</h2>
         <div className="flex flex-wrap items-center gap-3 mt-2">
           <span className="bg-ni-neon px-3 py-1 text-sm font-bold border border-black shadow-[2px_2px_0px_0px_#000]">

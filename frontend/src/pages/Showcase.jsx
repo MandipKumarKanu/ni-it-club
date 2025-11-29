@@ -7,6 +7,8 @@ import {
   Minus,
   Square,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Button from "../components/ui/Button";
 import {
@@ -23,11 +25,13 @@ import {
 } from "../components/ui/Doodles";
 import api from "../services/api";
 import SEO from "../components/SEO";
+import ProjectModal from "../components/ui/ProjectModal";
 
 const WindowHeader = ({
   title,
   color = "bg-ni-black",
   textColor = "text-ni-white",
+  onMaximize,
 }) => (
   <div
     className={`${color} ${textColor} border-b-4 border-ni-black p-2 sm:p-3 flex justify-between items-center gap-2`}
@@ -41,7 +45,10 @@ const WindowHeader = ({
         <Minus size={12} className="sm:block hidden" />
         <Minus size={10} className="sm:hidden" />
       </div>
-      <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-ni-black bg-ni-white flex items-center justify-center hover:bg-ni-gray-200 cursor-pointer">
+      <div
+        className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-ni-black bg-ni-white flex items-center justify-center hover:bg-ni-gray-200 cursor-pointer"
+        onClick={onMaximize}
+      >
         <Square size={10} className="sm:block hidden" />
         <Square size={8} className="sm:hidden" />
       </div>
@@ -56,23 +63,32 @@ const WindowHeader = ({
 const Showcase = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const { data } = await api.get("/projects");
-        setProjects(data);
-      } catch (error) {
-        console.error("Failed to fetch projects", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProjects();
-  }, []);
+  }, [page]);
 
-  if (loading) {
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/projects?page=${page}&limit=9`);
+      if (data.docs) {
+        setProjects(data.docs);
+        setTotalPages(data.totalPages);
+      } else {
+        setProjects(data); // Fallback if not paginated
+      }
+    } catch (error) {
+      console.error("Failed to fetch projects", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading && page === 1) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-ni-white">
         <div className="text-2xl font-black uppercase animate-pulse">
@@ -136,12 +152,16 @@ const Showcase = () => {
                   title={`PROJ_0${index + 1}.js`}
                   color={index % 2 === 0 ? "bg-ni-neon" : "bg-ni-cyan"}
                   textColor="text-ni-black"
+                  onMaximize={() => setSelectedProject(project)}
                 />
 
-                <div className="relative border-b-4 border-ni-black overflow-hidden h-56 group-hover:h-64 transition-all duration-300">
+                <div
+                  className="relative border-b-4 border-ni-black overflow-hidden h-56 group-hover:h-64 transition-all duration-300 cursor-pointer"
+                  onClick={() => setSelectedProject(project)}
+                >
                   <div className="absolute inset-0 bg-ni-black opacity-0 group-hover:opacity-20 transition-opacity z-10"></div>
                   <img
-                    src={project.image}
+                    src={project.image?.url || project.image}
                     alt={project.name}
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                   />
@@ -151,7 +171,7 @@ const Showcase = () => {
                   <h3 className="text-xl sm:text-2xl font-black uppercase mb-3 font-mono">
                     {project.name}
                   </h3>
-                  <p className="font-bold mb-6 grow text-ni-gray-800 font-mono text-sm leading-relaxed">
+                  <p className="font-bold mb-6 grow text-ni-gray-800 font-mono text-sm leading-relaxed line-clamp-3">
                     // {project.shortDescription}
                   </p>
 
@@ -194,6 +214,29 @@ const Showcase = () => {
           ))}
         </div>
 
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-12 flex justify-center gap-4">
+            <Button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft size={20} /> Previous
+            </Button>
+            <div className="flex items-center font-mono font-bold bg-ni-white border-2 border-ni-black px-4">
+              Page {page} of {totalPages}
+            </div>
+            <Button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="flex items-center gap-2"
+            >
+              Next <ChevronRight size={20} />
+            </Button>
+          </div>
+        )}
+
         {/* CTA Section */}
         <div className="mt-32 relative max-w-4xl mx-auto">
           <div className="bg-ni-pink border-4 border-ni-black shadow-brutal-lg">
@@ -217,6 +260,11 @@ const Showcase = () => {
           </div>
         </div>
       </div>
+
+      <ProjectModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </>
   );
 };

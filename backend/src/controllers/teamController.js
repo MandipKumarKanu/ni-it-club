@@ -97,6 +97,7 @@ const createTeamMember = async (req, res) => {
       jobType,
       bio,
       skills,
+      specializedIn,
       description,
       email,
       position,
@@ -120,6 +121,7 @@ const createTeamMember = async (req, res) => {
       jobType: jobType || "Other",
       bio: bio || "",
       skills: parseArrayField(skills),
+      specializedIn: specializedIn || "",
       description: parseArrayField(description),
       email,
       position: position ? parseInt(position) : 0,
@@ -152,6 +154,7 @@ const updateTeamMember = async (req, res) => {
       jobType,
       bio,
       skills,
+      specializedIn,
       description,
       email,
       position,
@@ -179,6 +182,9 @@ const updateTeamMember = async (req, res) => {
       }
       if (skills !== undefined) {
         member.skills = parseArrayField(skills);
+      }
+      if (specializedIn !== undefined) {
+        member.specializedIn = specializedIn;
       }
       if (description !== undefined) {
         member.description = parseArrayField(description);

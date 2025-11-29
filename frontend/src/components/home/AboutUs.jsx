@@ -1,40 +1,16 @@
-import React, { useState, useEffect } from "react";
 import Card from "../ui/Card";
 import { CircleScribble, Dots } from "../ui/Doodles";
-import api from "../../services/api";
 
-const AboutUs = () => {
-  const [aboutData, setAboutData] = useState({
-    title: "About Us",
+const AboutUs = ({ data }) => {
+  const aboutData = {
+    title: data?.title || "About Us",
     description:
+      data?.description ||
       "NI IT Club is the premier student organization dedicated to fostering a culture of technical excellence and innovation. We bridge the gap between academic learning and industry requirements through hands-on workshops, hackathons, and collaborative projects.",
     description2:
+      data?.description2 ||
       "Our mission is to empower every student with the tools and community they need to succeed in the tech world.",
-  });
-
-  useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const { data } = await api.get("/home");
-        if (data.about) {
-          setAboutData({
-            title: data.about.title || "About Us",
-            description:
-              data.about.description ||
-              "NI IT Club is the premier student organization dedicated to fostering a culture of technical excellence and innovation.",
-            description2:
-              data.about.description2 ||
-              "Our mission is to empower every student with the tools and community they need to succeed in the tech world.",
-          });
-        }
-      } catch (error) {
-        console.error("Failed to fetch about data, using defaults", error);
-        // Fallback data is already set in initial state
-      }
-    };
-
-    fetchAboutData();
-  }, []);
+  };
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">

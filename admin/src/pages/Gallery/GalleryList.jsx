@@ -7,10 +7,12 @@ import Modal from "../../components/ui/Modal";
 import GalleryForm from "./GalleryForm";
 import GalleryDetails from "./GalleryDetails";
 import toast from "react-hot-toast";
+import Loader from "../../components/ui/Loader";
 import { format } from "date-fns";
 
 const GalleryList = () => {
   const [galleries, setGalleries] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [editingGallery, setEditingGallery] = useState(null);
@@ -22,6 +24,7 @@ const GalleryList = () => {
 
   const fetchGalleries = async () => {
     try {
+      setLoading(true);
       const { data } = await api.get("/gallery");
       // Handle both paginated (data.docs) and non-paginated (data) responses
       const galleriesData = Array.isArray(data) ? data : data.docs || [];
@@ -30,6 +33,8 @@ const GalleryList = () => {
       console.error("Failed to fetch galleries:", error);
       toast.error("Failed to fetch galleries");
       setGalleries([]); // Set empty array on error
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,7 +79,9 @@ const GalleryList = () => {
         </Button>
       </div>
 
-      {galleries.length === 0 ? (
+      {loading ? (
+        <Loader />
+      ) : galleries.length === 0 ? (
         <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
           <p className="text-gray-500 text-lg mb-4">No galleries found</p>
           <Button

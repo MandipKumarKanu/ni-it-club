@@ -1,29 +1,14 @@
-import React, { useState, useEffect } from "react";
 import { Github, Linkedin, Twitter, Instagram } from "lucide-react";
 import Button from "../ui/Button";
 import Card from "../ui/Card";
 import { AngleBracket } from "../ui/Doodles";
-import api from "../../services/api";
 
-const Team = () => {
-  const [teamMembers, setTeamMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Team = ({ data }) => {
+  const teamMembers = data || [];
 
-  useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        const { data } = await api.get("/team");
-        setTeamMembers(data);
-      } catch (error) {
-        console.error("Failed to fetch team members", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTeam();
-  }, []);
-
-  if (loading) return <div className="text-center py-20">Loading Team...</div>;
+  if (!teamMembers || teamMembers.length === 0) {
+    return null; // Don't render if no team members
+  }
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,7 +44,7 @@ const Team = () => {
               </h3>
 
               {/* Roles */}
-              <div className="flex flex-wrap justify-center gap-1 mb-4">
+              <div className="flex flex-wrap justify-center gap-1 mb-2">
                 {Array.isArray(member.role) ? (
                   member.role.map((r, idx) => (
                     <span
@@ -77,17 +62,28 @@ const Team = () => {
                 )}
               </div>
 
+              {/* Specialized In */}
+              {/* {member.specializedIn && (
+                <div className="text-xs text-gray-600 mb-4 italic">
+                  {member.specializedIn}
+                </div>
+              )} */}
+
               {/* Skills/Description Tags */}
               <div className="flex flex-wrap justify-center gap-2 mb-6 border-t-4 border-ni-black pt-4 w-full">
-                {member.skills &&
-                  member.skills.map((skill, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-ni-black text-ni-white px-3 py-1 text-sm font-bold uppercase"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                {member.specializedIn &&
+                  member.specializedIn
+                    .split(",")
+                    .map((skill) => skill.trim())
+                    .filter((skill) => skill)
+                    .map((skill, idx) => (
+                      <span
+                        key={idx}
+                        className="bg-ni-black text-ni-white px-3 py-1 text-sm font-bold uppercase"
+                      >
+                        {skill}
+                      </span>
+                    ))}
               </div>
 
               <div className="flex gap-4 mt-auto">

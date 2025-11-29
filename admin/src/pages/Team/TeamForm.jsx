@@ -34,6 +34,8 @@ const TeamForm = ({ member, onSuccess }) => {
 
     formData.append("name", data.name);
     formData.append("role", data.role);
+    if (data.specializedIn)
+      formData.append("specializedIn", data.specializedIn);
     if (data.linkedin) formData.append("linkedin", data.linkedin);
     if (data.github) formData.append("github", data.github);
     if (data.twitter) formData.append("twitter", data.twitter);
@@ -61,67 +63,82 @@ const TeamForm = ({ member, onSuccess }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <Input
-        label="Name"
-        {...register("name", { required: "Name is required" })}
-        error={errors.name}
-      />
-
-      <Input
-        label="Role (comma separated)"
-        {...register("role", { required: "Role is required" })}
-        error={errors.role}
-      />
-
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          label="LinkedIn URL"
-          {...register("linkedin")}
-          error={errors.linkedin}
-        />
-        <Input
-          label="GitHub URL"
-          {...register("github")}
-          error={errors.github}
-        />
+      {/* Sticky Header */}
+      <div className="sticky top-0 bg-white z-20 border-b-2 border-black pb-4 mb-4 flex justify-between items-center">
+        <h2 className="text-2xl font-bold">
+          {member ? "Edit Member" : "Create New Member"}
+        </h2>
+        <Button type="submit" disabled={isLoading} className="w-auto px-6">
+          {isLoading ? "Saving..." : member ? "Update Member" : "Create Member"}
+        </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-4 px-1">
         <Input
-          label="Twitter URL"
-          {...register("twitter")}
-          error={errors.twitter}
+          label="Name"
+          {...register("name", { required: "Name is required" })}
+          error={errors.name}
         />
-        <Input
-          label="Instagram URL"
-          {...register("instagram")}
-          error={errors.instagram}
-        />
-      </div>
 
-      <div className="space-y-2">
         <Input
-          label="Profile Image"
-          type="file"
-          accept="image/*"
-          {...register("image", { required: !member && "Image is required" })}
-          error={errors.image}
+          label="Role (comma separated)"
+          {...register("role", { required: "Role is required" })}
+          error={errors.role}
         />
-        {member?.image && (
-          <div className="mt-2">
-            <p className="text-sm font-bold mb-1">Current Image:</p>
-            <img
-              src={member.image?.url || member.image}
-              alt="Current Member"
-              className="w-20 h-20 object-cover border-2 border-black rounded-full"
-            />
-          </div>
-        )}
-      </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Saving..." : member ? "Update Member" : "Create Member"}
-      </Button>
+        <Input
+          label="Specialized In (e.g., React, Node.js, UI/UX Design)"
+          placeholder="Enter specialization areas..."
+          {...register("specializedIn")}
+          error={errors.specializedIn}
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="LinkedIn URL"
+            {...register("linkedin")}
+            error={errors.linkedin}
+          />
+          <Input
+            label="GitHub URL"
+            {...register("github")}
+            error={errors.github}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="Twitter URL"
+            {...register("twitter")}
+            error={errors.twitter}
+          />
+          <Input
+            label="Instagram URL"
+            {...register("instagram")}
+            error={errors.instagram}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Input
+            label="Profile Image"
+            type="file"
+            accept="image/*"
+            {...register("image", { required: !member && "Image is required" })}
+            error={errors.image}
+          />
+          {member?.image && (
+            <div className="mt-2">
+              <p className="text-sm font-bold mb-1">Current Image:</p>
+              <img
+                src={member.image?.url || member.image}
+                alt="Current Member"
+                className="w-20 h-20 object-cover rounded-full border-2 border-black"
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </form>
   );
 };
