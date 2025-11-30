@@ -4,6 +4,9 @@ const {
   generateRefreshToken,
 } = require("../utils/generateToken");
 const jwt = require("jsonwebtoken");
+const sendEmail = require("../utils/emailService");
+const { getResetPasswordOTPTemplate } = require("../utils/emailTemplates");
+const crypto = require("crypto");
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -35,7 +38,6 @@ const registerUser = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
-
     });
 
     res.status(201).json({
@@ -70,7 +72,6 @@ const loginUser = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
-
     });
 
     res.json({
@@ -78,6 +79,8 @@ const loginUser = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      permissions: user.permissions,
+      isFirstLogin: user.isFirstLogin,
       accessToken,
     });
   } else {
@@ -149,6 +152,7 @@ const getCurrentUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        permissions: user.permissions,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       });
@@ -191,6 +195,92 @@ const updateCurrentUser = async (req, res) => {
   }
 };
 
+// @desc    Forgot Password
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Hash OTP and save to database
+    user.resetPasswordOtp = crypto
+      .createHash("sha256")
+      .update(otp)
+      .digest("hex");
+
+    // Set expire time (10 minutes)
+    user.resetPasswordOtpExpire = Date.now() + 10 * 60 * 1000;
+
+    await user.save();
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: "Password Reset OTP - NI-IT Club",
+        html: getResetPasswordOTPTemplate(otp, user.name),
+      });
+
+      console.log("Email sent successfully");
+      res.status(200).json({ message: "OTP sent to email" });
+    } catch (error) {
+      console.error("Email send error:", error);
+      user.resetPasswordOtp = undefined;
+      user.resetPasswordOtpExpire = undefined;
+      await user.save();
+
+      return res
+        .status(500)
+        .json({ message: "Email could not be sent", error: error.message });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Reset Password
+// @route   POST /api/auth/reset-password
+// @access  Public
+const resetPassword = async (req, res) => {
+  const { email, otp, password } = req.body;
+
+  try {
+    const resetPasswordOtp = crypto
+      .createHash("sha256")
+      .update(otp)
+      .digest("hex");
+
+    const user = await User.findOne({
+      email,
+      resetPasswordOtp,
+      resetPasswordOtpExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    user.password = password;
+    user.resetPasswordOtp = undefined;
+    user.resetPasswordOtpExpire = undefined;
+    user.isFirstLogin = false; // Resetting password also clears first login flag
+
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -198,4 +288,6 @@ module.exports = {
   refreshAccessToken,
   getCurrentUser,
   updateCurrentUser,
+  forgotPassword,
+  resetPassword,
 };

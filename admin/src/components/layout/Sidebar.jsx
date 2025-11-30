@@ -9,6 +9,7 @@ import {
   Mail,
   Settings as SettingsIcon,
   X,
+  Activity,
 } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import clsx from "clsx";
@@ -45,7 +46,13 @@ const Sidebar = ({ isOpen = false, onClose }) => {
     { to: "/projects", icon: Briefcase, label: "Projects", module: "projects" },
     { to: "/team", icon: Users, label: "Team", module: "team" },
     { to: "/contact", label: "Contact", icon: Mail, module: "contact" },
-    { to: "/users", label: "Users", icon: Users, module: "users" }, // Only super admin or specific permission? Let's add 'users' permission to schema/form if not there.
+    { to: "/users", label: "Users", icon: Users, module: "users" },
+    {
+      to: "/logs",
+      label: "Activity Logs",
+      icon: Activity,
+      module: "view_logs",
+    },
     {
       to: "/settings",
       label: "Settings",

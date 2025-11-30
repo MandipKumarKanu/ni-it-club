@@ -21,6 +21,7 @@ const UserForm = () => {
       contact: false,
       settings: false,
       users: false,
+      view_logs: false,
     },
   });
 
@@ -65,6 +66,7 @@ const UserForm = () => {
             contact: false,
             settings: false,
             users: false,
+            view_logs: false,
           },
         });
       }
@@ -185,9 +187,32 @@ const UserForm = () => {
         <input type="hidden" name="role" value="admin" />
 
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-4">
-            Permissions
-          </label>
+          <div className="flex justify-between items-center mb-4">
+            <label className="block text-gray-700 text-sm font-bold">
+              Permissions
+            </label>
+            <button
+              type="button"
+              onClick={() => {
+                const allChecked = Object.values(formData.permissions).every(
+                  Boolean
+                );
+                const newPermissions = {};
+                Object.keys(formData.permissions).forEach((key) => {
+                  newPermissions[key] = !allChecked;
+                });
+                setFormData((prev) => ({
+                  ...prev,
+                  permissions: newPermissions,
+                }));
+              }}
+              className="text-sm text-blue-600 hover:underline font-bold"
+            >
+              {Object.values(formData.permissions).every(Boolean)
+                ? "Deselect All"
+                : "Select All"}
+            </button>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {Object.keys(formData.permissions).map((perm) => (
               <label

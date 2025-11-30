@@ -1,22 +1,35 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import api from "../../services/api";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     setLoading(true);
     setError("");
     setMessage("");
 
     try {
-      await api.post("/auth/forgot-password", { email });
+      await api.post("/auth/forgot-password", { email: data.email });
       setMessage("OTP sent to your email. Please check your inbox.");
+
+      // Navigate to reset password page with email in state after 1.5 seconds
+      setTimeout(() => {
+        navigate("/reset-password", { state: { email: data.email } });
+      }, 1500);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to send OTP");
     } finally {
@@ -25,52 +38,43 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Forgot Password</h2>
+    <div className="min-h-screen flex items-center justify-center bg-ni-neon p-4">
+      <div className="bg-white border-brutal shadow-brutal-lg p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-6 text-center uppercase">
+          Forgot Password
+        </h1>
+
         {message ? (
-          <div className="text-center">
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <div className="text-center space-y-6">
+            <div className="bg-green-100 border-2 border-green-500 text-green-800 px-4 py-3 font-bold">
               {message}
             </div>
-            <Link
-              to={`/reset-password?email=${encodeURIComponent(email)}`}
-              className="text-blue-500 hover:text-blue-700 font-bold"
-            >
-              Proceed to Reset Password
-            </Link>
           </div>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              <div className="bg-red-100 border-2 border-red-500 text-red-800 px-4 py-3 font-bold">
                 {error}
               </div>
             )}
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            <button
+
+            <Input
+              label="Email Address"
+              type="email"
+              {...register("email", { required: "Email is required" })}
+              error={errors.email}
+            />
+
+            <Button
               type="submit"
+              className="w-full bg-black text-white hover:bg-gray-800"
               disabled={loading}
-              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
             >
               {loading ? "Sending OTP..." : "Send OTP"}
-            </button>
-            <div className="mt-4 text-center">
-              <Link
-                to="/login"
-                className="text-sm text-blue-500 hover:text-blue-700"
-              >
+            </Button>
+
+            <div className="text-center">
+              <Link to="/login" className="text-sm font-bold hover:underline">
                 Back to Login
               </Link>
             </div>

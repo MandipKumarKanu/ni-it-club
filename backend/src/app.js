@@ -10,7 +10,7 @@ const app = express();
 // Connect to Database
 // Note: In serverless (Vercel), connection is handled in api/index.js
 // For local development, uncomment the line below:
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   connectDB();
 }
 
@@ -24,7 +24,7 @@ app.use(
       process.env.CLIENT_URL,
       "https://ni-itclub.web.app",
       "https://ni-it-club-c6lq.vercel.app",
-      "https://ni-it-club-admin.vercel.app"
+      "https://ni-it-club-admin.vercel.app",
     ],
     credentials: true,
   })
@@ -35,6 +35,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/home", require("./routes/homeRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/gallery", require("./routes/galleryRoutes"));
 app.use("/api/projects", require("./routes/projectRoutes"));

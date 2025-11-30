@@ -23,7 +23,13 @@ const Login = () => {
       // Access store state to get the user that was just set
       const user = useAuthStore.getState().user;
       localStorage.setItem("niit_admin_user", JSON.stringify(user));
-      navigate("/");
+
+      // Check if first login - force password change
+      if (user?.isFirstLogin) {
+        navigate("/change-password");
+      } else {
+        navigate("/");
+      }
     }
   };
 

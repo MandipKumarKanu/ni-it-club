@@ -41,6 +41,7 @@ import {
 } from "../components/ui/Doodles";
 
 import useSettingsStore from "../store/useSettingsStore";
+import api from "../services/api";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -77,17 +78,33 @@ const Contact = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
     if (Object.keys(newErrors).length === 0) {
       setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
+      setErrors({}); // Clear previous errors
+
+      try {
+        await api.post("/contact", {
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          category: activeTab, // Send the selected tab/category
+        });
+
         setSuccessMessage(true);
         setFormData({ name: "", email: "", subject: "", message: "" });
         setTimeout(() => setSuccessMessage(false), 5000);
-      }, 2000);
+      } catch (err) {
+        console.error("Failed to send message:", err);
+        setErrors({
+          submit: err.response?.data?.message || "Failed to send message",
+        });
+      } finally {
+        setSubmitted(false);
+      }
     } else {
       setErrors(newErrors);
     }

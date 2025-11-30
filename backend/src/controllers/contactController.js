@@ -1,5 +1,9 @@
 const Contact = require("../models/Contact");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../utils/emailService");
+const {
+  getContactThankYouTemplate,
+  getContactNotificationTemplate,
+} = require("../utils/emailTemplates");
 
 // @desc    Send contact email and save to DB
 // @route   POST /api/contact
@@ -22,30 +26,32 @@ const sendContactEmail = async (req, res) => {
       status: "new",
     });
 
-    // Send email notification
-    const emailContent = `
-      <h3>New Contact Form Submission</h3>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Category:</strong> ${category || "general"}</p>
-      <p><strong>Subject:</strong> ${subject}</p>
-      <p><strong>Message:</strong></p>
-      <p>${message}</p>
-      <hr>
-      <p><small>Contact ID: ${contact._id}</small></p>
-    `;
-
+    // Send admin notification email
     await sendEmail({
-      email: process.env.CONTACT_EMAIL || process.env.BREVO_SMTP_USER,
-      subject: `[${(category || "general").toUpperCase()}] Contact Form: ${subject}`,
-      html: emailContent,
-      message: `Name: ${name}\nEmail: ${email}\nCategory: ${category}\nSubject: ${subject}\nMessage: ${message}`,
+      email: process.env.CONTACT_EMAIL || process.env.SMTP_USER,
+      subject: `[${(
+        category || "General"
+      ).toUpperCase()}] New Contact: ${subject}`,
+      html: getContactNotificationTemplate({
+        name,
+        email,
+        subject,
+        message,
+        category: category || "General",
+      }),
     });
 
-    res.status(201).json({ 
-      success: true, 
+    // Send thank you email to submitter
+    await sendEmail({
+      email: email,
+      subject: "Thanks for contacting NI-IT Club! 🚀",
+      html: getContactThankYouTemplate(name, subject, category || "General"),
+    });
+
+    res.status(201).json({
+      success: true,
       message: "Message sent successfully",
-      contactId: contact._id 
+      contactId: contact._id,
     });
   } catch (error) {
     console.error(error);
@@ -60,7 +66,7 @@ const getContacts = async (req, res) => {
   try {
     const { status, category, page = 1, limit = 20 } = req.query;
     const filter = {};
-    
+
     if (status) filter.status = status;
     if (category) filter.category = category;
 
@@ -91,8 +97,10 @@ const getContacts = async (req, res) => {
 // @access  Private/Admin
 const getContactById = async (req, res) => {
   try {
-    const contact = await Contact.findById(req.params.id)
-      .populate("repliedBy", "name email");
+    const contact = await Contact.findById(req.params.id).populate(
+      "repliedBy",
+      "name email"
+    );
 
     if (contact) {
       // Mark as read if new
@@ -147,7 +155,7 @@ const replyToContact = async (req, res) => {
       return res.status(400).json({ message: "Reply message is required" });
     }
 
-    // Send reply email
+    // Send reply email (using simple template for now, can be enhanced later)
     const emailContent = `
       <h3>Response from NI IT Club</h3>
       <p>Dear ${contact.name},</p>
@@ -160,7 +168,6 @@ const replyToContact = async (req, res) => {
       email: contact.email,
       subject: replySubject || `Re: ${contact.subject}`,
       html: emailContent,
-      message: replyMessage,
     });
 
     // Update contact status
@@ -169,10 +176,10 @@ const replyToContact = async (req, res) => {
     contact.repliedBy = req.user._id;
     await contact.save();
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: "Reply sent successfully",
-      contact 
+      contact,
     });
   } catch (error) {
     console.error(error);
@@ -241,7 +248,7 @@ const getContactStats = async (req, res) => {
   }
 };
 
-module.exports = { 
+module.exports = {
   sendContactEmail,
   getContacts,
   getContactById,

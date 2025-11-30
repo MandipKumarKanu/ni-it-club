@@ -1,33 +1,51 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import api from "../../services/api";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState(searchParams.get("email") || "");
-  const [otp, setOtp] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // Get email from navigation state or search params
+  const emailFromState =
+    location.state?.email || searchParams.get("email") || "";
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: emailFromState,
+    },
+  });
+
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     setLoading(true);
     setError("");
     setMessage("");
 
-    if (password !== confirmPassword) {
+    if (data.password !== data.confirmPassword) {
       setError("Passwords do not match");
       setLoading(false);
       return;
     }
 
     try {
-      await api.post("/auth/reset-password", { email, otp, password });
+      await api.post("/auth/reset-password", {
+        email: emailFromState || data.email,
+        otp: data.otp,
+        password: data.password,
+      });
       setMessage("Password reset successful. Redirecting to login...");
       setTimeout(() => {
         navigate("/login");
@@ -40,77 +58,84 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Reset Password</h2>
+    <div className="min-h-screen flex items-center justify-center bg-ni-neon p-4">
+      <div className="bg-white border-brutal shadow-brutal-lg p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-6 text-center uppercase">
+          Reset Password
+        </h1>
+
         {message && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <div className="bg-green-100 border-2 border-green-500 text-green-800 px-4 py-3 font-bold mb-6">
             {message}
           </div>
         )}
+
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-100 border-2 border-red-500 text-red-800 px-4 py-3 font-bold mb-6">
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Email Address
-            </label>
-            <input
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {!emailFromState && (
+            <Input
+              label="Email Address"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-              readOnly={!!searchParams.get("email")}
+              {...register("email", { required: "Email is required" })}
+              error={errors.email}
             />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              OTP
-            </label>
-            <input
-              type="text"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-              placeholder="Enter 6-digit OTP"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              New Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Confirm New Password
-            </label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-          <button
+          )}
+
+          {emailFromState && (
+            <div className="bg-gray-50 border-2 border-gray-300 p-4">
+              <p className="text-sm font-bold text-gray-600 mb-1">
+                Email Address
+              </p>
+              <p className="font-bold text-lg">{emailFromState}</p>
+            </div>
+          )}
+
+          <Input
+            label="OTP"
+            placeholder="Enter 6-digit OTP"
+            {...register("otp", { required: "OTP is required" })}
+            error={errors.otp}
+          />
+
+          <Input
+            label="New Password"
+            type="password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
+            error={errors.password}
+          />
+
+          <Input
+            label="Confirm New Password"
+            type="password"
+            {...register("confirmPassword", {
+              required: "Please confirm your password",
+              validate: (val) => {
+                if (watch("password") != val) {
+                  return "Your passwords do not match";
+                }
+              },
+            })}
+            error={errors.confirmPassword}
+          />
+
+          <Button
             type="submit"
+            className="w-full bg-black text-white hover:bg-gray-800"
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
           >
             {loading ? "Resetting..." : "Reset Password"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

@@ -21,6 +21,21 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    designation: {
+      type: String,
+      default: "Member",
+    },
+    permissions: {
+      type: Map,
+      of: Boolean,
+      default: {},
+    },
+    isFirstLogin: {
+      type: Boolean,
+      default: true,
+    },
+    resetPasswordOtp: String,
+    resetPasswordOtpExpire: Date,
     refreshToken: {
       type: String,
     },

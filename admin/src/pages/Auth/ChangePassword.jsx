@@ -64,19 +64,31 @@ const ChangePassword = ({ embedded = false }) => {
     : "bg-white p-8 rounded-lg shadow-md w-full max-w-md";
 
   return (
-    <div className={containerClass}>
-      <div className={cardClass}>
+    <div
+      className={
+        embedded
+          ? ""
+          : "min-h-screen flex items-center justify-center bg-ni-neon p-4"
+      }
+    >
+      <div
+        className={
+          embedded
+            ? "w-full"
+            : "bg-white border-brutal shadow-brutal-lg p-8 w-full max-w-md"
+        }
+      >
         {!embedded && (
-          <h2 className="text-2xl font-bold mb-6 text-center">
+          <h2 className="text-3xl font-bold mb-6 text-center uppercase">
             Change Password
           </h2>
         )}
         {user?.isFirstLogin && !embedded && (
-          <div
-            className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4"
-            role="alert"
-          >
-            <p>Please change your password to continue.</p>
+          <div className="bg-ni-neon border-4 border-black text-black p-4 mb-6 font-bold">
+            <p className="text-lg">⚠️ First time login detected!</p>
+            <p className="mt-2">
+              You must change your password to continue using the admin panel.
+            </p>
           </div>
         )}
         {error && (
@@ -98,7 +110,7 @@ const ChangePassword = ({ embedded = false }) => {
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full p-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-ni-neon"
               required
             />
           </div>
@@ -110,7 +122,7 @@ const ChangePassword = ({ embedded = false }) => {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full p-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-ni-neon"
               required
             />
           </div>
@@ -122,14 +134,14 @@ const ChangePassword = ({ embedded = false }) => {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full p-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-ni-neon"
               required
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+            className="w-full bg-black text-white font-bold py-3 px-4 hover:bg-gray-800 transition-all disabled:opacity-50 border-4 border-black"
           >
             {loading ? "Changing..." : "Change Password"}
           </button>
