@@ -10,9 +10,12 @@ import {
   Share2,
   BarChart3,
   Layout,
+  // Info,
   Info,
   Plus,
+  Lock,
 } from "lucide-react";
+import ChangePassword from "../Auth/ChangePassword";
 import api from "../../services/api";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
@@ -584,8 +587,20 @@ const Settings = () => {
             </Card>
           )}
 
+          {/* Security */}
+          {activeTab === "security" && (
+            <Card title="Security">
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600 mb-4">
+                  Update your password to keep your account secure.
+                </p>
+                <ChangePassword embedded={true} />
+              </div>
+            </Card>
+          )}
+
           {/* Save Button */}
-          {activeTab !== "social" && (
+          {activeTab !== "social" && activeTab !== "security" && (
             <div className="sticky bottom-6 bg-white border-2 border-black p-4 shadow-brutal">
               <Button
                 type="submit"

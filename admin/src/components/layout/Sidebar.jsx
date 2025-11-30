@@ -21,15 +21,38 @@ const Sidebar = ({ isOpen = false, onClose }) => {
     localStorage.removeItem("niit_admin_user");
   };
 
+  const { user } = useAuthStore();
+  const permissions = user?.permissions || {};
+
+  // Helper to check permission
+  const hasPermission = (module) => {
+    // Super admin (if we had one) or if permissions are not defined yet (legacy), maybe allow?
+    // But for now, let's be strict. If permissions object exists, check it.
+    // If user has no permissions object (legacy user), maybe default to true or false?
+    // Let's assume new users have permissions.
+    // Also, "Dashboard" and "Settings" might be common?
+    // User said "give them only access to that only".
+    // So we should filter everything except maybe Dashboard/Contact/Settings if not specified?
+    // Actually, let's map modules to routes.
+    if (!module) return true; // Public/Common modules
+    return permissions[module] === true;
+  };
+
   const navItems = [
-    { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-    { to: "/events", icon: Calendar, label: "Events" },
-    { to: "/gallery", icon: Image, label: "Gallery" },
-    { to: "/projects", icon: Briefcase, label: "Projects" },
-    { to: "/team", icon: Users, label: "Team" },
-    { to: "/contact", icon: Mail, label: "Messages" },
-    { to: "/settings", icon: SettingsIcon, label: "App Settings" },
-  ];
+    { to: "/", icon: LayoutDashboard, label: "Dashboard" }, // Always visible
+    { to: "/events", icon: Calendar, label: "Events", module: "events" },
+    { to: "/gallery", icon: Image, label: "Gallery", module: "gallery" },
+    { to: "/projects", icon: Briefcase, label: "Projects", module: "projects" },
+    { to: "/team", icon: Users, label: "Team", module: "team" },
+    { to: "/contact", label: "Contact", icon: Mail, module: "contact" },
+    { to: "/users", label: "Users", icon: Users, module: "users" }, // Only super admin or specific permission? Let's add 'users' permission to schema/form if not there.
+    {
+      to: "/settings",
+      label: "Settings",
+      icon: SettingsIcon,
+      module: "settings",
+    },
+  ].filter((item) => hasPermission(item.module));
 
   return (
     <>

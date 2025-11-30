@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
@@ -46,6 +46,15 @@ const Login = () => {
             {...register("password", { required: "Password is required" })}
             error={errors.password}
           />
+
+          <div className="flex justify-end">
+            <Link
+              to="/forgot-password"
+              className="text-sm font-bold hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
 
           <Button
             type="submit"

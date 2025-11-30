@@ -5,6 +5,8 @@ import api from "./services/api"; // Ensure interceptors are active
 import axios from "axios";
 import Layout from "./components/layout/Layout";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import EventsList from "./pages/Events/EventsList";
 import GalleryList from "./pages/Gallery/GalleryList";
@@ -12,6 +14,9 @@ import ProjectsList from "./pages/Projects/ProjectsList";
 import TeamList from "./pages/Team/TeamList";
 import ContactList from "./pages/Contact/ContactList";
 import Settings from "./pages/Settings/Settings";
+import UsersList from "./pages/Users/UsersList";
+import UserForm from "./pages/Users/UserForm";
+import ChangePassword from "./pages/Auth/ChangePassword";
 import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = ({ children }) => {
@@ -53,33 +58,44 @@ function App() {
           // If we need name/email, we should add a /me endpoint or store it in localStorage.
           // For now, let's just set token.
           setToken(accessToken);
-          // We can't get name/email from token if it's not there.
-          // Let's assume the user needs to login again if we can't get full profile,
-          // OR we implement /me.
-          // Let's implement a quick /me call or just decode what we have.
-          // Actually, the user's snippet uses `jwtDecode(token)` to get user.
-          // My backend `generateToken` puts `userId` and `role` in token.
-          // It does NOT put name/email.
-          // So I should probably fetch the user details.
-          // But I don't have a /me endpoint.
-          // I'll add a simple fetch to get user details if token exists.
-          // Or just rely on the fact that if refresh works, we are good.
-          // But the UI needs `user.name`.
-          // Let's add a `fetchProfile` to store or just use a placeholder.
-          // Better: Add /me endpoint to backend?
-          // Or just store user in localStorage as I did before?
-          // The user's snippet uses `jwtDecode(token).user`.
-          // My token payload is `{ userId, role }`.
-          // I will use localStorage for user details for now to persist name/email across refreshes,
-          // combined with the cookie for security.
-          const storedUser = localStorage.getItem("niit_admin_user");
-          if (storedUser) {
-            setUser(JSON.parse(storedUser));
+
+          // Fetch fresh user profile to ensure permissions are up to date
+          try {
+            // We need to use the token we just got.
+            // Since api interceptor might not have picked it up yet (state update is async),
+            // we can use axios directly or rely on api if we set the header manually or wait.
+            // But simpler: just use axios with the new token.
+            const userResponse = await axios.get(
+              `${
+                import.meta.env.VITE_API_URL || "http://localhost:5000/api"
+              }/auth/me`,
+              {
+                headers: { Authorization: `Bearer ${accessToken}` },
+              }
+            );
+
+            const freshUser = userResponse.data;
+            setUser(freshUser);
+            localStorage.setItem("niit_admin_user", JSON.stringify(freshUser));
+          } catch (profileError) {
+            console.error("Failed to fetch profile", profileError);
+            // Fallback to local storage if fetch fails
+            const storedUser = localStorage.getItem("niit_admin_user");
+            if (storedUser) {
+              setUser(JSON.parse(storedUser));
+            }
           }
         } catch (error) {
           // Refresh failed, user needs to login
           console.log("Session expired or invalid");
+          setToken(null);
+          setUser(null);
+          localStorage.removeItem("niit_admin_user");
         }
+      } else {
+        // Token exists in state (rare on reload, but possible if navigating)
+        // We should still maybe refresh profile?
+        // For now, let's assume if token is in state, user is also in state.
       }
       setIsChecking(false);
     };
@@ -98,6 +114,12 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route
+        path="/change-password"
+        element={token ? <ChangePassword /> : <Navigate to="/login" />}
+      />
 
       <Route
         path="/"
@@ -114,6 +136,9 @@ function App() {
         <Route path="team" element={<TeamList />} />
         <Route path="contact" element={<ContactList />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="users" element={<UsersList />} />
+        <Route path="users/new" element={<UserForm />} />
+        <Route path="users/:id" element={<UserForm />} />
       </Route>
     </Routes>
   );
