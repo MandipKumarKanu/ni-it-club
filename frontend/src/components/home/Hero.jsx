@@ -10,7 +10,30 @@ import {
   Arrow,
 } from "../ui/Doodles";
 
-const Hero = ({ data, logo }) => {
+import Skeleton from "../ui/Skeleton";
+
+const Hero = ({ data, logo, loading }) => {
+  if (loading) {
+    return (
+      <section className="relative border-b-4 border-ni-black py-24 lg:py overflow-hidden">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-24">
+          <div className="max-w-5xl relative flex-1 w-full">
+            <Skeleton className="h-24 w-3/4 mb-8" />
+            <Skeleton className="h-12 w-1/2 mb-10" />
+            <Skeleton className="h-32 w-full mb-12" />
+            <div className="flex flex-col sm:flex-row gap-6">
+              <Skeleton className="h-16 w-48" />
+              <Skeleton className="h-16 w-48" />
+            </div>
+          </div>
+          <div className="flex-1 flex justify-center items-center">
+            <Skeleton className="w-64 h-64 rounded-full" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const heroData = {
     title1: data?.title1 || "Welcome to",
     title2: data?.title2 || "NI IT Club",

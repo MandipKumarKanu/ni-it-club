@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search, Filter, RefreshCw, User, Clock, Activity } from "lucide-react";
 import api from "../../services/api";
+import Skeleton from "../../components/ui/Skeleton";
 
 const Logs = () => {
   const [logs, setLogs] = useState([]);
@@ -84,7 +85,6 @@ const Logs = () => {
           Refresh
         </button>
       </div>
-
       {/* Filters */}
       <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_#000] p-4 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -133,13 +133,67 @@ const Logs = () => {
           </div>
         </div>
       </div>
-
       {/* Logs Table */}
       <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_#000] overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-black border-t-transparent"></div>
-            <p className="mt-4 font-bold">Loading logs...</p>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-ni-neon border-b-2 border-black">
+                <tr>
+                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
+                    Timestamp
+                  </th>
+                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
+                    User
+                  </th>
+                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
+                    Action
+                  </th>
+                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
+                    Module
+                  </th>
+                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
+                    Details
+                  </th>
+                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
+                    IP Address
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(10)].map((_, i) => (
+                  <tr
+                    key={i}
+                    className={`border-b-2 border-gray-200 ${
+                      i % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    }`}
+                  >
+                    <td className="px-4 py-3">
+                      <Skeleton className="h-5 w-32" />
+                    </td>
+                    <td className="px-4 py-3">
+                      <Skeleton className="h-5 w-24 mb-1" />
+                      <Skeleton className="h-3 w-32" />
+                    </td>
+                    <td className="px-4 py-3">
+                      <Skeleton className="h-6 w-16" />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-4 w-4" />
+                        <Skeleton className="h-5 w-20" />
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <Skeleton className="h-5 w-48" />
+                    </td>
+                    <td className="px-4 py-3">
+                      <Skeleton className="h-5 w-24" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : logs.length === 0 ? (
           <div className="p-12 text-center text-gray-500">

@@ -16,6 +16,7 @@ import {
 import { Star, Dots, CircleScribble } from "../components/ui/Doodles";
 import api from "../services/api";
 import SEO from "../components/SEO";
+import Skeleton from "../components/ui/Skeleton";
 
 const Gallery = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -185,9 +186,21 @@ const Gallery = () => {
           </div>
         </div>
         {loading ? (
-          <div className="min-h-screen flex items-center justify-center bg-ni-white">
-            <div className="text-2xl font-black uppercase animate-pulse">
-              Loading Gallery...
+          <div className="min-h-screen bg-ni-white">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-ni-white border-4 border-ni-black shadow-brutal"
+                >
+                  <div className="h-2 bg-gray-200" />
+                  <Skeleton className="w-full aspect-4/3 border-b-4 border-ni-black" />
+                  <div className="bg-gray-50 border-t-4 border-ni-black p-3 sm:p-4">
+                    <Skeleton className="h-5 w-3/4 mb-2 bg-gray-300" />
+                    <Skeleton className="h-3 w-1/2 bg-gray-300" />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         ) : (

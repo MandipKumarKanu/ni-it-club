@@ -13,17 +13,25 @@ import Showcase from "./pages/Showcase";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import useResetScrollPosition from "./components/hook/useResetScrollPosition";
+import FullPageLoader from "./components/ui/FullPageLoader";
 
 import useSettingsStore from "./store/useSettingsStore";
+import useHomeStore from "./store/useHomeStore";
 
 function App() {
   const location = useLocation();
   useResetScrollPosition(location);
   const { fetchSettings } = useSettingsStore();
+  const { fetchHomeData, loading, homeData } = useHomeStore();
 
   useEffect(() => {
     fetchSettings();
-  }, [fetchSettings]);
+    fetchHomeData();
+  }, [fetchSettings, fetchHomeData]);
+
+  if (loading && !homeData) {
+    return <FullPageLoader />;
+  }
 
   return (
     <Layout>

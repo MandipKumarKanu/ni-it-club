@@ -9,6 +9,7 @@ import ProjectDetails from "./ProjectDetails";
 import toast from "react-hot-toast";
 
 import Loader from "../../components/ui/Loader";
+import Skeleton from "../../components/ui/Skeleton";
 
 const ProjectsList = () => {
   const [projects, setProjects] = useState([]);
@@ -80,7 +81,38 @@ const ProjectsList = () => {
       </div>
 
       {loading ? (
-        <Loader />
+        <Table headers={["Image", "Name", "Tech Stack", "Links", "Actions"]}>
+          {[...Array(5)].map((_, i) => (
+            <TableRow key={i}>
+              <TableCell>
+                <Skeleton className="w-16 h-16" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-32" />
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-1">
+                  <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-12" />
+                  <Skeleton className="h-5 w-14" />
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Skeleton className="h-6 w-6" />
+                  <Skeleton className="h-6 w-6" />
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </Table>
       ) : projects.length === 0 ? (
         <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
           <p className="text-gray-500 text-lg mb-4">No projects found</p>

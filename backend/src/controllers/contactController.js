@@ -3,6 +3,7 @@ const sendEmail = require("../utils/emailService");
 const {
   getContactThankYouTemplate,
   getContactNotificationTemplate,
+  getContactReplyTemplate,
 } = require("../utils/emailTemplates");
 
 // @desc    Send contact email and save to DB
@@ -155,19 +156,11 @@ const replyToContact = async (req, res) => {
       return res.status(400).json({ message: "Reply message is required" });
     }
 
-    // Send reply email (using simple template for now, can be enhanced later)
-    const emailContent = `
-      <h3>Response from NI IT Club</h3>
-      <p>Dear ${contact.name},</p>
-      <p>${replyMessage}</p>
-      <hr>
-      <p><small>This is in response to your message: "${contact.subject}"</small></p>
-    `;
-
+    // Send reply email with nice template
     await sendEmail({
       email: contact.email,
       subject: replySubject || `Re: ${contact.subject}`,
-      html: emailContent,
+      html: getContactReplyTemplate(contact.name, replyMessage, contact.subject),
     });
 
     // Update contact status

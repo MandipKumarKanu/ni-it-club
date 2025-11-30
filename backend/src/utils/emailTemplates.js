@@ -310,8 +310,54 @@ const getContactNotificationTemplate = (contactData) => {
   return getBaseTemplate(content);
 };
 
+/**
+ * Admin Reply to Contact Submission Email Template
+ */
+const getContactReplyTemplate = (name, replyMessage, originalSubject) => {
+  const content = `
+    <div class="content">
+      <h2>We've Got You Covered! 💬</h2>
+      <p>Hey ${name}! 👋</p>
+      <p>Thanks for reaching out to NI-IT Club. Here's our response to your message:</p>
+      
+      <div class="info-box" style="background-color: ${colors.cyan};">
+        <p style="color: ${colors.white}; margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase;">
+          📩 Our Response
+        </p>
+        <p style="color: ${colors.white}; margin: 0; white-space: pre-wrap; line-height: 1.6;">
+          ${replyMessage}
+        </p>
+      </div>
+      
+      <div style="background-color: #f5f5f5; border: 4px solid ${colors.black}; padding: 20px; margin: 20px 0;">
+        <p style="margin: 0; font-size: 14px; text-transform: uppercase; font-weight: 900;">
+          📌 Regarding Your Message
+        </p>
+        <p style="margin: 10px 0 0 0; font-style: italic;">
+          "${originalSubject}"
+        </p>
+      </div>
+      
+      <div style="background-color: ${colors.neon}; border: 4px solid ${colors.black}; padding: 20px; margin: 20px 0;">
+        <p style="margin: 0; font-size: 14px; text-transform: uppercase; font-weight: 900;">
+          💡 Need More Help?
+        </p>
+        <p style="margin: 10px 0 0 0;">
+          Feel free to reply to this email or reach out to us anytime. We're here to help!
+        </p>
+      </div>
+      
+      <p style="margin-top: 30px;">Keep innovating! 🚀</p>
+      <p style="font-weight: 900;">— The NI-IT Club Team</p>
+    </div>
+  `;
+
+  return getBaseTemplate(content);
+};
+
 module.exports = {
   getResetPasswordOTPTemplate,
   getContactThankYouTemplate,
   getContactNotificationTemplate,
+  getContactReplyTemplate,
 };

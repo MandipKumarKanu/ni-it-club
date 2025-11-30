@@ -9,6 +9,7 @@ import EventDetails from "./EventDetails";
 import toast from "react-hot-toast";
 import Loader from "../../components/ui/Loader";
 import { format } from "date-fns";
+import Skeleton from "../../components/ui/Skeleton";
 
 const EventsList = () => {
   const [events, setEvents] = useState([]);
@@ -80,7 +81,31 @@ const EventsList = () => {
       </div>
 
       {loading ? (
-        <Loader />
+        <Table headers={["Image", "Name", "Date", "Location", "Actions"]}>
+          {[...Array(5)].map((_, i) => (
+            <TableRow key={i}>
+              <TableCell>
+                <Skeleton className="w-16 h-16" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-32" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-24" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-28" />
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </Table>
       ) : events.length === 0 ? (
         <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
           <p className="text-gray-500 text-lg mb-4">No events found</p>

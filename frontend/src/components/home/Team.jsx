@@ -3,8 +3,44 @@ import Button from "../ui/Button";
 import Card from "../ui/Card";
 import { AngleBracket } from "../ui/Doodles";
 
-const Team = ({ data }) => {
+import Skeleton from "../ui/Skeleton";
+
+const Team = ({ data, loading }) => {
   const teamMembers = data || [];
+
+  if (loading) {
+    return (
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-end mb-16 relative">
+          <Skeleton className="h-16 w-64" />
+          <Skeleton className="h-12 w-40 hidden md:block" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {[...Array(3)].map((_, index) => (
+            <div key={index} className="relative">
+              <div className="absolute inset-0 bg-ni-black transform translate-x-4 translate-y-4 border-brutal"></div>
+              <div className="relative z-10 bg-ni-white border-brutal p-6 flex flex-col items-center h-full">
+                <Skeleton className="w-24 h-24 rounded-full mb-6" />
+                <Skeleton className="h-8 w-40 mb-2" />
+                <Skeleton className="h-4 w-32 mb-6" />
+                <div className="flex gap-2 w-full justify-center mb-6">
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-6 w-16" />
+                </div>
+                <div className="flex gap-4 mt-auto">
+                  <Skeleton className="h-10 w-10" />
+                  <Skeleton className="h-10 w-10" />
+                  <Skeleton className="h-10 w-10" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   if (!teamMembers || teamMembers.length === 0) {
     return null; // Don't render if no team members

@@ -6,6 +6,7 @@ import Table, { TableRow, TableCell } from "../../components/ui/Table";
 import Button from "../../components/ui/Button";
 import Loader from "../../components/ui/Loader";
 import toast from "react-hot-toast";
+import Skeleton from "../../components/ui/Skeleton";
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
@@ -51,7 +52,30 @@ const UsersList = () => {
       </div>
 
       {loading ? (
-        <Loader />
+        <Table headers={["Name", "Email", "Role", "Designation", "Actions"]}>
+          {[...Array(5)].map((_, i) => (
+            <TableRow key={i}>
+              <TableCell>
+                <Skeleton className="h-6 w-32" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-48" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-16" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-24" />
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </Table>
       ) : users.length === 0 ? (
         <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
           <p className="text-gray-500 text-lg mb-4">No users found</p>

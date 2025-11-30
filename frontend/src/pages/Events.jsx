@@ -21,6 +21,8 @@ import {
 import { Dots, Zigzag, WavyLine } from "../components/ui/Doodles";
 import api from "../services/api";
 import SEO from "../components/SEO";
+import Skeleton from "../components/ui/Skeleton";
+import EventModal from "../components/ui/EventModal";
 
 const Events = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,8 +35,8 @@ const Events = () => {
     hasNextPage: false,
   });
   const [hoveredEvent, setHoveredEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // Get state from URL or defaults
   const category = searchParams.get("category") || "All";
   const urlSearchTerm = searchParams.get("search") || "";
   const page = parseInt(searchParams.get("page") || "1");
@@ -148,6 +150,12 @@ const Events = () => {
       icon: BookOpen,
       accent: "text-ni-blue",
     },
+    Other: {
+      color: "bg-ni-black",
+      gradient: "from-ni-black to-gray-600",
+      icon: Star,
+      accent: "text-ni-black",
+    },
   };
 
   const getTypeConfig = (type) => typeConfig[type] || typeConfig["Workshop"];
@@ -164,7 +172,6 @@ const Events = () => {
         {/* Subtle Background Decorations */}
         <Dots className="absolute top-20 right-10 w-32 h-32 text-ni-black opacity-5" />
         <Dots className="absolute bottom-40 left-10 w-32 h-32 text-ni-black opacity-5" />
-
         {/* Hero Section - Split Panel */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-12">
@@ -242,11 +249,60 @@ const Events = () => {
         {/* Events Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20 relative z-10">
           {loading ? (
-            <div className="min-h-[400px] flex items-center justify-center">
-              <div className="text-2xl font-black uppercase animate-pulse">
-                Loading Events...
+            <>
+              {/* Featured Event Skeleton */}
+              <div className="mb-16">
+                <div className="flex items-center gap-3 mb-8">
+                  <Skeleton className="w-8 h-8 rounded-full" />
+                  <Skeleton className="h-8 w-64" />
+                </div>
+                <div className="bg-ni-white border-4 border-ni-black grid grid-cols-1 lg:grid-cols-3 shadow-brutal">
+                  <div className="p-8 lg:p-12 border-b-4 lg:border-b-0 lg:border-r-4 border-ni-black flex flex-col items-center justify-center bg-gray-50">
+                    <Skeleton className="h-24 w-24 mb-2 bg-gray-300" />
+                    <Skeleton className="h-8 w-16 mb-4 bg-gray-300" />
+                    <Skeleton className="h-6 w-32 bg-gray-300" />
+                  </div>
+                  <div className="lg:col-span-2 p-8 lg:p-12">
+                    <div className="flex gap-4 mb-6">
+                      <Skeleton className="h-8 w-32" />
+                      <Skeleton className="h-6 w-40" />
+                    </div>
+                    <Skeleton className="h-12 w-3/4 mb-4" />
+                    <Skeleton className="h-6 w-full mb-2" />
+                    <Skeleton className="h-6 w-5/6 mb-8" />
+                    <div className="flex gap-4">
+                      <Skeleton className="h-14 w-40" />
+                      <Skeleton className="h-14 w-40" />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-ni-white border-4 border-ni-black overflow-hidden"
+                  >
+                    <div className="h-2 bg-gray-200" />
+                    <div className="p-6">
+                      <div className="flex justify-between mb-4">
+                        <Skeleton className="h-16 w-16" />
+                        <Skeleton className="h-6 w-24" />
+                      </div>
+                      <Skeleton className="h-8 w-3/4 mb-3" />
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-2/3 mb-4" />
+                      <div className="flex gap-4 mb-5">
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-4 w-24" />
+                      </div>
+                      <Skeleton className="h-12 w-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           ) : events.length > 0 ? (
             <>
               {/* Featured Event */}
@@ -346,7 +402,10 @@ const Events = () => {
                                 />
                               </a>
                             )}
-                          <button className="bg-transparent text-ni-black border-4 border-ni-black px-8 py-4 font-black uppercase text-lg hover:bg-ni-black hover:text-ni-white transition-all group-hover:border-ni-white group-hover:text-ni-white group-hover:hover:bg-ni-white group-hover:hover:text-ni-black">
+                          <button
+                            onClick={() => setSelectedEvent(featuredEvent)}
+                            className="bg-transparent text-ni-black border-4 border-ni-black px-8 py-4 font-black uppercase text-lg hover:bg-ni-black hover:text-ni-white transition-all group-hover:border-ni-white group-hover:text-ni-white group-hover:hover:bg-ni-white group-hover:hover:text-ni-black"
+                          >
                             Learn More
                           </button>
                         </div>
@@ -446,7 +505,13 @@ const Events = () => {
                               </div>
 
                               {/* Action */}
-                              <button className="w-full bg-gray-100 border-3 border-ni-black py-3 font-bold uppercase text-sm hover:bg-ni-black hover:text-ni-white transition-all flex items-center justify-center gap-2 group-hover:bg-ni-black group-hover:text-ni-white">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedEvent(event);
+                                }}
+                                className="w-full bg-gray-100 border-3 border-ni-black py-3 font-bold uppercase text-sm hover:bg-ni-black hover:text-ni-white transition-all flex items-center justify-center gap-2 group-hover:bg-ni-black group-hover:text-ni-white"
+                              >
                                 View Details
                                 <ChevronRight
                                   size={16}
@@ -520,7 +585,6 @@ const Events = () => {
             </div>
           )}
         </div>
-
         {/* CTA Section - Ticket/Poster Style */}
         <div className="relative mt-20">
           <div className="bg-ni-neon border-y-8 border-ni-black py-16 sm:py-20 relative overflow-hidden">
