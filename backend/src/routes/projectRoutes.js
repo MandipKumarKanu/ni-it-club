@@ -28,7 +28,6 @@ router
     createProject
   );
 
-// Admin routes
 router.get("/admin/all", protect, admin, getAllProjectsAdmin);
 router.get("/stats", protect, admin, getProjectStats);
 router.patch("/:id/featured", protect, admin, toggleProjectFeatured);

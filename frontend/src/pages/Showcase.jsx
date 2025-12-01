@@ -80,7 +80,7 @@ const Showcase = () => {
         setProjects(data.docs);
         setTotalPages(data.totalPages);
       } else {
-        setProjects(data); // Fallback if not paginated
+        setProjects(data);
       }
     } catch (error) {
       console.error("Failed to fetch projects", error);
@@ -98,11 +98,9 @@ const Showcase = () => {
         url="/showcase"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative overflow-hidden min-h-screen">
-        {/* Background Elements */}
         <Binary className="absolute top-20 left-0 text-ni-black opacity-5 scale-150" />
         <Binary className="absolute bottom-20 right-0 text-ni-black opacity-5 scale-150" />
 
-        {/* Hero Section */}
         <div className="mb-24 relative z-10 max-w-4xl mx-auto">
           <div className="bg-ni-white border-4 border-ni-black shadow-brutal-lg">
             <WindowHeader title="SYSTEM_ROOT/SHOWCASE.EXE" />
@@ -129,7 +127,6 @@ const Showcase = () => {
             </div>
           </div>
 
-          {/* Decorative elements behind hero */}
           <Chip className="absolute -top-12 -right-12 w-32 h-32 text-ni-blue opacity-20 -z-10 rotate-12" />
           <Dots className="absolute -bottom-12 -left-12 w-40 h-40 text-ni-pink opacity-20 -z-10" />
         </div>
@@ -137,12 +134,7 @@ const Showcase = () => {
         {loading && page === 1 ? (
           <>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative overflow-hidden min-h-screen">
-              {/* Hero Skeleton Removed as per request */}
-              <div className="mb-24 relative z-10 max-w-4xl mx-auto">
-                {/* Keeping the container to maintain spacing if needed, or just empty */}
-              </div>
-
-              {/* Projects Grid Skeleton */}
+              <div className="mb-24 relative z-10 max-w-4xl mx-auto"></div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
                 {[...Array(6)].map((_, i) => (
                   <div
@@ -174,7 +166,6 @@ const Showcase = () => {
           </>
         ) : (
           <>
-            {/* Projects Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
               {projects.map((project, index) => (
                 <div key={project._id} className="group">
@@ -245,7 +236,6 @@ const Showcase = () => {
               ))}
             </div>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-12 flex justify-center gap-4">
                 <Button
@@ -270,7 +260,6 @@ const Showcase = () => {
           </>
         )}
 
-        {/* CTA Section */}
         <div className="mt-32 relative max-w-4xl mx-auto">
           <div className="bg-ni-pink border-4 border-ni-black shadow-brutal-lg">
             <WindowHeader title="SUBMISSION_FORM.EXE" color="bg-ni-black" />

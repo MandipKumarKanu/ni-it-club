@@ -1,7 +1,6 @@
 const Project = require("../models/Project");
 const { uploadToCloudinary, deleteFromCloudinary, deleteMultipleFromCloudinary } = require("../utils/cloudinaryUpload");
 
-// Helper to add thumb URL to project response
 const transformProject = (project) => {
   const p = project.toObject ? project.toObject() : project;
   return {
@@ -25,7 +24,6 @@ const transformProject = (project) => {
   };
 };
 
-// Helper to parse array fields
 const parseArrayField = (field) => {
   if (!field) return [];
   if (Array.isArray(field)) return field;
@@ -39,7 +37,6 @@ const parseArrayField = (field) => {
   return [];
 };
 
-// Helper to parse boolean
 const parseBool = (val) => {
   if (typeof val === "boolean") return val;
   if (val === "true" || val === "1") return true;
@@ -55,7 +52,6 @@ const getProjects = async (req, res) => {
     const { status, category, featured } = req.query;
     const filter = {};
     
-    // By default, only show non-draft/non-archived projects
     if (status) {
       filter.status = status;
     } else {
@@ -121,7 +117,6 @@ const createProject = async (req, res) => {
       image = { url: result.secure_url, public_id: result.public_id };
     }
 
-    // Handle screenshots
     let screenshotsArr = [];
     if (req.files && req.files.screenshots) {
       const uploadPromises = req.files.screenshots.map((file) =>
@@ -200,7 +195,6 @@ const updateProject = async (req, res) => {
         project.status = status;
       }
 
-      // Handle image update
       if (req.files && req.files.image) {
         if (project.image?.public_id) {
           deleteFromCloudinary(project.image.public_id);
@@ -215,7 +209,6 @@ const updateProject = async (req, res) => {
         project.image = { url: result.secure_url, public_id: result.public_id };
       }
 
-      // Handle new screenshots (append)
       if (req.files && req.files.screenshots) {
         const uploadPromises = req.files.screenshots.map((file) =>
           uploadToCloudinary(file.buffer)

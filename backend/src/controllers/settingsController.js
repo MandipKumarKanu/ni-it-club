@@ -59,7 +59,6 @@ const updateSettings = async (req, res) => {
       seo,
     } = req.body;
 
-    // Update fields if provided
     if (siteName !== undefined) settings.siteName = siteName;
     if (siteTagline !== undefined) settings.siteTagline = siteTagline;
     if (siteDescription !== undefined)
@@ -77,14 +76,12 @@ const updateSettings = async (req, res) => {
     if (aboutDescription2 !== undefined)
       settings.aboutDescription2 = aboutDescription2;
 
-    // Update social links
     if (socialLinks) {
       const parsedLinks =
         typeof socialLinks === "string" ? JSON.parse(socialLinks) : socialLinks;
       settings.socialLinks = parsedLinks;
     }
 
-    // Update stats - handle both JSON string and individual fields from FormData
     if (stats) {
       const parsedStats = typeof stats === "string" ? JSON.parse(stats) : stats;
       if (!settings.stats) {
@@ -96,7 +93,6 @@ const updateSettings = async (req, res) => {
       req.body["stats[projectsCount]"] ||
       req.body["stats[eventsCount]"]
     ) {
-      // Handle stats sent as individual FormData fields
       if (!settings.stats) {
         settings.stats = {};
       }
@@ -120,7 +116,6 @@ const updateSettings = async (req, res) => {
         settings.stats.yearsActive = parseInt(req.body["stats[yearsActive]"]);
     }
 
-    // Update features
     if (features) {
       const parsedFeatures =
         typeof features === "string" ? JSON.parse(features) : features;
@@ -130,13 +125,10 @@ const updateSettings = async (req, res) => {
       };
     }
 
-    // Update SEO
     if (seo) {
       const parsedSeo = typeof seo === "string" ? JSON.parse(seo) : seo;
       settings.seo = { ...settings.seo.toObject(), ...parsedSeo };
     }
-
-    // Handle logo upload
     if (req.files && req.files.logo) {
       if (settings.logo?.public_id) {
         await deleteFromCloudinary(settings.logo.public_id);
@@ -144,8 +136,6 @@ const updateSettings = async (req, res) => {
       const result = await uploadToCloudinary(req.files.logo[0].buffer);
       settings.logo = { url: result.secure_url, public_id: result.public_id };
     }
-
-    // Handle favicon upload
     if (req.files && req.files.favicon) {
       if (settings.favicon?.public_id) {
         await deleteFromCloudinary(settings.favicon.public_id);
@@ -156,8 +146,6 @@ const updateSettings = async (req, res) => {
         public_id: result.public_id,
       };
     }
-
-    // Handle OG image upload
     if (req.files && req.files.ogImage) {
       if (settings.seo?.ogImage?.public_id) {
         await deleteFromCloudinary(settings.seo.ogImage.public_id);
@@ -215,7 +203,6 @@ const recalculateStats = async (req, res) => {
   try {
     const settings = await Settings.getSettings();
 
-    // Calculate stats from actual data
     const projectsCount = await Project.countDocuments({
       status: { $in: ["active", "completed"] },
     });
@@ -223,12 +210,10 @@ const recalculateStats = async (req, res) => {
       status: { $ne: "draft" },
     });
 
-    // Initialize stats if undefined
     if (!settings.stats) {
       settings.stats = {};
     }
 
-    // Update stats (membersCount is not tracked as all college members are considered members)
     settings.stats.projectsCount = projectsCount;
     settings.stats.eventsCount = eventsCount;
 
@@ -320,7 +305,6 @@ const deleteSocialLink = async (req, res) => {
 // @access  Private/Admin
 const getDashboardStats = async (req, res) => {
   try {
-    // Get counts
     const totalMembers = await TeamMember.countDocuments();
     const activeMembers = await TeamMember.countDocuments({ status: "active" });
     const totalProjects = await Project.countDocuments();
@@ -328,8 +312,6 @@ const getDashboardStats = async (req, res) => {
     const totalEvents = await Event.countDocuments();
     const upcomingEvents = await Event.countDocuments({ status: "upcoming" });
     const totalGalleryItems = await Gallery.countDocuments();
-
-    // Get recent activity
     const recentProjects = await Project.find()
       .sort({ createdAt: -1 })
       .limit(5)

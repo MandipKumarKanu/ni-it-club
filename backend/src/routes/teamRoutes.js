@@ -17,7 +17,6 @@ router
   .get(getTeamMembers)
   .post(protect, admin, upload.single("image"), createTeamMember);
 
-// Admin routes
 router.get("/admin/all", protect, admin, getAllTeamMembersAdmin);
 router.put("/reorder", protect, admin, reorderTeamMembers);
 

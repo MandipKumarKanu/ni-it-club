@@ -1,6 +1,5 @@
 import React from "react";
 
-// Spinner Component
 export const Spinner = ({ size = "md", className = "" }) => {
   const sizes = {
     sm: "w-5 h-5 border-2",
@@ -18,7 +17,6 @@ export const Spinner = ({ size = "md", className = "" }) => {
   );
 };
 
-// Card Skeleton
 export const CardSkeleton = ({ className = "" }) => (
   <div
     className={`bg-ni-white border-4 border-ni-black shadow-brutal animate-pulse ${className}`}
@@ -38,7 +36,6 @@ export const CardSkeleton = ({ className = "" }) => (
   </div>
 );
 
-// Event Card Skeleton
 export const EventCardSkeleton = () => (
   <div
     className="bg-ni-white border-4 border-ni-black shadow-brutal animate-pulse"
@@ -62,7 +59,6 @@ export const EventCardSkeleton = () => (
   </div>
 );
 
-// Team Member Skeleton
 export const TeamMemberSkeleton = () => (
   <div className="relative" aria-hidden="true">
     <div className="absolute inset-0 bg-ni-black transform translate-x-4 translate-y-4 border-brutal" />
@@ -83,7 +79,6 @@ export const TeamMemberSkeleton = () => (
   </div>
 );
 
-// Gallery Image Skeleton
 export const GallerySkeleton = () => (
   <div
     className="bg-ni-white border-4 border-ni-black shadow-brutal animate-pulse"
@@ -97,7 +92,6 @@ export const GallerySkeleton = () => (
   </div>
 );
 
-// Text Line Skeleton
 export const TextSkeleton = ({ lines = 3, className = "" }) => (
   <div className={`animate-pulse ${className}`} aria-hidden="true">
     {Array.from({ length: lines }).map((_, i) => (
@@ -111,7 +105,6 @@ export const TextSkeleton = ({ lines = 3, className = "" }) => (
   </div>
 );
 
-// Page Loading Component
 export const PageLoader = ({ message = "Loading..." }) => (
   <div
     className="min-h-[60vh] flex flex-col items-center justify-center"
@@ -123,7 +116,6 @@ export const PageLoader = ({ message = "Loading..." }) => (
   </div>
 );
 
-// Button Loading State
 export const ButtonLoader = ({ children, isLoading, ...props }) => (
   <button {...props} disabled={isLoading}>
     {isLoading ? (
@@ -137,7 +129,6 @@ export const ButtonLoader = ({ children, isLoading, ...props }) => (
   </button>
 );
 
-// Featured Event Skeleton
 export const FeaturedEventSkeleton = () => (
   <div
     className="bg-ni-white border-4 border-ni-black animate-pulse"

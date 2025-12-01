@@ -44,7 +44,6 @@ const Hero = ({ data, logo, loading }) => {
 
   return (
     <section className="relative  border-b-4 border-ni-black py-24 lg:py overflow-hidden">
-      {/* Background Doodles */}
       <Binary className="absolute top-10 left-10 text-ni-neon transform -rotate-12 scale-150" />
       <Binary className="absolute bottom-20 right-10 text-ni-pink transform rotate-12 scale-150" />
       <Chip className="absolute top-20 right-20 text-ni-cyan w-24 h-24 animate-float" />

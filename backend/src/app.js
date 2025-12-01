@@ -7,14 +7,10 @@ require("dotenv").config();
 
 const app = express();
 
-// Connect to Database
-// Note: In serverless (Vercel), connection is handled in api/index.js
-// For local development, uncomment the line below:
 if (process.env.NODE_ENV !== "production") {
   connectDB();
 }
 
-// Middleware
 app.use(helmet());
 app.use(
   cors({
@@ -32,7 +28,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
 app.use("/api/home", require("./routes/homeRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
@@ -47,13 +42,10 @@ app.get("/", (req, res) => {
   res.send("NI-IT Club Backend is running!");
 });
 
-// Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!" });
 });
-
-// For local development
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {

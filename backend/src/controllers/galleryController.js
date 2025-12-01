@@ -5,7 +5,6 @@ const {
   deleteMultipleFromCloudinary,
 } = require("../utils/cloudinaryUpload");
 
-// Helper to transform gallery with thumbnail URLs
 const transformGallery = (g) => {
   const gallery = g.toObject ? g.toObject() : g;
   return {
@@ -29,7 +28,6 @@ const transformGallery = (g) => {
   };
 };
 
-// Helper to parse array fields
 const parseArrayField = (field) => {
   if (!field) return [];
   if (Array.isArray(field)) return field;
@@ -54,7 +52,6 @@ const getGalleries = async (req, res) => {
     const { category, status, page = 1, limit = 9 } = req.query;
     const filter = {};
 
-    // By default, only show published galleries
     if (status) {
       filter.status = status;
     } else {
@@ -138,7 +135,6 @@ const createGallery = async (req, res) => {
     const { title, description, date, category, tags, event, status } =
       req.body;
 
-    // Handle featured image
     let featuredImage = { url: "", public_id: "" };
     if (req.files && req.files.featuredImage) {
       const result = await uploadToCloudinary(
@@ -147,7 +143,6 @@ const createGallery = async (req, res) => {
       featuredImage = { url: result.secure_url, public_id: result.public_id };
     }
 
-    // Handle multiple images
     let imagesArr = [];
     if (req.files && req.files.images) {
       const uploadPromises = req.files.images.map((file) =>
@@ -203,7 +198,6 @@ const updateGallery = async (req, res) => {
         gallery.tags = parseArrayField(tags);
       }
 
-      // Handle new featured image (delete old one if replacing)
       if (req.files && req.files.featuredImage) {
         if (gallery.featuredImage?.public_id) {
           deleteFromCloudinary(gallery.featuredImage.public_id);
@@ -217,7 +211,6 @@ const updateGallery = async (req, res) => {
         };
       }
 
-      // Handle new images (append to existing)
       if (req.files && req.files.images) {
         const uploadPromises = req.files.images.map((file) =>
           uploadToCloudinary(file.buffer)
@@ -294,7 +287,6 @@ const deleteGallery = async (req, res) => {
     const gallery = await Gallery.findById(req.params.id);
 
     if (gallery) {
-      // Collect all public_ids for deletion from Cloudinary
       const publicIds = [];
       if (gallery.featuredImage?.public_id) {
         publicIds.push(gallery.featuredImage.public_id);
@@ -303,7 +295,6 @@ const deleteGallery = async (req, res) => {
         if (img.public_id) publicIds.push(img.public_id);
       });
 
-      // Delete from Cloudinary
       if (publicIds.length > 0) {
         deleteMultipleFromCloudinary(publicIds);
       }
@@ -339,12 +330,10 @@ const deleteGalleryImage = async (req, res) => {
 
     const image = gallery.images[imageIndex];
 
-    // Delete from Cloudinary if public_id exists
     if (image.public_id) {
       await deleteFromCloudinary(image.public_id);
     }
 
-    // Remove image from array
     gallery.images.splice(imageIndex, 1);
     await gallery.save();
 

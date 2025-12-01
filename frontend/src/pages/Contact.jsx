@@ -83,7 +83,7 @@ const Contact = () => {
     const newErrors = validate();
     if (Object.keys(newErrors).length === 0) {
       setSubmitted(true);
-      setErrors({}); // Clear previous errors
+      setErrors({});
 
       try {
         await api.post("/contact", {
@@ -91,7 +91,7 @@ const Contact = () => {
           email: formData.email,
           subject: formData.subject,
           message: formData.message,
-          category: activeTab, // Send the selected tab/category
+          category: activeTab,
         });
 
         setSuccessMessage(true);
@@ -181,7 +181,7 @@ const Contact = () => {
       hoverBg: "hover:bg-[#cc0000]",
     },
     discord: {
-      icon: MessageCircle, // Fallback
+      icon: MessageCircle, 
       bgColor: "bg-[#5865F2]",
       hoverBg: "hover:bg-[#4752c4]",
     },
@@ -255,7 +255,6 @@ const Contact = () => {
 
   return (
     <div className="relative overflow-hidden bg-ni-white">
-      {/* Animated Background Pattern */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.02]">
         <div
           className="absolute inset-0"
@@ -266,19 +265,15 @@ const Contact = () => {
         />
       </div>
 
-      {/* Hero Section - Redesigned */}
       <div className="relative min-h-[50dvh] flex items-center justify-center overflow-hidden">
-        {/* Gradient Background */}
         {/* <div className="absolute inset-0 bg-gradient-to-br from-ni-black via-gray-900 to-ni-black" /> */}
 
-        {/* Animated Shapes */}
         {/* <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-20 left-10 w-72 h-72 bg-ni-neon/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-ni-pink/20 rounded-full blur-3xl animate-pulse delay-1000" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-ni-cyan/10 rounded-full blur-3xl" />
         </div> */}
 
-        {/* Decorative Elements */}
         <Binary className="absolute top-20 left-20 text-ni-neon opacity-30 scale-150" />
         {/* <Binary className="absolute bottom-32 right-20 text-ni-cyan opacity-30 scale-150" /> */}
         <Chip className="absolute top-32 right-32 w-24 h-24 text-ni-pink opacity-30" />
@@ -286,15 +281,12 @@ const Contact = () => {
         <CurlyBrace className="absolute top-1/3 right-16 h-32 text-ni-white opacity-10" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-ni-neon/20 border-2 border-ni-neon/50 px-6 py-2 mb-8 backdrop-blur-sm">
             <Zap size={18} className="text-ni-neon" />
             <span className="text-ni-neon font-bold uppercase tracking-wider">
               We would love to hear from you
             </span>
           </div>
-
-          {/* Main Heading */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter text-ni-black mb-6">
             Let's{" "}
             <span className="relative inline-block">
@@ -312,7 +304,7 @@ const Contact = () => {
             </span>
           </p>
 
-          {/* Quick Contact Pills */}
+         
           {/* <div className="flex flex-wrap justify-center gap-4 mb-12">
             {contactMethods.map((method, index) => (
               <a
@@ -337,13 +329,11 @@ const Contact = () => {
             ))}
           </div> */}
 
-          {/* Scroll Indicator */}
           {/* <div className="animate-bounce">
             <ChevronDown size={32} className="text-ni-black/50 mx-auto" />
           </div> */}
         </div>
 
-        {/* Bottom Wave */}
         {/* <div className="absolute bottom-0 left-0 w-full">
           <svg
             viewBox="0 0 1440 120"
@@ -359,10 +349,8 @@ const Contact = () => {
         </div> */}
       </div>
 
-      {/* Main Content Section */}
       <div className="relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
           {/* <div className="text-center mb-20 relative">
             <HandDrawnArrow className="absolute -left-8 top-0 w-24 text-ni-black transform -rotate-45 hidden xl:block" />
             <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tighter mb-6">
@@ -379,7 +367,6 @@ const Contact = () => {
             </p>
           </div> */}
 
-          {/* Contact Cards Grid - New Design */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             {contactMethods.map((method, index) => (
               <a
@@ -401,12 +388,10 @@ const Contact = () => {
                     : "rotate-2"
                 } hover:rotate-0`}
               >
-                {/* Gradient Overlay on Hover */}
                 <div
                   className={`absolute inset-0 bg-linear-to-br ${method.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
                 />
 
-                {/* Icon */}
                 <div
                   className={`relative z-10 ${method.iconBg} w-20 h-20 flex items-center justify-center border-brutal mb-6 transform group-hover:scale-110 transition-all duration-300`}
                 >
@@ -417,7 +402,6 @@ const Contact = () => {
                   />
                 </div>
 
-                {/* Content */}
                 <div className="relative z-10">
                   <h3 className="font-black uppercase text-2xl mb-2 group-hover:text-ni-white transition-colors">
                     {method.title}
@@ -430,23 +414,18 @@ const Contact = () => {
                   </p>
                 </div>
 
-                {/* Arrow */}
                 <ArrowRight
                   size={24}
                   className="absolute bottom-8 right-8 text-gray-300 group-hover:text-ni-white group-hover:translate-x-2 transition-all duration-300"
                 />
 
-                {/* Corner Decoration */}
                 {/* <div className="absolute -top-2 -right-2 w-8 h-8 bg-ni-black transform rotate-45 opacity-0 group-hover:opacity-100 transition-opacity" /> */}
               </a>
             ))}
           </div>
 
-          {/* Two Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
-            {/* Left Column - Info */}
             <div className="lg:col-span-2 space-y-10">
-              {/* Office Hours Card */}
               <div className="relative">
                 <div className="absolute -inset-2 bg-ni-neon transform -rotate-2" />
                 <Card className="relative z-10 bg-ni-white border-brutal p-8">
@@ -479,7 +458,6 @@ const Contact = () => {
                 </Card>
               </div>
 
-              {/* Social Links */}
               <div>
                 <h3 className="text-2xl font-black uppercase mb-6 flex items-center gap-3">
                   <span className="bg-ni-black text-ni-white px-4 py-2 transform -rotate-1">
@@ -510,7 +488,6 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Map */}
               <div className="relative group">
                 <div className="absolute -inset-3 bg-ni-black transform rotate-2 group-hover:rotate-0 transition-transform" />
                 <div className="relative z-10 border-brutal h-80 overflow-hidden">
@@ -537,16 +514,12 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Right Column - Form */}
             <div className="lg:col-span-3 relative">
-              {/* Form Container */}
               <div className="relative">
-                {/* Background Decoration */}
                 <div className="absolute -inset-4 bg-linear-to-br from-ni-neon via-ni-cyan to-ni-pink opacity-20 blur-xl" />
                 <div className="absolute -inset-2 bg-ni-black transform rotate-1" />
 
                 <div className="relative z-10 bg-ni-white border-brutal p-8 md:p-12">
-                  {/* Success Message */}
                   {successMessage && (
                     <div className="absolute inset-0 z-20 bg-ni-neon border-brutal flex flex-col items-center justify-center text-center p-8">
                       <CheckCircle2
@@ -563,7 +536,6 @@ const Contact = () => {
                     </div>
                   )}
 
-                  {/* Tabs */}
                   <div className="flex flex-wrap gap-3 mb-10">
                     {contactTabs.map((tab) => (
                       <button
@@ -581,7 +553,6 @@ const Contact = () => {
                     ))}
                   </div>
 
-                  {/* Form Header */}
                   <div className="mb-8">
                     <h2 className="text-4xl md:text-5xl font-black uppercase mb-3">
                       Send a Message
@@ -596,7 +567,6 @@ const Contact = () => {
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Name Field */}
                       <div className="group">
                         <label className="block  font-black uppercase mb-3 text-sm tracking-wider  items-center gap-2">
                           <span className="w-6 h-6 bg-ni-black text-ni-white flex items-center justify-center text-xs">
@@ -624,7 +594,6 @@ const Contact = () => {
                         )}
                       </div>
 
-                      {/* Email Field */}
                       <div className="group">
                         <label className="block font-black uppercase mb-3 text-sm tracking-wider items-center gap-2">
                           <span className="w-6 h-6 bg-ni-black text-ni-white flex items-center justify-center text-xs">
@@ -653,7 +622,6 @@ const Contact = () => {
                       </div>
                     </div>
 
-                    {/* Subject Field */}
                     <div>
                       <label className="block font-black uppercase mb-3 text-sm tracking-wider items-center gap-2">
                         <span className="w-6 h-6 bg-ni-black text-ni-white flex items-center justify-center text-xs">
@@ -681,7 +649,6 @@ const Contact = () => {
                       )}
                     </div>
 
-                    {/* Message Field */}
                     <div>
                       <label className="block font-black uppercase mb-3 text-sm tracking-wider items-center gap-2">
                         <span className="w-6 h-6 bg-ni-black text-ni-white flex items-center justify-center text-xs">
@@ -709,7 +676,6 @@ const Contact = () => {
                       )}
                     </div>
 
-                    {/* Submit Button */}
                     <button
                       type="submit"
                       disabled={submitted}
@@ -743,13 +709,12 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* FAQ Section - Redesigned */}
       <div className=" py-24 relative overflow-hidden">
         <Binary className="absolute top-10 right-10 text-ni-black opacity-5 scale-200" />
         <CircleScribble className="absolute bottom-10 left-10 w-64 h-64 text-ni-pink opacity-10" />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Section Header */}
+          
           <div className="text-center mb-16">
             <span className="inline-block bg-ni-pink text-ni-white px-4 py-2 font-black uppercase text-sm mb-4 transform -rotate-2 border-brutal">
               Got Questions?
@@ -759,7 +724,6 @@ const Contact = () => {
             </h2>
           </div>
 
-          {/* FAQ Items */}
           <div className="space-y-5">
             {faqs.map((faq, index) => (
               <div
@@ -815,7 +779,6 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* CTA Section - Redesigned */}
       <div className="relative py-5 overflow-hidden">
         <p className="mt-12 text-gray-500 font-bold flex items-center justify-center gap-2">
           <Coffee size={18} />

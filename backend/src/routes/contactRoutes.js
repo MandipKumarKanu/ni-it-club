@@ -11,10 +11,7 @@ const {
 } = require("../controllers/contactController");
 const { protect, admin } = require("../middleware/authMiddleware");
 
-// Public route
 router.post("/", sendContactEmail);
-
-// Admin routes
 router.get("/", protect, admin, getContacts);
 router.get("/stats", protect, admin, getContactStats);
 router.route("/:id")

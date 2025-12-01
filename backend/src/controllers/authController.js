@@ -93,7 +93,7 @@ const loginUser = async (req, res) => {
 // @access  Private
 const logoutUser = async (req, res) => {
   const cookie = req.cookies.jwt;
-  if (!cookie) return res.sendStatus(204); // No content
+  if (!cookie) return res.sendStatus(204); 
 
   const user = await User.findOne({ refreshToken: cookie });
   if (!user) {
@@ -105,7 +105,6 @@ const logoutUser = async (req, res) => {
     return res.sendStatus(204);
   }
 
-  // Delete refreshToken in db
   user.refreshToken = "";
   await user.save();
 
@@ -208,16 +207,13 @@ const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Hash OTP and save to database
     user.resetPasswordOtp = crypto
       .createHash("sha256")
       .update(otp)
       .digest("hex");
 
-    // Set expire time (10 minutes)
     user.resetPasswordOtpExpire = Date.now() + 10 * 60 * 1000;
 
     await user.save();
@@ -271,7 +267,7 @@ const resetPassword = async (req, res) => {
     user.password = password;
     user.resetPasswordOtp = undefined;
     user.resetPasswordOtpExpire = undefined;
-    user.isFirstLogin = false; // Resetting password also clears first login flag
+    user.isFirstLogin = false;
 
     await user.save();
 

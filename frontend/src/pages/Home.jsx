@@ -10,8 +10,6 @@ import useHomeStore from "../store/useHomeStore";
 const Home = () => {
   const { homeData, loading } = useHomeStore();
 
-  // Data is now fetched in App.jsx
-
   return (
     <>
       <SEO

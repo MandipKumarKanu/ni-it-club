@@ -75,9 +75,7 @@ const EventModal = ({ event, onClose }) => {
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6 sm:p-8 space-y-8">
-          {/* Meta Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-gray-50 border-2 border-ni-black p-4 text-center">
               <Calendar className="mx-auto mb-2 text-ni-black" size={24} />
@@ -112,7 +110,6 @@ const EventModal = ({ event, onClose }) => {
             </div>
           </div>
 
-          {/* Description */}
           <div>
             <h3 className="text-xl font-black uppercase mb-3 border-b-4 border-ni-neon inline-block">
               About Event
@@ -124,9 +121,6 @@ const EventModal = ({ event, onClose }) => {
             </div>
           </div>
 
-          {/* Agenda/Details if available (placeholder for now) */}
-
-          {/* Footer Actions */}
           <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t-4 border-ni-black border-dashed">
             {event.isRegisterable && event.registrationLink ? (
               <a
@@ -147,7 +141,6 @@ const EventModal = ({ event, onClose }) => {
               </div>
             )}
 
-            {/* Add to Calendar Button could go here */}
           </div>
         </div>
       </div>

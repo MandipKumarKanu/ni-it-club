@@ -57,7 +57,6 @@ const socialLinkSchema = new mongoose.Schema({
 
 const settingsSchema = mongoose.Schema(
   {
-    // Site metadata
     siteName: {
       type: String,
       default: "NI-IT Club",
@@ -75,8 +74,6 @@ const settingsSchema = mongoose.Schema(
       type: String,
       default: "",
     },
-
-    // Contact information
     contactEmail: {
       type: String,
       default: "",
@@ -90,10 +87,8 @@ const settingsSchema = mongoose.Schema(
       default: "",
     },
 
-    // Social links
     socialLinks: [socialLinkSchema],
 
-    // Stats (can be auto-calculated or manually set)
     stats: statsSchema,
 
     // Hero section settings

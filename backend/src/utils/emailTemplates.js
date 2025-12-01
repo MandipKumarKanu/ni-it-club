@@ -1,8 +1,3 @@
-/**
- * Email Templates with Neobrutalist Design
- * Matching the UI's bold, colorful aesthetic
- */
-
 const colors = {
   black: "#000000",
   white: "#FFFFFF",
@@ -13,7 +8,7 @@ const colors = {
 };
 
 /**
- * Base email template with neobrutalist styling
+ * Base email template
  */
 const getBaseTemplate = (content) => `
 <!DOCTYPE html>

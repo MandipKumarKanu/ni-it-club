@@ -8,9 +8,6 @@ const { format } = require("date-fns");
 // Helper to generate Google Calendar Link
 const generateGoogleCalendarLink = (event) => {
   const { name, details, location, date, timeFrom, timeTo } = event;
-
-  // Parse date and time to ISO format (simplified for this example)
-  // Assuming date is a Date object and timeFrom/timeTo are "HH:MM" strings
   const dateStr = format(new Date(date), "yyyyMMdd");
   const startDateTime = `${dateStr}T${timeFrom.replace(":", "")}00`;
   const endDateTime = `${dateStr}T${timeTo.replace(":", "")}00`;
@@ -28,7 +25,6 @@ const generateGoogleCalendarLink = (event) => {
   return `${baseUrl}&${params.toString()}`;
 };
 
-// Helper to add thumb URL to event response
 const transformEvent = (event) => {
   const e = event.toObject ? event.toObject() : event;
   return {
@@ -43,7 +39,6 @@ const transformEvent = (event) => {
   };
 };
 
-// Helper to parse array fields
 const parseArrayField = (field) => {
   if (!field) return [];
   if (Array.isArray(field)) return field;
@@ -60,7 +55,6 @@ const parseArrayField = (field) => {
   return [];
 };
 
-// Helper to parse boolean
 const parseBool = (val) => {
   if (typeof val === "boolean") return val;
   if (val === "true" || val === "1") return true;
@@ -84,7 +78,6 @@ const getEvents = async (req, res) => {
     } = req.query;
     const filter = {};
 
-    // By default for public, only show non-draft events
     if (status) {
       filter.status = status;
     } else {
@@ -290,7 +283,6 @@ const updateEvent = async (req, res) => {
       }
 
       if (req.file) {
-        // Delete old image from Cloudinary if exists
         if (event.image?.public_id) {
           deleteFromCloudinary(event.image.public_id);
         }
@@ -357,7 +349,6 @@ const deleteEvent = async (req, res) => {
     const event = await Event.findById(req.params.id);
 
     if (event) {
-      // Delete image from Cloudinary if exists
       if (event.image?.public_id) {
         deleteFromCloudinary(event.image.public_id);
       }

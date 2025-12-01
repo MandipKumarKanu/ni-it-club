@@ -31,7 +31,6 @@ const Gallery = () => {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [activeImage, setActiveImage] = useState(null);
 
-  // Get state from URL or defaults
   const category = searchParams.get("category") || "All";
   const page = parseInt(searchParams.get("page") || "1");
 
@@ -93,7 +92,6 @@ const Gallery = () => {
 
   const openAlbum = (album) => {
     setSelectedAlbum(album);
-    // Set initial active image to the first image in the album, or featured image if no images
     if (album.images && album.images.length > 0) {
       setActiveImage(album.images[0]);
     } else {
@@ -126,7 +124,6 @@ const Gallery = () => {
     setActiveImage(selectedAlbum.images[prevIndex]);
   };
 
-  // Keyboard Navigation
   useEffect(() => {
     if (!selectedAlbum) return;
 
@@ -164,7 +161,6 @@ const Gallery = () => {
             </p>
           </div>
 
-          {/* Category Filters */}
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {categories.map((cat) => {
               const Icon = cat.icon;
@@ -205,14 +201,10 @@ const Gallery = () => {
           </div>
         ) : (
           <div className="min-h-screen relative overflow-hidden ">
-            {/* Subtle Background */}
             <Dots className="absolute top-20 right-10 w-32 h-32 text-ni-black opacity-5" />
             <Dots className="absolute bottom-40 left-10 w-32 h-32 text-ni-black opacity-5" />
 
             <div>
-              {/* Hero Section */}
-
-              {/* Albums Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {albums.map((album, index) => {
                   const colors = ["bg-ni-neon", "bg-ni-cyan", "bg-ni-pink"];
@@ -225,10 +217,8 @@ const Gallery = () => {
                       onClick={() => openAlbum(album)}
                     >
                       <div className="bg-ni-white border-4 border-ni-black shadow-brutal hover:shadow-brutal-lg transition-all duration-300 hover:-translate-y-2 overflow-hidden">
-                        {/* Accent stripe */}
                         <div className={`h-2 ${accentColor}`}></div>
 
-                        {/* Image */}
                         <div className="relative overflow-hidden">
                           <img
                             src={
@@ -239,7 +229,6 @@ const Gallery = () => {
                             className="w-full h-auto transition-all duration-500 grayscale group-hover:grayscale-0 group-hover:scale-105"
                           />
 
-                          {/* Hover overlay */}
                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-ni-black/70">
                             <div className="bg-ni-white text-ni-black p-4 border-4 border-ni-black shadow-brutal">
                               <ZoomIn size={32} strokeWidth={3} />
@@ -247,7 +236,6 @@ const Gallery = () => {
                           </div>
                         </div>
 
-                        {/* Title bar */}
                         <div
                           className={`${accentColor} border-t-4 border-ni-black p-3 sm:p-4`}
                         >
@@ -265,7 +253,6 @@ const Gallery = () => {
                 })}
               </div>
 
-              {/* Empty State */}
               {albums.length === 0 && (
                 <div className="text-center py-20 sm:py-32 border-4 border-ni-black bg-ni-gray shadow-brutal-lg">
                   <div className="relative z-10">
@@ -279,7 +266,6 @@ const Gallery = () => {
                 </div>
               )}
 
-              {/* Pagination Controls */}
               {pagination.totalPages > 1 && (
                 <div className="flex justify-center items-center gap-4 mt-16">
                   <button
@@ -303,11 +289,9 @@ const Gallery = () => {
               )}
             </div>
 
-            {/* Album Viewer Modal */}
             {selectedAlbum &&
               createPortal(
                 <div className="fixed inset-0 z-9999 flex flex-col bg-ni-black/95 animate-in fade-in duration-200">
-                  {/* Toolbar */}
                   <div className="flex justify-between items-center p-4 bg-ni-black text-ni-white border-b border-ni-gray-800">
                     <div className="flex items-center gap-4">
                       <h3 className="text-xl font-black uppercase truncate max-w-md">
@@ -328,9 +312,7 @@ const Gallery = () => {
                     </button>
                   </div>
 
-                  {/* Main Content Area */}
                   <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-                    {/* Main Image Stage */}
                     <div className="flex-1 relative flex items-center justify-center bg-ni-black p-4 lg:p-8">
                       {activeImage ? (
                         <>
@@ -340,7 +322,6 @@ const Gallery = () => {
                             className="max-w-full max-h-full object-contain shadow-2xl"
                           />
 
-                          {/* Navigation Arrows */}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -360,7 +341,6 @@ const Gallery = () => {
                             <ChevronRight size={24} strokeWidth={3} />
                           </button>
 
-                          {/* Caption Overlay */}
                           {activeImage.caption && (
                             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-ni-black/80 text-ni-white px-6 py-3 border-2 border-ni-white max-w-2xl text-center backdrop-blur-sm">
                               <p className="font-bold text-lg">
@@ -376,7 +356,6 @@ const Gallery = () => {
                       )}
                     </div>
 
-                    {/* Thumbnails Sidebar */}
                     <div className="h-32 lg:h-full lg:w-80 bg-ni-gray-900 border-t lg:border-t-0 lg:border-l border-ni-gray-800 overflow-y-auto p-4">
                       <div className="grid grid-cols-4 lg:grid-cols-2 gap-2">
                         {selectedAlbum.images.map((img) => (

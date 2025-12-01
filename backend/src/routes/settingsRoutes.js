@@ -14,11 +14,9 @@ const {
 const { protect, admin } = require("../middleware/authMiddleware");
 const upload = require("../middleware/uploadMiddleware");
 
-// Public routes
 router.get("/", getSettings);
 router.get("/stats", getPublicStats);
 
-// Admin routes
 router.put(
   "/",
   protect,
@@ -34,7 +32,6 @@ router.get("/dashboard", protect, admin, getDashboardStats);
 router.patch("/stats", protect, admin, updateStats);
 router.post("/stats/recalculate", protect, admin, recalculateStats);
 
-// Social links management
 router.post("/social-links", protect, admin, addSocialLink);
 router.put("/social-links/:linkId", protect, admin, updateSocialLink);
 router.delete("/social-links/:linkId", protect, admin, deleteSocialLink);

@@ -31,7 +31,6 @@ const ProjectModal = ({ project, onClose }) => {
         </div>
 
         <div className="p-6 md:p-8 space-y-8">
-          {/* Hero Image */}
           <div className="border-4 border-ni-black overflow-hidden relative group">
             <img
               src={project.image?.url || project.image}
@@ -40,9 +39,7 @@ const ProjectModal = ({ project, onClose }) => {
             />
           </div>
 
-          {/* Content Grid */}
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Main Info */}
             <div className="md:col-span-2 space-y-6">
               <div>
                 <h2 className="text-3xl md:text-4xl font-black uppercase mb-4 font-mono">
@@ -53,7 +50,6 @@ const ProjectModal = ({ project, onClose }) => {
                 </div>
               </div>
 
-              {/* Screenshots */}
               {project.screenshots && project.screenshots.length > 0 && (
                 <div className="space-y-4">
                   <h3 className="text-xl font-bold uppercase border-b-4 border-ni-black inline-block">
@@ -77,9 +73,7 @@ const ProjectModal = ({ project, onClose }) => {
               )}
             </div>
 
-            {/* Sidebar */}
             <div className="space-y-6">
-              {/* Tech Stack */}
               <div className="bg-ni-gray-100 p-4 border-2 border-ni-black">
                 <h3 className="font-bold uppercase mb-3 flex items-center gap-2">
                   <span className="w-2 h-2 bg-ni-neon block"></span>
@@ -97,7 +91,6 @@ const ProjectModal = ({ project, onClose }) => {
                 </div>
               </div>
 
-              {/* Links */}
               <div className="space-y-3">
                 {project.link && (
                   <a
@@ -125,7 +118,6 @@ const ProjectModal = ({ project, onClose }) => {
                 )}
               </div>
 
-              {/* Metadata */}
               <div className="text-xs font-mono text-ni-gray-600 space-y-2 border-t-2 border-dashed border-ni-gray-300 pt-4">
                 <p>
                   <span className="font-bold">Category:</span>{" "}

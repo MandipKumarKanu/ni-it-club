@@ -27,11 +27,10 @@ const Footer = () => {
     website: Globe,
     telegram: Send,
     whatsapp: MessageCircle,
-    discord: MessageCircle, // Fallback
+    discord: MessageCircle,
     email: Mail,
   };
 
-  // Default social links if none provided
   const defaultSocials = [
     { platform: "github", url: "https://github.com/ni-it-club" },
     { platform: "facebook", url: "#" },
@@ -48,7 +47,6 @@ const Footer = () => {
     <footer className="bg-ni-black text-ni-white border-t-4 border-ni-neon py-12 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Brand */}
           <div className="space-y-4">
             <h2 className="text-3xl font-bold text-ni-neon uppercase tracking-tighter">
               {settings?.siteName || "NI IT Club"}
@@ -59,7 +57,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Quick Links */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold uppercase border-b-2 border-ni-neon inline-block pb-1">
               Quick Links
@@ -100,7 +97,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Socials */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold uppercase border-b-2 border-ni-neon inline-block pb-1">
               Connect

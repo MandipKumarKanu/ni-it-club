@@ -4,7 +4,6 @@ const {
   deleteFromCloudinary,
 } = require("../utils/cloudinaryUpload");
 
-// Helper to add thumb URL to team member response
 const transformMember = (member) => {
   const m = member.toObject ? member.toObject() : member;
   return {
@@ -19,7 +18,6 @@ const transformMember = (member) => {
   };
 };
 
-// Helper to parse comma-separated string to array
 const parseArrayField = (field) => {
   if (!field) return [];
   if (Array.isArray(field)) return field;
@@ -40,7 +38,6 @@ const getTeamMembers = async (req, res) => {
     const { status, jobType } = req.query;
     const filter = {};
 
-    // By default, only show active members on public routes
     if (status) {
       filter.status = status;
     }
@@ -190,7 +187,6 @@ const updateTeamMember = async (req, res) => {
         member.description = parseArrayField(description);
       }
 
-      // Update social links
       if (linkedin !== undefined) member.socialLinks.linkedin = linkedin;
       if (github !== undefined) member.socialLinks.github = github;
       if (twitter !== undefined) member.socialLinks.twitter = twitter;
@@ -198,7 +194,6 @@ const updateTeamMember = async (req, res) => {
       if (portfolio !== undefined) member.socialLinks.portfolio = portfolio;
 
       if (req.file) {
-        // Delete old image from Cloudinary if exists
         if (member.image?.public_id) {
           deleteFromCloudinary(member.image.public_id);
         }
@@ -221,7 +216,7 @@ const updateTeamMember = async (req, res) => {
 // @access  Private/Admin
 const reorderTeamMembers = async (req, res) => {
   try {
-    const { positions } = req.body; // Array of { id, position }
+    const { positions } = req.body; 
 
     if (!Array.isArray(positions)) {
       return res.status(400).json({ message: "Positions array required" });
@@ -248,7 +243,6 @@ const deleteTeamMember = async (req, res) => {
     const member = await TeamMember.findById(req.params.id);
 
     if (member) {
-      // Delete image from Cloudinary if exists
       if (member.image?.public_id) {
         deleteFromCloudinary(member.image.public_id);
       }

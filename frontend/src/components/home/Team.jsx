@@ -43,7 +43,7 @@ const Team = ({ data, loading }) => {
   }
 
   if (!teamMembers || teamMembers.length === 0) {
-    return null; // Don't render if no team members
+    return null;
   }
 
   return (
@@ -79,7 +79,6 @@ const Team = ({ data, loading }) => {
                 {member.name}
               </h3>
 
-              {/* Roles */}
               <div className="flex flex-wrap justify-center gap-1 mb-2">
                 {Array.isArray(member.role) ? (
                   member.role.map((r, idx) => (
@@ -97,13 +96,6 @@ const Team = ({ data, loading }) => {
                   </span>
                 )}
               </div>
-
-              {/* Specialized In */}
-              {/* {member.specializedIn && (
-                <div className="text-xs text-gray-600 mb-4 italic">
-                  {member.specializedIn}
-                </div>
-              )} */}
 
               {/* Skills/Description Tags */}
               <div className="flex flex-wrap justify-center gap-2 mb-6 border-t-4 border-ni-black pt-4 w-full">

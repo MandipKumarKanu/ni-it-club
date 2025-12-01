@@ -19,7 +19,6 @@ router
   .get(getEvents)
   .post(protect, admin, upload.single("image"), createEvent);
 
-// Admin routes
 router.get("/admin/all", protect, admin, getAllEventsAdmin);
 router.get("/stats", protect, admin, getEventStats);
 router.patch("/:id/featured", protect, admin, toggleEventFeatured);

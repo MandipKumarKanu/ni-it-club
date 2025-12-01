@@ -28,7 +28,6 @@ router
     createGallery
   );
 
-// Admin routes
 router.get("/admin/all", protect, admin, getAllGalleriesAdmin);
 router.get("/stats", protect, admin, getGalleryStats);
 router.patch("/:id/status", protect, admin, toggleGalleryStatus);
@@ -47,8 +46,6 @@ router
     updateGallery
   )
   .delete(protect, admin, deleteGallery);
-
-// Delete individual image from gallery
 router.delete("/:id/images/:imageId", protect, admin, deleteGalleryImage);
 
 module.exports = router;

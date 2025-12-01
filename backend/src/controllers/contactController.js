@@ -17,7 +17,6 @@ const sendContactEmail = async (req, res) => {
   }
 
   try {
-    // Save to database
     const contact = await Contact.create({
       name,
       email,
@@ -27,7 +26,6 @@ const sendContactEmail = async (req, res) => {
       status: "new",
     });
 
-    // Send admin notification email
     await sendEmail({
       email: process.env.CONTACT_EMAIL || process.env.SMTP_USER,
       subject: `[${(
@@ -42,7 +40,6 @@ const sendContactEmail = async (req, res) => {
       }),
     });
 
-    // Send thank you email to submitter
     await sendEmail({
       email: email,
       subject: "Thanks for contacting NI-IT Club! 🚀",
@@ -104,7 +101,6 @@ const getContactById = async (req, res) => {
     );
 
     if (contact) {
-      // Mark as read if new
       if (contact.status === "new") {
         contact.status = "read";
         await contact.save();
@@ -156,14 +152,12 @@ const replyToContact = async (req, res) => {
       return res.status(400).json({ message: "Reply message is required" });
     }
 
-    // Send reply email with nice template
     await sendEmail({
       email: contact.email,
       subject: replySubject || `Re: ${contact.subject}`,
       html: getContactReplyTemplate(contact.name, replyMessage, contact.subject),
     });
 
-    // Update contact status
     contact.status = "replied";
     contact.repliedAt = new Date();
     contact.repliedBy = req.user._id;

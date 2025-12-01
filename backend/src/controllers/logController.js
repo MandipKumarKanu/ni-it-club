@@ -34,7 +34,6 @@ const getLogs = async (req, res) => {
   }
 };
 
-// Helper function to log activity
 const logActivity = async (userId, action, module, details, req) => {
   try {
     const ipAddress =
