@@ -27,13 +27,12 @@ const ProjectsList = () => {
     try {
       setLoading(true);
       const { data } = await api.get("/projects");
-      // Handle both paginated (data.docs) and non-paginated (data) responses
       const projectsData = Array.isArray(data) ? data : data.docs || [];
       setProjects(projectsData);
     } catch (error) {
       console.error("Failed to fetch projects:", error);
       toast.error("Failed to fetch projects");
-      setProjects([]); // Set empty array on error
+      setProjects([]);
     } finally {
       setLoading(false);
     }

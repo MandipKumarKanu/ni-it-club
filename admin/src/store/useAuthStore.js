@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { toast } from "react-hot-toast";
-import { jwtDecode } from "jwt-decode";
-import api from "../services/api"; // This is customAxios
+import api from "../services/api"; 
 
 export const useAuthStore = create((set) => ({
   loading: false,
@@ -25,10 +24,9 @@ export const useAuthStore = create((set) => ({
       }
 
       const { accessToken, ...userData } = data;
-      // We can store the full user data returned from login
       set({ loading: false, user: userData, token: accessToken });
       toast.success("Login Successful");
-      return true; // Indicate success
+      return true;
     } catch (error) {
       const msg = error.response?.data?.message || "Login failed";
       toast.error(msg);
@@ -44,7 +42,6 @@ export const useAuthStore = create((set) => ({
       toast.success("Logged out");
     } catch (error) {
       console.error(error);
-      // Force logout anyway
       set({ loading: false, user: null, token: null });
     }
   },

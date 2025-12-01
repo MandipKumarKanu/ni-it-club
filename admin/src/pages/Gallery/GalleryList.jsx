@@ -27,13 +27,12 @@ const GalleryList = () => {
     try {
       setLoading(true);
       const { data } = await api.get("/gallery");
-      // Handle both paginated (data.docs) and non-paginated (data) responses
       const galleriesData = Array.isArray(data) ? data : data.docs || [];
       setGalleries(galleriesData);
     } catch (error) {
       console.error("Failed to fetch galleries:", error);
       toast.error("Failed to fetch galleries");
-      setGalleries([]); // Set empty array on error
+      setGalleries([]); 
     } finally {
       setLoading(false);
     }

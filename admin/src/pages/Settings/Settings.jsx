@@ -188,7 +188,7 @@ const Settings = () => {
   if (!settings) return <div>Loading...</div>;
 
   const tabs = [
-    { id: "general", label: "General", icon: Globe },
+    { id: "general", label: "General (SEO)", icon: Globe },
     { id: "branding", label: "Branding", icon: Tag },
     { id: "hero", label: "Hero Section", icon: Layout },
     { id: "about", label: "About", icon: Info },
@@ -426,7 +426,6 @@ const Settings = () => {
           {/* Social Links */}
           {activeTab === "social" && (
             <div className="space-y-4">
-              {/* Add New Social Link */}
               <Card title="Add Social Link">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                   <div>

@@ -17,14 +17,9 @@ const Login = () => {
   const onSubmit = async (data) => {
     const success = await login(data.email, data.password);
     if (success) {
-      // Persist user details for UI (since token only has ID/Role)
-      // The store update happens in login()
-      // We also need to save to localStorage to persist name/email on refresh
-      // Access store state to get the user that was just set
       const user = useAuthStore.getState().user;
       localStorage.setItem("niit_admin_user", JSON.stringify(user));
 
-      // Check if first login - force password change
       if (user?.isFirstLogin) {
         navigate("/change-password");
       } else {

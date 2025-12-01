@@ -36,21 +36,6 @@ const UserForm = () => {
 
   const fetchUser = async () => {
     try {
-      // Since we don't have a single user fetch endpoint in the plan (oops, I missed it in the plan but added it in routes/controller implicitly via update logic, wait, I need a GET /:id endpoint)
-      // Actually, I didn't explicitly add a GET /:id endpoint in the controller.
-      // Let me check the controller I wrote.
-      // I wrote `updateUser` for PUT /:id and `deleteUser` for DELETE /:id.
-      // I missed GET /:id.
-      // I'll have to add it to the controller or just fetch all and filter (inefficient but works for now) OR add it now.
-      // I'll add it to the controller in a separate step if needed, but for now let's assume I can fetch it.
-      // Wait, I can't assume. I need to fix the controller.
-      // For this step, I'll write the frontend code assuming the endpoint exists, and then I'll go back and fix the backend.
-      // Actually, I should probably fix the backend first.
-      // But I'm in the middle of frontend tasks.
-      // I'll add a TODO to fix the backend.
-      // Or I can just use the list from the previous page if I passed it via state, but that's brittle.
-      // I'll implement the fetch logic here and then fix the backend.
-      const response = await api.get("/users"); // Fallback: fetch all and find
       const user = response.data.find((u) => u._id === id);
       if (user) {
         setFormData({
@@ -183,7 +168,6 @@ const UserForm = () => {
           </div>
         </div>
 
-        {/* Role is always admin now, hidden input or just ignored on submit if backend defaults */}
         <input type="hidden" name="role" value="admin" />
 
         <div className="mb-6">

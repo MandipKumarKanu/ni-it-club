@@ -27,13 +27,12 @@ const EventsList = () => {
     try {
       setLoading(true);
       const { data } = await api.get("/events");
-      // Handle both paginated (data.docs) and non-paginated (data) responses
       const eventsData = Array.isArray(data) ? data : data.docs || [];
       setEvents(eventsData);
     } catch (error) {
       console.error("Failed to fetch events:", error);
       toast.error("Failed to fetch events");
-      setEvents([]); // Set empty array on error
+      setEvents([]);
     } finally {
       setLoading(false);
     }

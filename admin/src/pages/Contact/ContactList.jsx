@@ -49,13 +49,12 @@ const ContactList = () => {
   const handleView = (contact) => {
     setSelectedContact(contact);
     setIsModalOpen(true);
-    // Mark as read locally if needed, but backend handles it on getById
   };
 
   const handleClose = () => {
     setIsModalOpen(false);
     setSelectedContact(null);
-    fetchContacts(); // Refresh to update status
+    fetchContacts();
   };
 
   return (

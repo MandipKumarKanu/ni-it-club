@@ -6,7 +6,6 @@ import App from "./App.jsx";
 import { setupInterceptors } from "./services/api.js";
 import { useAuthStore } from "./store/useAuthStore.js";
 
-// Setup Axios Interceptors with Zustand Store
 setupInterceptors(
   () => useAuthStore.getState().token,
   useAuthStore.getState().setToken,

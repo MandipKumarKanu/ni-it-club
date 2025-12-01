@@ -25,22 +25,13 @@ const Sidebar = ({ isOpen = false, onClose }) => {
   const { user } = useAuthStore();
   const permissions = user?.permissions || {};
 
-  // Helper to check permission
   const hasPermission = (module) => {
-    // Super admin (if we had one) or if permissions are not defined yet (legacy), maybe allow?
-    // But for now, let's be strict. If permissions object exists, check it.
-    // If user has no permissions object (legacy user), maybe default to true or false?
-    // Let's assume new users have permissions.
-    // Also, "Dashboard" and "Settings" might be common?
-    // User said "give them only access to that only".
-    // So we should filter everything except maybe Dashboard/Contact/Settings if not specified?
-    // Actually, let's map modules to routes.
-    if (!module) return true; // Public/Common modules
+    if (!module) return true;
     return permissions[module] === true;
   };
 
   const navItems = [
-    { to: "/", icon: LayoutDashboard, label: "Dashboard" }, // Always visible
+    { to: "/", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/events", icon: Calendar, label: "Events", module: "events" },
     { to: "/gallery", icon: Image, label: "Gallery", module: "gallery" },
     { to: "/projects", icon: Briefcase, label: "Projects", module: "projects" },

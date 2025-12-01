@@ -194,13 +194,12 @@ const TeamList = () => {
     try {
       setLoading(true);
       const { data } = await api.get("/team");
-      // Handle both paginated (data.docs) and non-paginated (data) responses
       const teamData = Array.isArray(data) ? data : data.docs || [];
       setTeam(teamData);
     } catch (error) {
       console.error("Failed to fetch team members:", error);
       toast.error("Failed to fetch team members");
-      setTeam([]); // Set empty array on error
+      setTeam([]);
     } finally {
       setLoading(false);
     }
@@ -248,13 +247,11 @@ const TeamList = () => {
 
         const newItems = arrayMove(items, oldIndex, newIndex);
 
-        // Prepare payload for API
         const positions = newItems.map((item, index) => ({
           id: item._id,
           position: index,
         }));
 
-        // Call API to update order
         api
           .put("/team/reorder", { positions })
           .then(() => {
@@ -263,7 +260,6 @@ const TeamList = () => {
           .catch((err) => {
             console.error("Failed to reorder team:", err);
             toast.error("Failed to reorder team");
-            // Revert changes if API fails (optional, but good UX)
             fetchTeam();
           });
 

@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "./store/useAuthStore";
-import api from "./services/api"; // Ensure interceptors are active
 import axios from "axios";
 import Layout from "./components/layout/Layout";
 import Login from "./pages/Login";
@@ -36,10 +35,8 @@ function App() {
 
   useEffect(() => {
     const initAuth = async () => {
-      // Try to refresh token on app load if we don't have one but might have a cookie
       if (!token) {
         try {
-          // Use global axios to avoid interceptor loop
           const { data } = await axios.post(
             `${
               import.meta.env.VITE_API_URL || "http://localhost:5000/api"
@@ -49,23 +46,9 @@ function App() {
           );
           const { accessToken } = data;
           const decodedUser = jwtDecode(accessToken);
-          // Ideally we should fetch full user profile here if needed,
-          // but for now let's assume we can proceed or fetch profile.
-          // Let's try to fetch profile or just use decoded info?
-          // My backend doesn't have a /me endpoint yet.
-          // Let's just set the token. The interceptor handles the rest for requests.
-          // But we need 'user' in store for UI.
-          // Let's decode the token to get basic info (id, role).
-          // If we need name/email, we should add a /me endpoint or store it in localStorage.
-          // For now, let's just set token.
           setToken(accessToken);
 
-          // Fetch fresh user profile to ensure permissions are up to date
           try {
-            // We need to use the token we just got.
-            // Since api interceptor might not have picked it up yet (state update is async),
-            // we can use axios directly or rely on api if we set the header manually or wait.
-            // But simpler: just use axios with the new token.
             const userResponse = await axios.get(
               `${
                 import.meta.env.VITE_API_URL || "http://localhost:5000/api"
@@ -80,23 +63,18 @@ function App() {
             localStorage.setItem("niit_admin_user", JSON.stringify(freshUser));
           } catch (profileError) {
             console.error("Failed to fetch profile", profileError);
-            // Fallback to local storage if fetch fails
             const storedUser = localStorage.getItem("niit_admin_user");
             if (storedUser) {
               setUser(JSON.parse(storedUser));
             }
           }
         } catch (error) {
-          // Refresh failed, user needs to login
           console.log("Session expired or invalid");
           setToken(null);
           setUser(null);
           localStorage.removeItem("niit_admin_user");
         }
       } else {
-        // Token exists in state (rare on reload, but possible if navigating)
-        // We should still maybe refresh profile?
-        // For now, let's assume if token is in state, user is also in state.
       }
       setIsChecking(false);
     };

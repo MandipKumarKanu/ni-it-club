@@ -71,8 +71,6 @@ export const setupInterceptors = (getToken, setToken, updateUser) => {
             setToken(null);
             updateUser(null);
             reject(refreshError);
-            // Do NOT redirect to login here, let the UI handle it
-            // window.location.href = "/login";
           } finally {
             tokenPromise = null;
           }

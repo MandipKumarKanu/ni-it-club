@@ -18,7 +18,7 @@ const EventForm = ({ event, onSuccess }) => {
     if (event) {
       reset({
         ...event,
-        date: event.date.split("T")[0], // Format date for input
+        date: event.date.split("T")[0],
       });
     } else {
       reset({});
@@ -29,7 +29,6 @@ const EventForm = ({ event, onSuccess }) => {
     setIsLoading(true);
     const formData = new FormData();
 
-    // Append all fields
     Object.keys(data).forEach((key) => {
       if (key === "image") {
         if (data.image[0]) {
@@ -165,7 +164,6 @@ const EventForm = ({ event, onSuccess }) => {
             </label>
           </div>
 
-          {/* Watch isRegisterable to show/hide link input */}
           <Input
             label="Registration Link"
             placeholder="https://..."
