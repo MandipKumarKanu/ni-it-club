@@ -16,6 +16,8 @@ import Settings from "./pages/Settings/Settings";
 import UsersList from "./pages/Users/UsersList";
 import UserForm from "./pages/Users/UserForm";
 import Logs from "./pages/Logs/Logs";
+import SubscribersList from "./pages/Newsletter/SubscribersList";
+import ComposeNewsletter from "./pages/Newsletter/ComposeNewsletter";
 import ChangePassword from "./pages/Auth/ChangePassword";
 import { jwtDecode } from "jwt-decode";
 
@@ -114,6 +116,8 @@ function App() {
         <Route path="projects" element={<ProjectsList />} />
         <Route path="team" element={<TeamList />} />
         <Route path="contact" element={<ContactList />} />
+        <Route path="newsletter" element={<SubscribersList />} />
+        <Route path="newsletter/compose" element={<ComposeNewsletter />} />
         <Route path="settings" element={<Settings />} />
         <Route path="users" element={<UsersList />} />
         <Route path="users/new" element={<UserForm />} />

@@ -36,7 +36,8 @@ const UserForm = () => {
 
   const fetchUser = async () => {
     try {
-      const user = response.data.find((u) => u._id === id);
+      const response = await api.get(`/users/${id}`);
+      const user = response.data;
       if (user) {
         setFormData({
           name: user.name,

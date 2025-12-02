@@ -350,9 +350,120 @@ const getContactReplyTemplate = (name, replyMessage, originalSubject) => {
   return getBaseTemplate(content);
 };
 
+/**
+ * Newsletter Welcome Email Template
+ */
+const getNewsletterWelcomeTemplate = (name, isResubscribe = false) => {
+  const title = isResubscribe ? "Welcome Back!" : "You're In!";
+  const subtitle = isResubscribe
+    ? "Great to have you back in our community! 🎉"
+    : "Thanks for joining the NI-IT Club newsletter! 🚀";
+
+  const content = `
+    <div class="content">
+      <h2>${title} ${isResubscribe ? "🔄" : "🎊"}</h2>
+      <p>Hey ${name}! 👋</p>
+      <p>${subtitle}</p>
+      
+      <div class="info-box" style="background-color: ${colors.neon}; color: ${colors.black};">
+        <p style="color: ${colors.black}; margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase;">
+          📬 What You'll Get
+        </p>
+        <ul style="margin: 0; padding-left: 20px; color: ${colors.black};">
+          <li style="margin: 5px 0;">🎯 Updates on upcoming events & workshops</li>
+          <li style="margin: 5px 0;">💡 New project showcases from our members</li>
+          <li style="margin: 5px 0;">📰 Tech tips, tutorials & community news</li>
+          <li style="margin: 5px 0;">🏆 Competition announcements & opportunities</li>
+        </ul>
+      </div>
+      
+      <div style="background-color: ${colors.cyan}; border: 4px solid ${colors.black}; padding: 20px; margin: 20px 0;">
+        <p style="color: ${colors.white}; margin: 0; font-weight: 900;">
+          💡 Pro Tip: Add us to your contacts to make sure our emails don't end up in spam!
+        </p>
+      </div>
+      
+      <p style="margin-top: 30px;">We're excited to have you onboard! 🚀</p>
+      <p style="font-weight: 900;">— The NI-IT Club Team</p>
+    </div>
+  `;
+
+  return getBaseTemplate(content);
+};
+
+/**
+ * Newsletter Content Email Template
+ */
+const getNewsletterTemplate = ({ content, preheader, subscriberName, unsubscribeUrl }) => {
+  const emailContent = `
+    <div class="content">
+      <p>Hey ${subscriberName}! 👋</p>
+      
+      <div style="margin: 20px 0; line-height: 1.8;">
+        ${content}
+      </div>
+      
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 2px dashed ${colors.black};">
+        <p style="font-weight: 900;">— The NI-IT Club Team</p>
+      </div>
+    </div>
+    
+    <div style="background-color: #f5f5f5; border-left: 4px solid ${colors.black}; border-right: 4px solid ${colors.black}; padding: 15px 30px; text-align: center;">
+      <p style="margin: 0; font-size: 12px; color: #666;">
+        You're receiving this because you subscribed to NI-IT Club newsletter.
+        <br>
+        <a href="${unsubscribeUrl}" style="color: ${colors.cyan}; text-decoration: underline;">Unsubscribe</a> if you no longer wish to receive these emails.
+      </p>
+    </div>
+  `;
+
+  // Add preheader for email preview text
+  const preheaderHtml = preheader
+    ? `<div style="display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">${preheader}</div>`
+    : "";
+
+  return preheaderHtml + getBaseTemplate(emailContent);
+};
+
+/**
+ * Unsubscribe Confirmation Email Template
+ */
+const getUnsubscribeConfirmationTemplate = (name) => {
+  const content = `
+    <div class="content">
+      <h2>You've Been Unsubscribed 👋</h2>
+      <p>Hey ${name},</p>
+      <p>We're sad to see you go, but we understand. You've been successfully unsubscribed from the NI-IT Club newsletter.</p>
+      
+      <div class="info-box" style="background-color: ${colors.pink};">
+        <p style="color: ${colors.white}; margin: 0;">
+          💔 You won't receive any more newsletters from us.
+        </p>
+      </div>
+      
+      <div style="background-color: ${colors.neon}; border: 4px solid ${colors.black}; padding: 20px; margin: 20px 0;">
+        <p style="margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; font-weight: 900;">
+          🔄 Changed Your Mind?
+        </p>
+        <p style="margin: 0;">
+          You can always resubscribe by visiting our website. We'd love to have you back!
+        </p>
+      </div>
+      
+      <p style="margin-top: 30px;">Thanks for being part of our journey! 🙏</p>
+      <p style="font-weight: 900;">— The NI-IT Club Team</p>
+    </div>
+  `;
+
+  return getBaseTemplate(content);
+};
+
 module.exports = {
   getResetPasswordOTPTemplate,
   getContactThankYouTemplate,
   getContactNotificationTemplate,
   getContactReplyTemplate,
+  getNewsletterWelcomeTemplate,
+  getNewsletterTemplate,
+  getUnsubscribeConfirmationTemplate,
 };

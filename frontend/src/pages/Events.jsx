@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Calendar,
   MapPin,
@@ -17,12 +17,14 @@ import {
   Mic,
   BookOpen,
   X,
+  Eye,
 } from "lucide-react";
 import { Dots, Zigzag, WavyLine } from "../components/ui/Doodles";
 import api from "../services/api";
 import SEO from "../components/SEO";
 import Skeleton from "../components/ui/Skeleton";
 import EventModal from "../components/ui/EventModal";
+import CountdownTimer from "../components/ui/CountdownTimer";
 
 const Events = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -148,10 +150,10 @@ const Events = () => {
       accent: "text-ni-blue",
     },
     Other: {
-      color: "bg-ni-black",
-      gradient: "from-ni-black to-gray-600",
+      color: "bg-ni-cyan",
+      gradient: "from-ni-cyan to-blue-600",
       icon: Star,
-      accent: "text-ni-black",
+      accent: "text-ni-cyan",
     },
   };
 
@@ -366,9 +368,19 @@ const Events = () => {
                           {featuredEvent.name}
                         </h3>
 
-                        <p className="font-bold text-xl text-gray-600 mb-8 group-hover:text-ni-white/80 transition-colors max-w-2xl line-clamp-3">
+                        <p className="font-bold text-xl text-gray-600 mb-6 group-hover:text-ni-white/80 transition-colors max-w-2xl line-clamp-3">
                           {featuredEvent.shortDetails}
                         </p>
+
+                        {new Date(featuredEvent.date) > new Date() && (
+                          <div className="mb-6 p-4 bg-ni-white/90 border-4 border-ni-black inline-block">
+                            <CountdownTimer
+                              eventDate={featuredEvent.date}
+                              eventTime={featuredEvent.timeFrom}
+                              variant="compact"
+                            />
+                          </div>
+                        )}
 
                         <div className="flex flex-wrap gap-4">
                           {featuredEvent.isRegisterable &&
@@ -388,9 +400,10 @@ const Events = () => {
                             )}
                           <button
                             onClick={() => setSelectedEvent(featuredEvent)}
-                            className="bg-transparent text-ni-black border-4 border-ni-black px-8 py-4 font-black uppercase text-lg hover:bg-ni-black hover:text-ni-white transition-all group-hover:border-ni-white group-hover:text-ni-white group-hover:hover:bg-ni-white group-hover:hover:text-ni-black"
+                            className="bg-transparent text-ni-black border-4 border-ni-black px-8 py-4 font-black uppercase text-lg hover:bg-ni-black hover:text-ni-white transition-all group-hover:border-ni-white group-hover:text-ni-white group-hover:hover:bg-ni-white group-hover:hover:text-ni-black inline-flex items-center gap-2"
                           >
-                            Learn More
+                            <Eye size={20} />
+                            View Details
                           </button>
                         </div>
                       </div>
@@ -479,18 +492,26 @@ const Events = () => {
                                 </span>
                               </div>
 
+                              {/* Countdown Timer for upcoming events */}
+                              {new Date(event.date) > new Date() && (
+                                <div className="mb-4">
+                                  <CountdownTimer
+                                    eventDate={event.date}
+                                    eventTime={event.timeFrom}
+                                    variant="compact"
+                                  />
+                                </div>
+                              )}
+
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setSelectedEvent(event);
                                 }}
-                                className="w-full bg-gray-100 border-3 border-ni-black py-3 font-bold uppercase text-sm hover:bg-ni-black hover:text-ni-white transition-all flex items-center justify-center gap-2 group-hover:bg-ni-black group-hover:text-ni-white"
+                                className="w-full bg-ni-black text-ni-white border-3 border-ni-black py-3 font-bold uppercase text-sm hover:bg-ni-neon hover:text-ni-black transition-all flex items-center justify-center gap-2"
                               >
+                                <Eye size={14} />
                                 View Details
-                                <ChevronRight
-                                  size={16}
-                                  className="group-hover:translate-x-1 transition-transform"
-                                />
                               </button>
                             </div>
 
@@ -596,8 +617,8 @@ const Events = () => {
                 Workshops • Tech Talks • Study Sessions • Hackathons
               </p>
 
-              <a
-                href="/contact"
+              <Link
+                to="/contact"
                 className="group inline-flex items-center gap-3 bg-ni-black text-ni-neon border-4 border-ni-black px-10 py-5 font-black uppercase text-xl shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-none hover:translate-x-1.5 hover:translate-y-1.5 transition-all"
               >
                 <Users size={24} />
@@ -606,11 +627,16 @@ const Events = () => {
                   size={22}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
       </div>
+
+      <EventModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+      />
     </>
   );
 };

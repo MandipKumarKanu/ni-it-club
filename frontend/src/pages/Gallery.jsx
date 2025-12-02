@@ -84,10 +84,10 @@ const Gallery = () => {
   };
 
   const categories = [
-    { name: "All", icon: ImageIcon },
-    { name: "Hackathons", icon: Code },
-    { name: "Workshops", icon: Calendar },
-    { name: "Socials", icon: Users },
+    { name: "All", icon: ImageIcon, color: "bg-ni-black" },
+    { name: "Hackathons", icon: Code, color: "bg-ni-neon" },
+    { name: "Workshops", icon: Calendar, color: "bg-ni-cyan" },
+    { name: "Socials", icon: Users, color: "bg-ni-pink" },
   ];
 
   const openAlbum = (album) => {
@@ -164,14 +164,15 @@ const Gallery = () => {
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {categories.map((cat) => {
               const Icon = cat.icon;
+              const isActive = category === cat.name;
               return (
                 <button
                   key={cat.name}
                   onClick={() => setCategory(cat.name)}
                   className={`px-4 sm:px-6 py-2 sm:py-3 font-black uppercase border-4 border-ni-black transition-all text-sm sm:text-base flex items-center gap-2 ${
-                    category === cat.name
-                      ? "bg-ni-black text-ni-white shadow-brutal scale-105"
-                      : "bg-ni-white text-ni-black hover:bg-ni-neon shadow-brutal-sm hover:shadow-brutal hover:-translate-y-1"
+                    isActive
+                      ? `${cat.color} ${cat.name === "All" ? "text-ni-white" : "text-ni-black"} shadow-none translate-x-1 translate-y-1`
+                      : "bg-ni-white text-ni-black shadow-brutal hover:-translate-y-1"
                   }`}
                 >
                   <Icon size={18} strokeWidth={3} />

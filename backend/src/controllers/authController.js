@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const ActivityLog = require("../models/ActivityLog");
 const {
   generateAccessToken,
   generateRefreshToken,
@@ -83,6 +84,24 @@ const loginUser = async (req, res) => {
       isFirstLogin: user.isFirstLogin,
       accessToken,
     });
+
+    // Log Login Activity
+    try {
+      await ActivityLog.create({
+        user: user._id,
+        userName: user.name,
+        userEmail: user.email,
+        userRole: user.role,
+        action: "LOGIN",
+        module: "Auth",
+        details: "User logged in successfully",
+        ipAddress: req.ip || req.connection.remoteAddress,
+        method: req.method,
+        url: req.originalUrl,
+      });
+    } catch (error) {
+      console.error("Login Logging Error:", error.message);
+    }
   } else {
     res.status(401).json({ message: "Invalid email or password" });
   }
@@ -93,7 +112,7 @@ const loginUser = async (req, res) => {
 // @access  Private
 const logoutUser = async (req, res) => {
   const cookie = req.cookies.jwt;
-  if (!cookie) return res.sendStatus(204); 
+  if (!cookie) return res.sendStatus(204);
 
   const user = await User.findOne({ refreshToken: cookie });
   if (!user) {

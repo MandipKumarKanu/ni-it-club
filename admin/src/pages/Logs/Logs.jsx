@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Filter, RefreshCw, User, Clock, Activity } from "lucide-react";
+import { Search, RefreshCw, User, Clock, Activity, AlertCircle, CheckCircle, Edit, Trash2, LogIn, LogOut, UserPlus, Eye } from "lucide-react";
 import api from "../../services/api";
 import Skeleton from "../../components/ui/Skeleton";
 
@@ -12,6 +12,7 @@ const Logs = () => {
     limit: 50,
     module: "",
     action: "",
+    search: "",
   });
 
   useEffect(() => {
@@ -44,25 +45,38 @@ const Logs = () => {
     setFilters((prev) => ({ ...prev, page: newPage }));
   };
 
-  const getActionColor = (action) => {
-    const colors = {
-      CREATE: "bg-green-100 text-green-800 border-green-500",
-      UPDATE: "bg-blue-100 text-blue-800 border-blue-500",
-      DELETE: "bg-red-100 text-red-800 border-red-500",
-      LOGIN: "bg-purple-100 text-purple-800 border-purple-500",
+  const getActionConfig = (action) => {
+    const configs = {
+      CREATE: { color: "bg-green-100 text-green-800 border-green-500", icon: CheckCircle },
+      UPDATE: { color: "bg-blue-100 text-blue-800 border-blue-500", icon: Edit },
+      DELETE: { color: "bg-red-100 text-red-800 border-red-500", icon: Trash2 },
+      LOGIN: { color: "bg-purple-100 text-purple-800 border-purple-500", icon: LogIn },
+      LOGOUT: { color: "bg-gray-100 text-gray-800 border-gray-500", icon: LogOut },
+      REGISTER: { color: "bg-teal-100 text-teal-800 border-teal-500", icon: UserPlus },
+      VIEW: { color: "bg-yellow-100 text-yellow-800 border-yellow-500", icon: Eye },
+      EVENT_REGISTER: { color: "bg-indigo-100 text-indigo-800 border-indigo-500", icon: UserPlus },
     };
-    return colors[action] || "bg-gray-100 text-gray-800 border-gray-500";
+    return configs[action] || { color: "bg-gray-100 text-gray-800 border-gray-500", icon: Activity };
+  };
+
+  const getStatusColor = (statusCode) => {
+    if (!statusCode) return "";
+    if (statusCode >= 500) return "text-red-600 font-bold";
+    if (statusCode >= 400) return "text-orange-600 font-bold";
+    if (statusCode >= 300) return "text-yellow-600";
+    return "text-green-600";
   };
 
   const getModuleIcon = (module) => {
     const icons = {
-      USER: User,
-      EVENT: Activity,
-      GALLERY: Activity,
-      PROJECT: Activity,
-      TEAM: Activity,
-      CONTACT: Activity,
-      SETTINGS: Activity,
+      Users: User,
+      Auth: LogIn,
+      Events: Activity,
+      Gallery: Activity,
+      Projects: Activity,
+      Team: User,
+      Contact: Activity,
+      Settings: Activity,
     };
     const Icon = icons[module] || Activity;
     return <Icon size={16} />;
@@ -87,7 +101,20 @@ const Logs = () => {
       </div>
       {/* Filters */}
       <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_#000] p-4 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-bold mb-2">Search</label>
+            <div className="relative">
+              <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search user, email, details..."
+                value={filters.search}
+                onChange={(e) => handleFilterChange("search", e.target.value)}
+                className="w-full pl-10 p-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-ni-neon"
+              />
+            </div>
+          </div>
           <div>
             <label className="block text-sm font-bold mb-2">Module</label>
             <select
@@ -96,13 +123,14 @@ const Logs = () => {
               className="w-full p-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-ni-neon"
             >
               <option value="">All Modules</option>
-              <option value="USER">User</option>
-              <option value="EVENT">Event</option>
-              <option value="GALLERY">Gallery</option>
-              <option value="PROJECT">Project</option>
-              <option value="TEAM">Team</option>
-              <option value="CONTACT">Contact</option>
-              <option value="SETTINGS">Settings</option>
+              <option value="Auth">Auth</option>
+              <option value="Users">Users</option>
+              <option value="Events">Events</option>
+              <option value="Gallery">Gallery</option>
+              <option value="Projects">Projects</option>
+              <option value="Team">Team</option>
+              <option value="Contact">Contact</option>
+              <option value="Settings">Settings</option>
             </select>
           </div>
           <div>
@@ -116,7 +144,10 @@ const Logs = () => {
               <option value="CREATE">Create</option>
               <option value="UPDATE">Update</option>
               <option value="DELETE">Delete</option>
+              <option value="VIEW">View</option>
               <option value="LOGIN">Login</option>
+              <option value="LOGOUT">Logout</option>
+              <option value="REGISTER">Register</option>
             </select>
           </div>
           <div>
@@ -227,30 +258,52 @@ const Logs = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {logs.map((log, index) => (
+                  {logs.map((log, index) => {
+                    const actionConfig = getActionConfig(log.action);
+                    const ActionIcon = actionConfig.icon;
+                    return (
                     <tr
                       key={log._id}
                       className={`border-b-2 border-gray-200 hover:bg-gray-50 ${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      }`}
+                      } ${log.statusCode >= 400 ? "bg-red-50" : ""}`}
                     >
-                      <td className="px-4 py-3 text-sm font-mono">
-                        {new Date(log.createdAt).toLocaleString()}
+                      <td className="px-4 py-3 text-sm">
+                        <div className="font-mono">{new Date(log.createdAt).toLocaleDateString()}</div>
+                        <div className="text-xs text-gray-500 font-mono">{new Date(log.createdAt).toLocaleTimeString()}</div>
+                        {log.responseTime && (
+                          <div className="text-xs text-gray-400">{log.responseTime}ms</div>
+                        )}
                       </td>
                       <td className="px-4 py-3">
-                        <div className="font-bold">
-                          {log.user?.name || "Unknown"}
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-sm border-2 border-black">
+                            {(log.userName || "?")[0].toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="font-bold">
+                              {log.userName || log.user?.name || "Unknown User"}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              {log.userEmail || log.user?.email || "No email"}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-xs text-gray-600">
-                          {log.user?.email}
-                        </div>
+                        {log.userRole && (
+                          <span className={`inline-block mt-1 px-2 py-0.5 text-xs font-bold rounded ${
+                            log.userRole === "admin" 
+                              ? "bg-purple-100 text-purple-800 border border-purple-300" 
+                              : "bg-gray-100 text-gray-800 border border-gray-300"
+                          }`}>
+                            {log.userRole}
+                          </span>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-block px-3 py-1 text-xs font-bold border-2 ${getActionColor(
-                            log.action
-                          )}`}
+                          className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-bold border-2 ${actionConfig.color}`}
                         >
+                          <ActionIcon size={12} />
                           {log.action}
                         </span>
                       </td>
@@ -259,13 +312,26 @@ const Logs = () => {
                           {getModuleIcon(log.module)}
                           <span className="font-bold">{log.module}</span>
                         </div>
+                        {log.statusCode && (
+                          <span className={`text-xs ${getStatusColor(log.statusCode)}`}>
+                            Status: {log.statusCode}
+                          </span>
+                        )}
                       </td>
-                      <td className="px-4 py-3 text-sm">{log.details}</td>
+                      <td className="px-4 py-3 text-sm max-w-xs">
+                        <div className="truncate" title={log.details}>{log.details}</div>
+                        {log.url && (
+                          <div className="text-xs text-gray-500 truncate font-mono" title={log.url}>
+                            {log.url}
+                          </div>
+                        )}
+                      </td>
                       <td className="px-4 py-3 text-sm font-mono text-gray-600">
                         {log.ipAddress || "N/A"}
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

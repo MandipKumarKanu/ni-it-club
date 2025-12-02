@@ -10,6 +10,7 @@ import {
   Settings as SettingsIcon,
   X,
   Activity,
+  Newspaper,
 } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import clsx from "clsx";
@@ -37,6 +38,7 @@ const Sidebar = ({ isOpen = false, onClose }) => {
     { to: "/projects", icon: Briefcase, label: "Projects", module: "projects" },
     { to: "/team", icon: Users, label: "Team", module: "team" },
     { to: "/contact", label: "Contact", icon: Mail, module: "contact" },
+    { to: "/newsletter", label: "Newsletter", icon: Newspaper, module: "newsletter" },
     { to: "/users", label: "Users", icon: Users, module: "users" },
     {
       to: "/logs",

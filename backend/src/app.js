@@ -28,6 +28,8 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(require("./middleware/activityLogger"));
+
 app.use("/api/home", require("./routes/homeRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
@@ -37,6 +39,7 @@ app.use("/api/projects", require("./routes/projectRoutes"));
 app.use("/api/team", require("./routes/teamRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
 app.use("/api/settings", require("./routes/settingsRoutes"));
+app.use("/api/newsletter", require("./routes/newsletterRoutes"));
 
 app.get("/", (req, res) => {
   res.send("NI-IT Club Backend is running!");

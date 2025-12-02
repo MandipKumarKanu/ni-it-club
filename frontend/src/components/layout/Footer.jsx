@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import useSettingsStore from "../../store/useSettingsStore";
+import NewsletterSubscribe from "../ui/NewsletterSubscribe";
 
 const Footer = () => {
   const { settings } = useSettingsStore();
@@ -97,32 +98,56 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold uppercase border-b-2 border-ni-neon inline-block pb-1">
-              Connect
-            </h3>
-            <div className="flex space-x-4">
-              {socials.map((social, index) => {
-                const Icon = socialIcons[social.platform.toLowerCase()] || Mail;
-                return (
-                  <a
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-ni-white text-ni-black p-2 hover:bg-ni-neon hover:translate-y-[-4px] transition-all border-2 border-transparent hover:border-ni-white"
-                  >
-                    <Icon size={24} />
-                  </a>
-                );
-              })}
+          <div className="space-y-6">
+            {/* Connect Section */}
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold uppercase border-b-2 border-ni-neon inline-block pb-1">
+                Connect
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {socials.map((social, index) => {
+                  const Icon =
+                    socialIcons[social.platform.toLowerCase()] || Mail;
+                  return (
+                    <a
+                      key={index}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-ni-white text-ni-black p-2 hover:bg-ni-neon hover:-translate-y-1 transition-all border-2 border-transparent hover:border-ni-white"
+                    >
+                      <Icon size={24} />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Newsletter Subscribe - Below Connect */}
+            <div className="pt-4 border-t border-ni-gray/30">
+              <h3 className="text-xl font-bold uppercase border-b-2 border-ni-pink inline-block pb-1 mb-4">
+                📬 Newsletter
+              </h3>
+              <p className="text-ni-gray text-sm mb-3">
+                Get updates on events, projects & tech tips!
+              </p>
+              <NewsletterSubscribe variant="compact" />
             </div>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t-2 border-ni-gray/20 text-center text-ni-gray text-sm font-mono">
           &copy; {new Date().getFullYear()} {settings?.siteName || "NI IT Club"}
-          . All rights reserved. Brutally designed.
+          . All rights reserved. Made Brutally by{" "}
+          <a
+            href="https://github.com/mandipkumarkanu"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ni-neon text-xl"
+          >
+            Mandy
+          </a>
+          .
         </div>
       </div>
     </footer>

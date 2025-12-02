@@ -133,8 +133,8 @@ const Showcase = () => {
 
         {loading && page === 1 ? (
           <>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative overflow-hidden min-h-screen">
-              <div className="mb-24 relative z-10 max-w-4xl mx-auto"></div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-hidden min-h-screen">
+              {/* <div className="mb-24 relative z-10 max-w-4xl mx-auto"></div> */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
                 {[...Array(6)].map((_, i) => (
                   <div
