@@ -7,7 +7,15 @@ const getLogDbConnection = () => {
     return logDbConnection;
   }
 
-  logDbConnection = mongoose.createConnection(process.env.MONGODB_URI_LOG, {
+  // Fall back to main database if log database URI is not configured
+  const logDbUri = process.env.MONGODB_URI_LOG || process.env.MONGODB_URI;
+  
+  if (!logDbUri) {
+    console.warn("No MongoDB URI configured for logs");
+    return null;
+  }
+
+  logDbConnection = mongoose.createConnection(logDbUri, {
     serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000,
   });
