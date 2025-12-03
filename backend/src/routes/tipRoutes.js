@@ -8,6 +8,7 @@ const {
   updateTip,
   deleteTip,
   uploadMedia,
+  getTipSharePage,
 } = require("../controllers/tipController");
 const { protect, admin } = require("../middleware/authMiddleware");
 const upload = require("../middleware/uploadMiddleware");
@@ -25,6 +26,9 @@ router.post(
   upload.single("file"),
   uploadMedia
 );
+
+// Route for social media sharing (must be before :id route)
+router.get("/share/:slug", getTipSharePage);
 
 router
   .route("/:id")

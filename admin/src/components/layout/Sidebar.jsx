@@ -12,6 +12,7 @@ import {
   Activity,
   Newspaper,
   Lightbulb,
+  BarChart3,
 } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import clsx from "clsx";
@@ -47,6 +48,12 @@ const Sidebar = ({ isOpen = false, onClose }) => {
     },
     { to: "/tips", label: "Tips & Blogs", icon: Lightbulb, module: "tips" },
     { to: "/users", label: "Users", icon: Users, module: "users" },
+    {
+      to: "/traffic",
+      label: "Traffic",
+      icon: BarChart3,
+      module: "view_logs",
+    },
     {
       to: "/logs",
       label: "Activity Logs",

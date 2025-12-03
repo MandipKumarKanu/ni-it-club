@@ -42,6 +42,7 @@ app.use("/api/contact", require("./routes/contactRoutes"));
 app.use("/api/settings", require("./routes/settingsRoutes"));
 app.use("/api/newsletter", require("./routes/newsletterRoutes"));
 app.use("/api/tips", require("./routes/tipRoutes"));
+app.use("/api/traffic", require("./routes/trafficRoutes"));
 
 app.get("/", (req, res) => {
   res.send("NI-IT Club Backend is running!");

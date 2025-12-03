@@ -20,6 +20,7 @@ import SubscribersList from "./pages/Newsletter/SubscribersList";
 import ComposeNewsletter from "./pages/Newsletter/ComposeNewsletter";
 import TipsList from "./pages/Tips/TipsList";
 import TipForm from "./pages/Tips/TipForm";
+import Traffic from "./pages/Traffic/Traffic";
 import ChangePassword from "./pages/Auth/ChangePassword";
 import { jwtDecode } from "jwt-decode";
 import useResetScrollPosition from "./components/hooks/useResetScrollPosition";
@@ -130,6 +131,7 @@ function App() {
         <Route path="users" element={<UsersList />} />
         <Route path="users/new" element={<UserForm />} />
         <Route path="users/:id" element={<UserForm />} />
+        <Route path="traffic" element={<Traffic />} />
         <Route path="logs" element={<Logs />} />
       </Route>
     </Routes>

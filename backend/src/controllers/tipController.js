@@ -195,6 +195,66 @@ const uploadMedia = async (req, res) => {
   }
 };
 
+// @desc    Get OG meta page for sharing
+// @route   GET /api/tips/share/:slug
+// @access  Public
+const getTipSharePage = async (req, res) => {
+  try {
+    const tip = await Tip.findOne({ slug: req.params.slug });
+
+    if (!tip) {
+      return res.redirect(process.env.CLIENT_URL || "https://ni-itclub.web.app");
+    }
+
+    const siteUrl = process.env.CLIENT_URL || "https://ni-itclub.web.app";
+    const tipUrl = `${siteUrl}/tips/${tip.slug}`;
+    const description = tip.content.replace(/<[^>]*>/g, "").substring(0, 200) + "...";
+
+    // Send HTML with proper OG meta tags
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary Meta Tags -->
+  <title>${tip.title} | NI IT Club</title>
+  <meta name="title" content="${tip.title} | NI IT Club">
+  <meta name="description" content="${description}">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${tipUrl}">
+  <meta property="og:title" content="${tip.title}">
+  <meta property="og:description" content="${description}">
+  <meta property="og:image" content="${tip.coverImage?.url || siteUrl + '/niit-c.png'}">
+  <meta property="og:site_name" content="NI IT Club">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="${tipUrl}">
+  <meta name="twitter:title" content="${tip.title}">
+  <meta name="twitter:description" content="${description}">
+  <meta name="twitter:image" content="${tip.coverImage?.url || siteUrl + '/niit-c.png'}">
+  
+  <!-- Redirect to actual page -->
+  <meta http-equiv="refresh" content="0;url=${tipUrl}">
+  <link rel="canonical" href="${tipUrl}">
+</head>
+<body>
+  <p>Redirecting to <a href="${tipUrl}">${tip.title}</a>...</p>
+  <script>window.location.href = "${tipUrl}";</script>
+</body>
+</html>`;
+
+    res.setHeader("Content-Type", "text/html");
+    res.send(html);
+  } catch (error) {
+    console.error(error);
+    res.redirect(process.env.CLIENT_URL || "https://ni-itclub.web.app");
+  }
+};
+
 module.exports = {
   getTips,
   getTip,
@@ -203,4 +263,5 @@ module.exports = {
   updateTip,
   deleteTip,
   uploadMedia,
+  getTipSharePage,
 };

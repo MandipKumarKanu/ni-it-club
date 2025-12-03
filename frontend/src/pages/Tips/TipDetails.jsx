@@ -46,12 +46,18 @@ const TipDetails = () => {
   };
 
   const shareTip = async (platform) => {
-    const tipUrl = window.location.href;
+    const baseUrl = import.meta.env.MODE === "development" 
+      ? "http://localhost:5000" 
+      : "https://ni-it-club.vercel.app";
+    // Use backend share URL for social media (has OG meta tags)
+    const shareUrl = `${baseUrl}/api/tips/share/${tip.slug}`;
+    // Use direct URL for copy
+    const directUrl = window.location.href;
     const text = "Check out this blog: " + tip.title;
 
     if (platform === "copy") {
       try {
-        await navigator.clipboard.writeText(tipUrl);
+        await navigator.clipboard.writeText(directUrl);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       } catch (err) {
@@ -62,24 +68,24 @@ const TipDetails = () => {
         "https://twitter.com/intent/tweet?text=" +
           encodeURIComponent(text) +
           "&url=" +
-          encodeURIComponent(tipUrl),
+          encodeURIComponent(shareUrl),
         "_blank"
       );
     } else if (platform === "whatsapp") {
       window.open(
-        "https://wa.me/?text=" + encodeURIComponent(text + " " + tipUrl),
+        "https://wa.me/?text=" + encodeURIComponent(text + " " + shareUrl),
         "_blank"
       );
     } else if (platform === "linkedin") {
       window.open(
         "https://www.linkedin.com/sharing/share-offsite/?url=" +
-          encodeURIComponent(tipUrl),
+          encodeURIComponent(shareUrl),
         "_blank"
       );
     } else if (platform === "facebook") {
       window.open(
         "https://www.facebook.com/sharer/sharer.php?u=" +
-          encodeURIComponent(tipUrl),
+          encodeURIComponent(shareUrl),
         "_blank"
       );
     }

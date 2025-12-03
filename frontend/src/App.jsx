@@ -16,6 +16,7 @@ import TipDetails from "./pages/Tips/TipDetails";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import useResetScrollPosition from "./components/hook/useResetScrollPosition";
+import usePageTracker from "./components/hook/usePageTracker";
 import FullPageLoader from "./components/ui/FullPageLoader";
 
 import useSettingsStore from "./store/useSettingsStore";
@@ -24,6 +25,7 @@ import useHomeStore from "./store/useHomeStore";
 function App() {
   const location = useLocation();
   useResetScrollPosition(location);
+  usePageTracker();
   const { fetchSettings } = useSettingsStore();
   const { fetchHomeData, loading, homeData } = useHomeStore();
 
