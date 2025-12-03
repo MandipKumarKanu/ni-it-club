@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Edit2, Trash2, Eye } from "lucide-react";
+import { Plus, Edit2, Trash2, Eye, BarChart2 } from "lucide-react";
 import api from "../../services/api";
 import Button from "../../components/ui/Button";
 import Modal from "../../components/ui/Modal";
 import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import Skeleton from "../../components/ui/Skeleton";
+import TipStats from "./TipStats";
 import toast from "react-hot-toast";
 
 const TipsList = () => {
@@ -13,6 +14,7 @@ const TipsList = () => {
   const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [tipToDelete, setTipToDelete] = useState(null);
+  const [selectedTipId, setSelectedTipId] = useState(null);
 
   useEffect(() => {
     fetchTips();
@@ -73,7 +75,7 @@ const TipsList = () => {
           <p className="text-gray-600">Manage useful articles and guides</p>
         </div>
         <Link to="/tips/new">
-          <Button className="flex items-center gap-2 bg-ni-neon text-black border-black hover:translate-y-[-2px] hover:shadow-brutal transition-all">
+          <Button className="flex items-center gap-2 bg-ni-neon text-black border-black hover:-translate-y-0.5 hover:shadow-brutal transition-all">
             <Plus size={20} /> Create New Blog
           </Button>
         </Link>
@@ -120,6 +122,13 @@ const TipsList = () => {
                   {tip.author?.name || "Admin"}
                 </div>
                 <div className="mt-auto flex gap-2">
+                  <button
+                    onClick={() => setSelectedTipId(tip._id)}
+                    className="px-3 py-2 border-2 border-black bg-ni-cyan hover:bg-ni-neon transition-colors"
+                    title="View Analytics"
+                  >
+                    <Eye size={16} />
+                  </button>
                   <Link to={`/tips/${tip._id}`} className="flex-1">
                     <Button
                       variant="outline"
@@ -147,6 +156,13 @@ const TipsList = () => {
         onConfirm={handleConfirmDelete}
         itemName="Blog Post"
       />
+
+      {selectedTipId && (
+        <TipStats
+          tipId={selectedTipId}
+          onClose={() => setSelectedTipId(null)}
+        />
+      )}
     </div>
   );
 };

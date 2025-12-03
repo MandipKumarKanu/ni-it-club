@@ -9,6 +9,9 @@ const {
   deleteTip,
   uploadMedia,
   getTipSharePage,
+  trackTipView,
+  trackTipShare,
+  getTipAnalytics,
 } = require("../controllers/tipController");
 const { protect, admin } = require("../middleware/authMiddleware");
 const upload = require("../middleware/uploadMiddleware");
@@ -29,6 +32,13 @@ router.post(
 
 // Route for social media sharing (must be before :id route)
 router.get("/share/:slug", getTipSharePage);
+
+// Public tracking routes
+router.post("/slug/:slug/view", trackTipView);
+router.post("/slug/:slug/share", trackTipShare);
+
+// Admin analytics route
+router.get("/:id/analytics", protect, admin, getTipAnalytics);
 
 router
   .route("/:id")

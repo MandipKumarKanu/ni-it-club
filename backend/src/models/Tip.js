@@ -1,5 +1,37 @@
 const mongoose = require("mongoose");
 
+const tipAnalyticsSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ["view", "share"],
+    required: true,
+  },
+  platform: {
+    type: String,
+    default: "",
+  },
+  sessionId: {
+    type: String,
+    default: "",
+  },
+  referrer: {
+    type: String,
+    default: "",
+  },
+  userAgent: {
+    type: String,
+    default: "",
+  },
+  ip: {
+    type: String,
+    default: "",
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const tipSchema = new mongoose.Schema(
   {
     title: {
@@ -34,6 +66,20 @@ const tipSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    // Analytics
+    viewCount: {
+      type: Number,
+      default: 0,
+    },
+    shareCount: {
+      type: Number,
+      default: 0,
+    },
+    uniqueViewers: {
+      type: Number,
+      default: 0,
+    },
+    analytics: [tipAnalyticsSchema],
   },
   {
     timestamps: true,

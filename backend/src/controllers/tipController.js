@@ -206,6 +206,35 @@ const getTipSharePage = async (req, res) => {
       return res.redirect(process.env.CLIENT_URL || "https://ni-itclub.web.app");
     }
 
+    // Track share access (from social media click)
+    const userAgent = req.headers["user-agent"] || "";
+    const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.ip || "";
+    const referrer = req.headers["referer"] || req.query.ref || "";
+    
+    // Check if this is a bot/crawler (don't count as share)
+    const isCrawler = /bot|crawler|spider|facebook|twitter|linkedin|whatsapp|telegram/i.test(userAgent);
+    
+    if (!isCrawler) {
+      // This is a real user clicking the shared link
+      await Tip.findByIdAndUpdate(tip._id, {
+        $inc: { shareCount: 1 },
+        $push: {
+          analytics: {
+            type: "share",
+            platform: referrer.includes("facebook") ? "facebook" 
+              : referrer.includes("twitter") || referrer.includes("t.co") ? "twitter"
+              : referrer.includes("linkedin") ? "linkedin"
+              : referrer.includes("whatsapp") ? "whatsapp"
+              : "direct",
+            referrer,
+            userAgent,
+            ip,
+            timestamp: new Date(),
+          },
+        },
+      });
+    }
+
     const siteUrl = process.env.CLIENT_URL || "https://ni-itclub.web.app";
     const tipUrl = `${siteUrl}/tips/${tip.slug}`;
     const description = tip.content.replace(/<[^>]*>/g, "").substring(0, 200) + "...";
@@ -255,6 +284,178 @@ const getTipSharePage = async (req, res) => {
   }
 };
 
+// @desc    Track tip view
+// @route   POST /api/tips/:slug/view
+// @access  Public
+const trackTipView = async (req, res) => {
+  try {
+    const { sessionId } = req.body;
+    const tip = await Tip.findOne({ slug: req.params.slug });
+
+    if (!tip) {
+      return res.status(404).json({ message: "Tip not found" });
+    }
+
+    const userAgent = req.headers["user-agent"] || "";
+    const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.ip || "";
+    const referrer = req.headers["referer"] || "";
+
+    // Check if this session already viewed this tip
+    const existingView = tip.analytics.find(
+      (a) => a.type === "view" && a.sessionId === sessionId
+    );
+
+    const updateQuery = {
+      $inc: { viewCount: 1 },
+      $push: {
+        analytics: {
+          type: "view",
+          sessionId: sessionId || "",
+          referrer,
+          userAgent,
+          ip,
+          timestamp: new Date(),
+        },
+      },
+    };
+
+    // Increment unique viewers only if new session
+    if (!existingView && sessionId) {
+      updateQuery.$inc.uniqueViewers = 1;
+    }
+
+    await Tip.findByIdAndUpdate(tip._id, updateQuery);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error tracking view:", error);
+    res.status(500).json({ message: "Failed to track view" });
+  }
+};
+
+// @desc    Track tip share
+// @route   POST /api/tips/:slug/share
+// @access  Public
+const trackTipShare = async (req, res) => {
+  try {
+    const { platform, sessionId } = req.body;
+    const tip = await Tip.findOne({ slug: req.params.slug });
+
+    if (!tip) {
+      return res.status(404).json({ message: "Tip not found" });
+    }
+
+    const userAgent = req.headers["user-agent"] || "";
+    const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.ip || "";
+
+    await Tip.findByIdAndUpdate(tip._id, {
+      $inc: { shareCount: 1 },
+      $push: {
+        analytics: {
+          type: "share",
+          platform: platform || "unknown",
+          sessionId: sessionId || "",
+          userAgent,
+          ip,
+          timestamp: new Date(),
+        },
+      },
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error tracking share:", error);
+    res.status(500).json({ message: "Failed to track share" });
+  }
+};
+
+// @desc    Get tip analytics
+// @route   GET /api/tips/:id/analytics
+// @access  Private/Admin
+const getTipAnalytics = async (req, res) => {
+  try {
+    const tip = await Tip.findById(req.params.id).select(
+      "title slug viewCount shareCount uniqueViewers analytics createdAt"
+    );
+
+    if (!tip) {
+      return res.status(404).json({ message: "Tip not found" });
+    }
+
+    // Process analytics for charts
+    const now = new Date();
+    const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    // Views over time (last 7 days)
+    const viewsOverTime = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split("T")[0];
+      
+      const dayViews = tip.analytics.filter((a) => {
+        const aDate = new Date(a.timestamp).toISOString().split("T")[0];
+        return a.type === "view" && aDate === dateStr;
+      }).length;
+
+      viewsOverTime.push({
+        date: dateStr,
+        views: dayViews,
+      });
+    }
+
+    // Share by platform
+    const sharesByPlatform = {};
+    tip.analytics
+      .filter((a) => a.type === "share")
+      .forEach((a) => {
+        const platform = a.platform || "unknown";
+        sharesByPlatform[platform] = (sharesByPlatform[platform] || 0) + 1;
+      });
+
+    // Recent activity
+    const recentActivity = tip.analytics
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, 20)
+      .map((a) => ({
+        type: a.type,
+        platform: a.platform,
+        timestamp: a.timestamp,
+      }));
+
+    // Stats for last 7 days
+    const last7DaysViews = tip.analytics.filter(
+      (a) => a.type === "view" && new Date(a.timestamp) >= last7Days
+    ).length;
+    const last7DaysShares = tip.analytics.filter(
+      (a) => a.type === "share" && new Date(a.timestamp) >= last7Days
+    ).length;
+
+    res.json({
+      tip: {
+        _id: tip._id,
+        title: tip.title,
+        slug: tip.slug,
+        createdAt: tip.createdAt,
+      },
+      stats: {
+        totalViews: tip.viewCount,
+        totalShares: tip.shareCount,
+        uniqueViewers: tip.uniqueViewers,
+        last7DaysViews,
+        last7DaysShares,
+      },
+      viewsOverTime,
+      sharesByPlatform,
+      recentActivity,
+    });
+  } catch (error) {
+    console.error("Error getting tip analytics:", error);
+    res.status(500).json({ message: "Failed to get analytics" });
+  }
+};
+
 module.exports = {
   getTips,
   getTip,
@@ -264,4 +465,7 @@ module.exports = {
   deleteTip,
   uploadMedia,
   getTipSharePage,
+  trackTipView,
+  trackTipShare,
+  getTipAnalytics,
 };

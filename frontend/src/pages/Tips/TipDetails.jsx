@@ -24,6 +24,17 @@ const TipDetails = () => {
     fetchTip();
   }, [slug]);
 
+  // Track page view
+  useEffect(() => {
+    if (tip && slug) {
+      const sessionId = sessionStorage.getItem("traffic_session_id") || 
+        `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      sessionStorage.setItem("traffic_session_id", sessionId);
+      
+      api.post(`/tips/slug/${slug}/view`, { sessionId }).catch(() => {});
+    }
+  }, [tip, slug]);
+
   useEffect(() => {
     const handleClickOutside = () => {
       setShowShareOptions(false);
@@ -52,6 +63,10 @@ const TipDetails = () => {
     // Use backend share URL (has OG meta tags and redirects to frontend)
     const shareUrl = `${baseUrl}/api/tips/share/${tip.slug}`;
     const text = "Check out this blog: " + tip.title;
+
+    // Track share action
+    const sessionId = sessionStorage.getItem("traffic_session_id") || "";
+    api.post(`/tips/slug/${tip.slug}/share`, { platform, sessionId }).catch(() => {});
 
     if (platform === "copy") {
       try {
