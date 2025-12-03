@@ -36,10 +36,11 @@ const TeamForm = ({ member, onSuccess }) => {
     formData.append("role", data.role);
     if (data.specializedIn)
       formData.append("specializedIn", data.specializedIn);
-    if (data.linkedin) formData.append("linkedin", data.linkedin);
-    if (data.github) formData.append("github", data.github);
-    if (data.twitter) formData.append("twitter", data.twitter);
-    if (data.instagram) formData.append("instagram", data.instagram);
+    
+    formData.append("linkedin", data.linkedin || "");
+    formData.append("github", data.github || "");
+    formData.append("twitter", data.twitter || "");
+    formData.append("instagram", data.instagram || "");
 
     if (data.image && data.image[0]) {
       formData.append("image", data.image[0]);

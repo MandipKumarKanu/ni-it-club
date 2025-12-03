@@ -13,7 +13,7 @@ const getHomeData = async (req, res) => {
 
     const teamMembers = await TeamMember.find({ status: "active" })
       .sort({ position: 1 })
-      .select("name role image socialLinks skills");
+      .select("name role image socialLinks specializedIn skills");
 
     const events = await Event.find({
       status: { $in: ["upcoming", "ongoing"] },
@@ -57,9 +57,9 @@ const getHomeData = async (req, res) => {
         description2: settings.aboutDescription2,
       },
       teamMembers,
-      events,
-      gallery,
-      projects,
+      // events,
+      // gallery,
+      // projects,
     };
 
     res.json(homeData);

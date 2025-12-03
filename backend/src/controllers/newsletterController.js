@@ -5,6 +5,7 @@ const {
   getNewsletterTemplate,
   getUnsubscribeConfirmationTemplate,
 } = require("../utils/emailTemplates");
+const { getClientIP } = require("../utils/ipUtils");
 
 // @desc    Subscribe to newsletter
 // @route   POST /api/newsletter/subscribe
@@ -60,7 +61,7 @@ const subscribe = async (req, res) => {
       email: email.toLowerCase(),
       name: name || "",
       preferences: preferences || {},
-      ipAddress: req.ip || req.headers["x-forwarded-for"] || "",
+      ipAddress: getClientIP(req),
       source: "website",
     });
 

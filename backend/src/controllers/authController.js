@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/emailService");
 const { getResetPasswordOTPTemplate } = require("../utils/emailTemplates");
 const crypto = require("crypto");
+const { getClientIP } = require("../utils/ipUtils");
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -95,7 +96,7 @@ const loginUser = async (req, res) => {
         action: "LOGIN",
         module: "Auth",
         details: "User logged in successfully",
-        ipAddress: req.ip || req.connection.remoteAddress,
+        ipAddress: getClientIP(req),
         method: req.method,
         url: req.originalUrl,
       });

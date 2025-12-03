@@ -62,6 +62,14 @@ const parseBool = (val) => {
   return false;
 };
 
+const parseDate = (val) => {
+  // Handle string "null", "undefined", empty strings, or actual null/undefined
+  if (!val || val === "null" || val === "undefined" || val === "") {
+    return null;
+  }
+  return val;
+};
+
 // @desc    Get all events
 // @route   GET /api/events
 // @access  Public
@@ -193,7 +201,7 @@ const createEvent = async (req, res) => {
       name,
       category,
       date,
-      endDate: endDate || null,
+      endDate: parseDate(endDate),
       timeFrom,
       timeTo,
       details,
@@ -250,7 +258,7 @@ const updateEvent = async (req, res) => {
       event.name = name || event.name;
       event.category = category || event.category;
       event.date = date || event.date;
-      event.endDate = endDate !== undefined ? endDate : event.endDate;
+      event.endDate = endDate !== undefined ? parseDate(endDate) : event.endDate;
       event.timeFrom = timeFrom || event.timeFrom;
       event.timeTo = timeTo || event.timeTo;
       event.details = details || event.details;

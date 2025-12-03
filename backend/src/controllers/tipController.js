@@ -3,6 +3,7 @@ const {
   uploadToCloudinary,
   deleteFromCloudinary,
 } = require("../utils/cloudinaryUpload");
+const { getClientIP } = require("../utils/ipUtils");
 
 // @desc    Get all tips
 // @route   GET /api/tips
@@ -206,16 +207,13 @@ const getTipSharePage = async (req, res) => {
       return res.redirect(process.env.CLIENT_URL || "https://ni-itclub.web.app");
     }
 
-    // Track share access (from social media click)
     const userAgent = req.headers["user-agent"] || "";
-    const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.ip || "";
+    const ip = getClientIP(req);
     const referrer = req.headers["referer"] || req.query.ref || "";
     
-    // Check if this is a bot/crawler (don't count as share)
     const isCrawler = /bot|crawler|spider|facebook|twitter|linkedin|whatsapp|telegram/i.test(userAgent);
     
     if (!isCrawler) {
-      // This is a real user clicking the shared link
       await Tip.findByIdAndUpdate(tip._id, {
         $inc: { shareCount: 1 },
         $push: {
@@ -239,7 +237,6 @@ const getTipSharePage = async (req, res) => {
     const tipUrl = `${siteUrl}/tips/${tip.slug}`;
     const description = tip.content.replace(/<[^>]*>/g, "").substring(0, 200) + "...";
 
-    // Send HTML with proper OG meta tags
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -297,10 +294,9 @@ const trackTipView = async (req, res) => {
     }
 
     const userAgent = req.headers["user-agent"] || "";
-    const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.ip || "";
+    const ip = getClientIP(req);
     const referrer = req.headers["referer"] || "";
 
-    // Check if this session already viewed this tip
     const existingView = tip.analytics.find(
       (a) => a.type === "view" && a.sessionId === sessionId
     );
@@ -346,7 +342,7 @@ const trackTipShare = async (req, res) => {
     }
 
     const userAgent = req.headers["user-agent"] || "";
-    const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.ip || "";
+    const ip = getClientIP(req);
 
     await Tip.findByIdAndUpdate(tip._id, {
       $inc: { shareCount: 1 },
@@ -382,12 +378,10 @@ const getTipAnalytics = async (req, res) => {
       return res.status(404).json({ message: "Tip not found" });
     }
 
-    // Process analytics for charts
     const now = new Date();
     const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    // Views over time (last 7 days)
     const viewsOverTime = [];
     for (let i = 6; i >= 0; i--) {
       const date = new Date(now);
@@ -405,7 +399,6 @@ const getTipAnalytics = async (req, res) => {
       });
     }
 
-    // Share by platform
     const sharesByPlatform = {};
     tip.analytics
       .filter((a) => a.type === "share")
@@ -414,7 +407,6 @@ const getTipAnalytics = async (req, res) => {
         sharesByPlatform[platform] = (sharesByPlatform[platform] || 0) + 1;
       });
 
-    // Recent activity
     const recentActivity = tip.analytics
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       .slice(0, 20)
@@ -424,7 +416,6 @@ const getTipAnalytics = async (req, res) => {
         timestamp: a.timestamp,
       }));
 
-    // Stats for last 7 days
     const last7DaysViews = tip.analytics.filter(
       (a) => a.type === "view" && new Date(a.timestamp) >= last7Days
     ).length;

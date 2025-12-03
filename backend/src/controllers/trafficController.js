@@ -1,18 +1,18 @@
 const PageView = require("../models/PageView");
+const { getClientIP } = require("../utils/ipUtils");
 
-// Helper to parse user agent
 const parseUserAgent = (userAgent) => {
   if (!userAgent) return { device: "unknown", browser: "" };
 
   const ua = userAgent.toLowerCase();
 
-  // Detect device
   let device = "desktop";
-  if (/mobile|android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua)) {
+  if (
+    /mobile|android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua)
+  ) {
     device = /ipad|tablet/i.test(ua) ? "tablet" : "mobile";
   }
 
-  // Detect browser
   let browser = "Unknown";
   if (ua.includes("firefox")) browser = "Firefox";
   else if (ua.includes("edg")) browser = "Edge";
@@ -23,17 +23,18 @@ const parseUserAgent = (userAgent) => {
   return { device, browser };
 };
 
-// Track a page view
 exports.trackPageView = async (req, res) => {
   try {
     const { path, referrer, sessionId } = req.body;
 
     if (!path || !sessionId) {
-      return res.status(400).json({ message: "Path and sessionId are required" });
+      return res
+        .status(400)
+        .json({ message: "Path and sessionId are required" });
     }
 
     const userAgent = req.headers["user-agent"] || "";
-    const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.ip || "";
+    const ip = getClientIP(req);
     const { device, browser } = parseUserAgent(userAgent);
 
     const pageView = new PageView({
@@ -55,12 +56,10 @@ exports.trackPageView = async (req, res) => {
   }
 };
 
-// Get traffic statistics
 exports.getTrafficStats = async (req, res) => {
   try {
     const { period = "7d" } = req.query;
 
-    // Calculate date range
     const now = new Date();
     let startDate = new Date();
 
@@ -81,17 +80,14 @@ exports.getTrafficStats = async (req, res) => {
         startDate.setDate(startDate.getDate() - 7);
     }
 
-    // Get total views
     const totalViews = await PageView.countDocuments({
       createdAt: { $gte: startDate },
     });
 
-    // Get unique visitors (by sessionId)
     const uniqueVisitors = await PageView.distinct("sessionId", {
       createdAt: { $gte: startDate },
     });
 
-    // Get views by page
     const pageStats = await PageView.aggregate([
       { $match: { createdAt: { $gte: startDate } } },
       {
@@ -112,7 +108,6 @@ exports.getTrafficStats = async (req, res) => {
       { $limit: 10 },
     ]);
 
-    // Get views over time
     const viewsOverTime = await PageView.aggregate([
       { $match: { createdAt: { $gte: startDate } } },
       {
@@ -138,7 +133,6 @@ exports.getTrafficStats = async (req, res) => {
       { $sort: { date: 1 } },
     ]);
 
-    // Get device breakdown
     const deviceStats = await PageView.aggregate([
       { $match: { createdAt: { $gte: startDate } } },
       {
@@ -149,7 +143,6 @@ exports.getTrafficStats = async (req, res) => {
       },
     ]);
 
-    // Get browser breakdown
     const browserStats = await PageView.aggregate([
       { $match: { createdAt: { $gte: startDate } } },
       {
@@ -162,7 +155,6 @@ exports.getTrafficStats = async (req, res) => {
       { $limit: 5 },
     ]);
 
-    // Get referrer stats
     const referrerStats = await PageView.aggregate([
       {
         $match: {
@@ -180,7 +172,6 @@ exports.getTrafficStats = async (req, res) => {
       { $limit: 10 },
     ]);
 
-    // Calculate comparison with previous period
     const prevStartDate = new Date(startDate);
     const periodLength = now - startDate;
     prevStartDate.setTime(startDate.getTime() - periodLength);
@@ -197,7 +188,11 @@ exports.getTrafficStats = async (req, res) => {
       ? (((totalViews - prevTotalViews) / prevTotalViews) * 100).toFixed(1)
       : 0;
     const visitorsChange = prevUniqueVisitors.length
-      ? (((uniqueVisitors.length - prevUniqueVisitors.length) / prevUniqueVisitors.length) * 100).toFixed(1)
+      ? (
+          ((uniqueVisitors.length - prevUniqueVisitors.length) /
+            prevUniqueVisitors.length) *
+          100
+        ).toFixed(1)
       : 0;
 
     res.json({
@@ -218,7 +213,6 @@ exports.getTrafficStats = async (req, res) => {
   }
 };
 
-// Get real-time visitors (active in last 5 minutes)
 exports.getRealtimeVisitors = async (req, res) => {
   try {
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);

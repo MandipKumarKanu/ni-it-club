@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
+const mongoose = require("mongoose");
 const connectDB = require("./config/db");
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
@@ -45,7 +46,52 @@ app.use("/api/tips", require("./routes/tipRoutes"));
 app.use("/api/traffic", require("./routes/trafficRoutes"));
 
 app.get("/", (req, res) => {
-  res.send("NI-IT Club Backend is running!");
+  res.redirect(process.env.CLIENT_URL || "https://ni-itclub.web.app");
+});
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
+
+// Database health check endpoint
+app.get("/dbhealth", async (req, res) => {
+  try {
+    const dbState = mongoose.connection.readyState;
+    const states = {
+      0: "disconnected",
+      1: "connected",
+      2: "connecting",
+      3: "disconnecting",
+    };
+
+    if (dbState === 1) {
+      // Ping the database
+      await mongoose.connection.db.admin().ping();
+      res.json({
+        status: "ok",
+        database: "connected",
+        timestamp: new Date().toISOString(),
+      });
+    } else {
+      res.status(503).json({
+        status: "error",
+        database: states[dbState] || "unknown",
+        timestamp: new Date().toISOString(),
+      });
+    }
+  } catch (error) {
+    res.status(503).json({
+      status: "error",
+      database: "unhealthy",
+      error: error.message,
+      timestamp: new Date().toISOString(),
+    });
+  }
 });
 
 app.use((err, req, res, next) => {

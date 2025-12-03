@@ -1,4 +1,5 @@
 const ActivityLog = require("../models/ActivityLog");
+const { getClientIP } = require("../utils/ipUtils");
 
 const getActionType = (method, url, statusCode) => {
   if (url.includes("/auth/login") && method === "POST") return "LOGIN";
@@ -59,7 +60,12 @@ const getResourceDetails = (req, res) => {
   return details;
 };
 
-const excludedRoutes = ["/api/auth/refresh", "/favicon.ico", "/health"];
+const excludedRoutes = [
+  "/api/auth/refresh",
+  "/favicon.ico",
+  "/health",
+  "/api/traffic",
+];
 
 const publicLogRoutes = [
   "/api/auth/login",
@@ -134,11 +140,7 @@ const activityLogger = (req, res, next) => {
         action: actionType,
         module: moduleName,
         details: getResourceDetails(req, res),
-        ipAddress:
-          req.ip ||
-          req.headers["x-forwarded-for"] ||
-          req.connection?.remoteAddress ||
-          "Unknown",
+        ipAddress: getClientIP(req),
         method: req.method,
         url: req.originalUrl,
         statusCode: res.statusCode,

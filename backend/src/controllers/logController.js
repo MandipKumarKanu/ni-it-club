@@ -1,4 +1,5 @@
 const ActivityLog = require("../models/ActivityLog");
+const { getClientIP } = require("../utils/ipUtils");
 
 const logActivity = async (userId, action, module, details, req = null) => {
   try {
@@ -12,7 +13,7 @@ const logActivity = async (userId, action, module, details, req = null) => {
       action,
       module,
       details,
-      ipAddress: req?.ip || req?.headers?.["x-forwarded-for"] || "System",
+      ipAddress: req ? getClientIP(req) : "System",
       method: req?.method || "SYSTEM",
       url: req?.originalUrl || "N/A",
       statusCode: 200,
