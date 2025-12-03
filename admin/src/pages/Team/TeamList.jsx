@@ -31,6 +31,7 @@ import api from "../../services/api";
 import Table, { TableRow, TableCell } from "../../components/ui/Table";
 import Button from "../../components/ui/Button";
 import Modal from "../../components/ui/Modal";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import TeamForm from "./TeamForm";
 import TeamDetails from "./TeamDetails";
 import toast from "react-hot-toast";
@@ -160,7 +161,7 @@ const SortableRow = ({ member, handleView, handleEdit, handleDelete }) => {
           </Button>
           <Button
             variant="danger"
-            onClick={() => handleDelete(member._id)}
+            onClick={() => handleDelete(member)}
             className="p-2"
           >
             <Trash2 size={16} />
@@ -176,8 +177,10 @@ const TeamList = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [viewingMemberId, setViewingMemberId] = useState(null);
+  const [memberToDelete, setMemberToDelete] = useState(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -205,15 +208,22 @@ const TeamList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this member?")) {
-      try {
-        await api.delete(`/team/${id}`);
-        toast.success("Team member deleted");
-        fetchTeam();
-      } catch (error) {
-        toast.error("Failed to delete team member");
-      }
+  const handleDeleteClick = (member) => {
+    setMemberToDelete(member);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!memberToDelete) return;
+
+    try {
+      await api.delete(`/team/${memberToDelete._id}`);
+      toast.success("Team member deleted");
+      fetchTeam();
+    } catch (error) {
+      toast.error("Failed to delete team member");
+    } finally {
+      setMemberToDelete(null);
     }
   };
 
@@ -341,7 +351,7 @@ const TeamList = () => {
                   member={member}
                   handleView={handleView}
                   handleEdit={handleEdit}
-                  handleDelete={handleDelete}
+                  handleDelete={handleDeleteClick}
                 />
               ))}
             </SortableContext>
@@ -369,6 +379,13 @@ const TeamList = () => {
           />
         )}
       </Modal>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName="Team Member"
+      />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import api from "../../services/api";
 import Table, { TableRow, TableCell } from "../../components/ui/Table";
 import Button from "../../components/ui/Button";
 import Modal from "../../components/ui/Modal";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import GalleryForm from "./GalleryForm";
 import GalleryDetails from "./GalleryDetails";
 import toast from "react-hot-toast";
@@ -16,8 +17,10 @@ const GalleryList = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingGallery, setEditingGallery] = useState(null);
   const [viewingGalleryId, setViewingGalleryId] = useState(null);
+  const [galleryToDelete, setGalleryToDelete] = useState(null);
 
   useEffect(() => {
     fetchGalleries();
@@ -32,21 +35,28 @@ const GalleryList = () => {
     } catch (error) {
       console.error("Failed to fetch galleries:", error);
       toast.error("Failed to fetch galleries");
-      setGalleries([]); 
+      setGalleries([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this gallery?")) {
-      try {
-        await api.delete(`/gallery/${id}`);
-        toast.success("Gallery deleted");
-        fetchGalleries();
-      } catch (error) {
-        toast.error("Failed to delete gallery");
-      }
+  const handleDeleteClick = (gallery) => {
+    setGalleryToDelete(gallery);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!galleryToDelete) return;
+
+    try {
+      await api.delete(`/gallery/${galleryToDelete._id}`);
+      toast.success("Gallery deleted");
+      fetchGalleries();
+    } catch (error) {
+      toast.error("Failed to delete gallery");
+    } finally {
+      setGalleryToDelete(null);
     }
   };
 
@@ -149,7 +159,7 @@ const GalleryList = () => {
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={() => handleDelete(gallery._id)}
+                    onClick={() => handleDeleteClick(gallery)}
                     className="p-2"
                   >
                     <Trash2 size={16} />
@@ -181,6 +191,13 @@ const GalleryList = () => {
           />
         )}
       </Modal>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName="Gallery"
+      />
     </div>
   );
 };

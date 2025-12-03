@@ -11,6 +11,8 @@ import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Showcase from "./pages/Showcase";
 import Contact from "./pages/Contact";
+import Tips from "./pages/Tips/Tips";
+import TipDetails from "./pages/Tips/TipDetails";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import useResetScrollPosition from "./components/hook/useResetScrollPosition";
@@ -42,6 +44,8 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/showcase" element={<Showcase />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/tips" element={<Tips />} />
+        <Route path="/tips/:slug" element={<TipDetails />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

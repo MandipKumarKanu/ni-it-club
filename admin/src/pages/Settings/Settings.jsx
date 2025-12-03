@@ -21,6 +21,7 @@ import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import Skeleton from "../../components/ui/Skeleton";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import toast from "react-hot-toast";
 
 const Settings = () => {
@@ -40,6 +41,8 @@ const Settings = () => {
     url: "",
     isActive: true,
   });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [linkToDelete, setLinkToDelete] = useState(null);
 
   useEffect(() => {
     fetchSettings();
@@ -173,16 +176,22 @@ const Settings = () => {
     }
   };
 
-  const handleDeleteSocialLink = async (linkId) => {
-    if (!window.confirm("Are you sure you want to delete this social link?")) {
-      return;
-    }
+  const handleDeleteClick = (linkId) => {
+    setLinkToDelete(linkId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!linkToDelete) return;
+
     try {
-      await api.delete(`/settings/social-links/${linkId}`);
+      await api.delete(`/settings/social-links/${linkToDelete}`);
       toast.success("Social link deleted");
       fetchSettings();
     } catch (error) {
       toast.error("Failed to delete social link");
+    } finally {
+      setLinkToDelete(null);
     }
   };
 
@@ -548,7 +557,7 @@ const Settings = () => {
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleDeleteSocialLink(link._id)}
+                            onClick={() => handleDeleteClick(link._id)}
                             className="px-3 py-1 text-xs font-bold border-2 border-black bg-red-500 text-white hover:bg-red-600 transition-all"
                           >
                             Delete
@@ -639,6 +648,13 @@ const Settings = () => {
           )}
         </form>
       </div>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName="Social Link"
+      />
     </div>
   );
 };

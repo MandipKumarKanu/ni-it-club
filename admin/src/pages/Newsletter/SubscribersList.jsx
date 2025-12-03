@@ -6,22 +6,21 @@ import {
   Mail,
   UserPlus,
   Download,
-  Trash2,
-  Edit2,
-  CheckCircle,
   XCircle,
-  Clock,
-  AlertCircle,
   Users,
   TrendingUp,
   Calendar,
   Send,
 } from "lucide-react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import api from "../../services/api";
 import Button from "../../components/ui/Button";
 import Modal from "../../components/ui/Modal";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import Input from "../../components/ui/Input";
 import Skeleton from "../../components/ui/Skeleton";
+import Table, { TableRow, TableCell } from "../../components/ui/Table";
+import toast from "react-hot-toast";
 
 const SubscribersList = () => {
   const navigate = useNavigate();
@@ -36,11 +35,11 @@ const SubscribersList = () => {
     search: "",
   });
 
-  // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedSubscriber, setSelectedSubscriber] = useState(null);
+  const [subscriberToDelete, setSubscriberToDelete] = useState(null);
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -61,7 +60,6 @@ const SubscribersList = () => {
       Object.entries(filters).forEach(([key, value]) => {
         if (value) params.append(key, value);
       });
-
       const { data } = await api.get(`/newsletter/subscribers?${params}`);
       setSubscribers(data.subscribers);
       setPagination(data.pagination);
@@ -93,13 +91,13 @@ const SubscribersList = () => {
     e.preventDefault();
     setFormLoading(true);
     setError("");
-
     try {
       await api.post("/newsletter/subscribers", formData);
       setIsAddModalOpen(false);
       setFormData({ email: "", name: "", status: "active" });
       fetchSubscribers();
       fetchStats();
+      toast.success("Subscriber added successfully");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add subscriber");
     } finally {
@@ -111,16 +109,13 @@ const SubscribersList = () => {
     e.preventDefault();
     setFormLoading(true);
     setError("");
-
     try {
-      await api.put(
-        `/newsletter/subscribers/${selectedSubscriber._id}`,
-        formData
-      );
+      await api.put(`/newsletter/subscribers/${selectedSubscriber._id}`, formData);
       setIsEditModalOpen(false);
       setSelectedSubscriber(null);
       fetchSubscribers();
       fetchStats();
+      toast.success("Subscriber updated successfully");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update subscriber");
     } finally {
@@ -128,26 +123,29 @@ const SubscribersList = () => {
     }
   };
 
-  const handleDeleteSubscriber = async () => {
-    setFormLoading(true);
+  const handleDeleteClick = (subscriber) => {
+    setSubscriberToDelete(subscriber);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!subscriberToDelete) return;
     try {
-      await api.delete(`/newsletter/subscribers/${selectedSubscriber._id}`);
-      setIsDeleteModalOpen(false);
-      setSelectedSubscriber(null);
+      await api.delete(`/newsletter/subscribers/${subscriberToDelete._id}`);
       fetchSubscribers();
       fetchStats();
+      toast.success("Subscriber deleted successfully");
     } catch (err) {
       console.error("Failed to delete subscriber:", err);
+      toast.error("Failed to delete subscriber");
     } finally {
-      setFormLoading(false);
+      setSubscriberToDelete(null);
     }
   };
 
   const handleExport = async () => {
     try {
-      const response = await api.get("/newsletter/export", {
-        responseType: "blob",
-      });
+      const response = await api.get("/newsletter/export", { responseType: "blob" });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -155,8 +153,10 @@ const SubscribersList = () => {
       document.body.appendChild(link);
       link.click();
       link.remove();
+      toast.success("Export successful");
     } catch (error) {
       console.error("Failed to export:", error);
+      toast.error("Failed to export subscribers");
     }
   };
 
@@ -170,54 +170,27 @@ const SubscribersList = () => {
     setIsEditModalOpen(true);
   };
 
-  const openDeleteModal = (subscriber) => {
-    setSelectedSubscriber(subscriber);
-    setIsDeleteModalOpen(true);
+  const getStatusBadge = (status) => {
+    const statusConfig = {
+      active: "bg-green-200 text-green-600 border-green-600",
+      pending: "bg-yellow-200 text-yellow-600 border-yellow-600",
+      unsubscribed: "bg-red-200 text-red-600 border-red-600",
+      bounced: "bg-orange-200 text-orange-600 border-orange-600",
+    };
+    return statusConfig[status] || "bg-gray-200 text-gray-600 border-gray-600";
   };
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "active":
-        return <CheckCircle size={16} className="text-green-600" />;
-      case "pending":
-        return <Clock size={16} className="text-yellow-600" />;
-      case "unsubscribed":
-        return <XCircle size={16} className="text-red-600" />;
-      case "bounced":
-        return <AlertCircle size={16} className="text-orange-600" />;
-      default:
-        return null;
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800 border-green-500";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-500";
-      case "unsubscribed":
-        return "bg-red-100 text-red-800 border-red-500";
-      case "bounced":
-        return "bg-orange-100 text-orange-800 border-orange-500";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-500";
-    }
-  };
+  const tableHeaders = ["Email", "Name", "Status", "Source", "Subscribed", "Actions"];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black">Newsletter Subscribers</h1>
           <p className="text-gray-600">Manage your email subscribers</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={() => navigate("/newsletter/compose")}
-            className="flex items-center gap-2 bg-purple-500"
-          >
+          <Button onClick={() => navigate("/newsletter/compose")} className="flex items-center gap-2 bg-purple-500">
             <Send size={18} />
             Compose Newsletter
           </Button>
@@ -225,17 +198,13 @@ const SubscribersList = () => {
             <Download size={18} />
             Export CSV
           </Button>
-          <Button
-            onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-2 bg-green-500"
-          >
+          <Button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 bg-green-500">
             <UserPlus size={18} />
             Add Subscriber
           </Button>
         </div>
       </div>
 
-      {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white border-4 border-black p-4 shadow-brutal">
@@ -285,14 +254,10 @@ const SubscribersList = () => {
         </div>
       )}
 
-      {/* Filters */}
       <div className="bg-white border-4 border-black p-4 shadow-brutal">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={20}
-            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
               placeholder="Search by email or name..."
@@ -312,251 +277,109 @@ const SubscribersList = () => {
             <option value="unsubscribed">Unsubscribed</option>
             <option value="bounced">Bounced</option>
           </select>
-          <Button
-            onClick={() => {
-              fetchSubscribers();
-              fetchStats();
-            }}
-            className="flex items-center gap-2"
-          >
+          <Button onClick={() => { fetchSubscribers(); fetchStats(); }} className="flex items-center gap-2">
             <RefreshCw size={18} />
             Refresh
           </Button>
         </div>
       </div>
 
-      {/* Subscribers Table */}
-      <div className="bg-white border-4 border-black shadow-brutal overflow-hidden">
-        {loading ? (
-          <div className="p-8 space-y-4">
-            {[...Array(10)].map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full" />
-            ))}
-          </div>
-        ) : subscribers.length === 0 ? (
-          <div className="p-12 text-center">
-            <Mail size={48} className="mx-auto text-gray-400 mb-4" />
-            <p className="text-xl font-bold text-gray-600">
-              No subscribers found
-            </p>
-            <p className="text-gray-500">
-              Add your first subscriber to get started
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-black text-white">
-                <tr>
-                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
-                    Email
-                  </th>
-                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
-                    Name
-                  </th>
-                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
-                    Status
-                  </th>
-                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
-                    Source
-                  </th>
-                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
-                    Subscribed
-                  </th>
-                  <th className="px-4 py-3 text-left font-black uppercase text-sm">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {subscribers.map((subscriber, index) => (
-                  <tr
-                    key={subscriber._id}
-                    className={`border-b-2 border-gray-200 hover:bg-gray-50 ${
-                      index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                    }`}
-                  >
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <Mail size={16} className="text-gray-400" />
-                        <span className="font-bold">{subscriber.email}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-gray-600">
-                      {subscriber.name || "-"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-bold border-2 ${getStatusColor(
-                          subscriber.status
-                        )}`}
-                      >
-                        {getStatusIcon(subscriber.status)}
-                        {subscriber.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="px-2 py-1 bg-gray-100 border border-gray-300 text-xs font-bold">
-                        {subscriber.source}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">
-                      <div className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        {new Date(subscriber.subscribedAt).toLocaleDateString()}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => openEditModal(subscriber)}
-                          className="p-2 hover:bg-blue-100 border-2 border-transparent hover:border-blue-500 transition-colors"
-                        >
-                          <Edit2 size={16} className="text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => openDeleteModal(subscriber)}
-                          className="p-2 hover:bg-red-100 border-2 border-transparent hover:border-red-500 transition-colors"
-                        >
-                          <Trash2 size={16} className="text-red-600" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      {loading ? (
+        <Table headers={tableHeaders}>
+          {[...Array(10)].map((_, i) => (
+            <TableRow key={i}>
+              <TableCell><Skeleton className="h-6 w-48" /></TableCell>
+              <TableCell><Skeleton className="h-6 w-32" /></TableCell>
+              <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+              <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+              <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+              <TableCell><div className="flex gap-2"><Skeleton className="h-8 w-8" /><Skeleton className="h-8 w-8" /></div></TableCell>
+            </TableRow>
+          ))}
+        </Table>
+      ) : subscribers.length === 0 ? (
+        <div className="bg-white border-4 border-black shadow-brutal p-12 text-center">
+          <Mail size={48} className="mx-auto text-gray-400 mb-4" />
+          <p className="text-xl font-bold text-gray-600">No subscribers found</p>
+          <p className="text-gray-500">Add your first subscriber to get started</p>
+        </div>
+      ) : (
+        <Table headers={tableHeaders}>
+          {subscribers.map((subscriber) => (
+            <TableRow key={subscriber._id}>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Mail size={16} className="text-gray-400" />
+                  <span className="font-bold">{subscriber.email}</span>
+                </div>
+              </TableCell>
+              <TableCell className="text-gray-600">{subscriber.name || "-"}</TableCell>
+              <TableCell>
+                <span className={`py-1 px-3 rounded-full text-xs font-bold border ${getStatusBadge(subscriber.status)}`}>
+                  {subscriber.status}
+                </span>
+              </TableCell>
+              <TableCell>
+                <span className="px-2 py-1 bg-gray-100 border border-gray-300 text-xs font-bold">{subscriber.source}</span>
+              </TableCell>
+              <TableCell className="text-sm text-gray-600">
+                <div className="flex items-center gap-1">
+                  <Calendar size={14} />
+                  {new Date(subscriber.subscribedAt).toLocaleDateString()}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => openEditModal(subscriber)} className="p-2">
+                    <FaEdit size={16} />
+                  </Button>
+                  <Button variant="danger" onClick={() => handleDeleteClick(subscriber)} className="p-2">
+                    <FaTrash size={16} />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </Table>
+      )}
 
-        {/* Pagination */}
-        {pagination.pages > 1 && (
-          <div className="border-t-2 border-black bg-gray-50 px-4 py-3 flex items-center justify-between">
-            <span className="text-sm text-gray-600">
-              Page {pagination.page} of {pagination.pages} ({pagination.total}{" "}
-              total)
-            </span>
-            <div className="flex gap-2">
-              <Button
-                onClick={() => handlePageChange(pagination.page - 1)}
-                disabled={pagination.page === 1}
-                className="px-3 py-1 text-sm"
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={() => handlePageChange(pagination.page + 1)}
-                disabled={pagination.page === pagination.pages}
-                className="px-3 py-1 text-sm"
-              >
-                Next
-              </Button>
-            </div>
+      {pagination.pages > 1 && (
+        <div className="bg-white border-4 border-black shadow-brutal px-4 py-3 flex items-center justify-between">
+          <span className="text-sm text-gray-600">Page {pagination.page} of {pagination.pages} ({pagination.total} total)</span>
+          <div className="flex gap-2">
+            <Button onClick={() => handlePageChange(pagination.page - 1)} disabled={pagination.page === 1} className="px-3 py-1 text-sm">Previous</Button>
+            <Button onClick={() => handlePageChange(pagination.page + 1)} disabled={pagination.page === pagination.pages} className="px-3 py-1 text-sm">Next</Button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Add Subscriber Modal */}
-      <Modal
-        isOpen={isAddModalOpen}
-        onClose={() => {
-          setIsAddModalOpen(false);
-          setFormData({ email: "", name: "", status: "active" });
-          setError("");
-        }}
-        title="Add Subscriber"
-      >
+      <Modal isOpen={isAddModalOpen} onClose={() => { setIsAddModalOpen(false); setFormData({ email: "", name: "", status: "active" }); setError(""); }} title="Add Subscriber">
         <form onSubmit={handleAddSubscriber} className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold">
-              {error}
-            </div>
-          )}
-          <Input
-            label="Email *"
-            type="email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, email: e.target.value }))
-            }
-            required
-          />
-          <Input
-            label="Name"
-            type="text"
-            value={formData.name}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, name: e.target.value }))
-            }
-          />
+          {error && <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold">{error}</div>}
+          <Input label="Email *" type="email" value={formData.email} onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))} required />
+          <Input label="Name" type="text" value={formData.name} onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
           <div>
             <label className="block text-sm font-bold mb-1">Status</label>
-            <select
-              value={formData.status}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, status: e.target.value }))
-              }
-              className="w-full px-4 py-2 border-2 border-black font-bold focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            >
+            <select value={formData.status} onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.value }))} className="w-full px-4 py-2 border-2 border-black font-bold focus:outline-none focus:ring-2 focus:ring-yellow-400">
               <option value="active">Active</option>
               <option value="pending">Pending</option>
             </select>
           </div>
           <div className="flex gap-2 pt-4">
-            <Button type="submit" disabled={formLoading} className="flex-1">
-              {formLoading ? "Adding..." : "Add Subscriber"}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => setIsAddModalOpen(false)}
-              className="bg-gray-200 text-black"
-            >
-              Cancel
-            </Button>
+            <Button type="submit" disabled={formLoading} className="flex-1">{formLoading ? "Adding..." : "Add Subscriber"}</Button>
+            <Button type="button" onClick={() => setIsAddModalOpen(false)} className="bg-gray-200 text-black">Cancel</Button>
           </div>
         </form>
       </Modal>
 
-      {/* Edit Subscriber Modal */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false);
-          setSelectedSubscriber(null);
-          setError("");
-        }}
-        title="Edit Subscriber"
-      >
+      <Modal isOpen={isEditModalOpen} onClose={() => { setIsEditModalOpen(false); setSelectedSubscriber(null); setError(""); }} title="Edit Subscriber">
         <form onSubmit={handleEditSubscriber} className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold">
-              {error}
-            </div>
-          )}
-          <Input
-            label="Email"
-            type="email"
-            value={formData.email}
-            disabled
-            className="bg-gray-100"
-          />
-          <Input
-            label="Name"
-            type="text"
-            value={formData.name}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, name: e.target.value }))
-            }
-          />
+          {error && <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold">{error}</div>}
+          <Input label="Email" type="email" value={formData.email} disabled className="bg-gray-100" />
+          <Input label="Name" type="text" value={formData.name} onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
           <div>
             <label className="block text-sm font-bold mb-1">Status</label>
-            <select
-              value={formData.status}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, status: e.target.value }))
-              }
-              className="w-full px-4 py-2 border-2 border-black font-bold focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            >
+            <select value={formData.status} onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.value }))} className="w-full px-4 py-2 border-2 border-black font-bold focus:outline-none focus:ring-2 focus:ring-yellow-400">
               <option value="active">Active</option>
               <option value="pending">Pending</option>
               <option value="unsubscribed">Unsubscribed</option>
@@ -564,52 +387,13 @@ const SubscribersList = () => {
             </select>
           </div>
           <div className="flex gap-2 pt-4">
-            <Button type="submit" disabled={formLoading} className="flex-1">
-              {formLoading ? "Saving..." : "Save Changes"}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => setIsEditModalOpen(false)}
-              className="bg-gray-200 text-black"
-            >
-              Cancel
-            </Button>
+            <Button type="submit" disabled={formLoading} className="flex-1">{formLoading ? "Saving..." : "Save Changes"}</Button>
+            <Button type="button" onClick={() => setIsEditModalOpen(false)} className="bg-gray-200 text-black">Cancel</Button>
           </div>
         </form>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
-      <Modal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false);
-          setSelectedSubscriber(null);
-        }}
-        title="Delete Subscriber"
-      >
-        <div className="space-y-4">
-          <p>
-            Are you sure you want to delete{" "}
-            <strong>{selectedSubscriber?.email}</strong>? This action cannot be
-            undone.
-          </p>
-          <div className="flex gap-2">
-            <Button
-              onClick={handleDeleteSubscriber}
-              disabled={formLoading}
-              className="flex-1 bg-red-500"
-            >
-              {formLoading ? "Deleting..." : "Delete"}
-            </Button>
-            <Button
-              onClick={() => setIsDeleteModalOpen(false)}
-              className="bg-gray-200 text-black"
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <DeleteConfirmationModal isOpen={isDeleteModalOpen} onClose={() => { setIsDeleteModalOpen(false); setSubscriberToDelete(null); }} onConfirm={handleConfirmDelete} itemName="Subscriber" />
     </div>
   );
 };

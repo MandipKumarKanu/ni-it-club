@@ -4,6 +4,7 @@ import api from "../../services/api";
 import Table, { TableRow, TableCell } from "../../components/ui/Table";
 import Button from "../../components/ui/Button";
 import Modal from "../../components/ui/Modal";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import EventForm from "./EventForm";
 import EventDetails from "./EventDetails";
 import toast from "react-hot-toast";
@@ -16,8 +17,10 @@ const EventsList = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [viewingEventId, setViewingEventId] = useState(null);
+  const [eventToDelete, setEventToDelete] = useState(null);
 
   useEffect(() => {
     fetchEvents();
@@ -38,15 +41,22 @@ const EventsList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this event?")) {
-      try {
-        await api.delete(`/events/${id}`);
-        toast.success("Event deleted");
-        fetchEvents();
-      } catch (error) {
-        toast.error("Failed to delete event");
-      }
+  const handleDeleteClick = (event) => {
+    setEventToDelete(event);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!eventToDelete) return;
+
+    try {
+      await api.delete(`/events/${eventToDelete._id}`);
+      toast.success("Event deleted");
+      fetchEvents();
+    } catch (error) {
+      toast.error("Failed to delete event");
+    } finally {
+      setEventToDelete(null);
     }
   };
 
@@ -149,7 +159,7 @@ const EventsList = () => {
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={() => handleDelete(event._id)}
+                    onClick={() => handleDeleteClick(event)}
                     className="p-2"
                   >
                     <Trash2 size={16} />
@@ -181,6 +191,13 @@ const EventsList = () => {
           />
         )}
       </Modal>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName="Event"
+      />
     </div>
   );
 };

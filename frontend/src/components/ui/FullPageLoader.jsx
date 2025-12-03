@@ -73,7 +73,7 @@ const FullPageLoader = () => {
           <div className="relative">
             <div className="absolute inset-0 transform translate-x-3 translate-y-3 bg-ni-black border-brutal w-56 h-56 md:w-72 md:h-72"></div>
             <div className="relative bg-ni-white border-brutal w-56 h-56 md:w-72 md:h-72 shadow-brutal-lg flex items-center justify-center p-10 overflow-hidden">
-              <div className="absolute inset-0 border-4 border-transparent border-t-ni-neon border-r-ni-pink animate-spin-slow opacity-50"></div>
+              {/* <div className="absolute inset-0 border-4 border-transparent border-t-ni-neon border-r-ni-pink animate-spin-slow opacity-50"></div> */}
 
               <img
                 src="/niit-c.png"

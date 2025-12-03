@@ -7,10 +7,13 @@ import Button from "../../components/ui/Button";
 import Loader from "../../components/ui/Loader";
 import toast from "react-hot-toast";
 import Skeleton from "../../components/ui/Skeleton";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -28,15 +31,22 @@ const UsersList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        await api.delete(`/users/${id}`);
-        setUsers(users.filter((user) => user._id !== id));
-        toast.success("User deleted successfully");
-      } catch (err) {
-        toast.error("Failed to delete user");
-      }
+  const handleDeleteClick = (user) => {
+    setUserToDelete(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return;
+
+    try {
+      await api.delete(`/users/${userToDelete._id}`);
+      setUsers(users.filter((user) => user._id !== userToDelete._id));
+      toast.success("User deleted successfully");
+    } catch (err) {
+      toast.error("Failed to delete user");
+    } finally {
+      setUserToDelete(null);
     }
   };
 
@@ -107,7 +117,7 @@ const UsersList = () => {
                   </Link>
                   <Button
                     variant="danger"
-                    onClick={() => handleDelete(user._id)}
+                    onClick={() => handleDeleteClick(user)}
                     className="p-2"
                   >
                     <FaTrash size={16} />
@@ -118,6 +128,13 @@ const UsersList = () => {
           ))}
         </Table>
       )}
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName="User"
+      />
     </div>
   );
 };

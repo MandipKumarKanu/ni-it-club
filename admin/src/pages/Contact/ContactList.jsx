@@ -4,6 +4,7 @@ import api from "../../services/api";
 import Table, { TableRow, TableCell } from "../../components/ui/Table";
 import Button from "../../components/ui/Button";
 import Modal from "../../components/ui/Modal";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import ContactDetails from "./ContactDetails";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
@@ -16,6 +17,8 @@ const ContactList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedContact, setSelectedContact] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [contactToDelete, setContactToDelete] = useState(null);
 
   useEffect(() => {
     fetchContacts();
@@ -33,16 +36,23 @@ const ContactList = () => {
     }
   };
 
-  const handleDelete = async (id, e) => {
+  const handleDeleteClick = (id, e) => {
     e.stopPropagation();
-    if (window.confirm("Are you sure you want to delete this message?")) {
-      try {
-        await api.delete(`/contact/${id}`);
-        toast.success("Message deleted");
-        fetchContacts();
-      } catch (error) {
-        toast.error("Failed to delete message");
-      }
+    setContactToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!contactToDelete) return;
+
+    try {
+      await api.delete(`/contact/${contactToDelete}`);
+      toast.success("Message deleted");
+      fetchContacts();
+    } catch (error) {
+      toast.error("Failed to delete message");
+    } finally {
+      setContactToDelete(null);
     }
   };
 
@@ -134,7 +144,7 @@ const ContactList = () => {
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={(e) => handleDelete(contact._id, e)}
+                    onClick={(e) => handleDeleteClick(contact._id, e)}
                     className="p-2"
                   >
                     <Trash2 size={16} />
@@ -154,6 +164,13 @@ const ContactList = () => {
           />
         )}
       </Modal>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName="Message"
+      />
     </div>
   );
 };

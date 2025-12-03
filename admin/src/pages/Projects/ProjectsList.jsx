@@ -4,6 +4,7 @@ import api from "../../services/api";
 import Table, { TableRow, TableCell } from "../../components/ui/Table";
 import Button from "../../components/ui/Button";
 import Modal from "../../components/ui/Modal";
+import DeleteConfirmationModal from "../../components/ui/DeleteConfirmationModal";
 import ProjectForm from "./ProjectForm";
 import ProjectDetails from "./ProjectDetails";
 import toast from "react-hot-toast";
@@ -16,8 +17,10 @@ const ProjectsList = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [viewingProjectId, setViewingProjectId] = useState(null);
+  const [projectToDelete, setProjectToDelete] = useState(null);
 
   useEffect(() => {
     fetchProjects();
@@ -38,15 +41,22 @@ const ProjectsList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      try {
-        await api.delete(`/projects/${id}`);
-        toast.success("Project deleted");
-        fetchProjects();
-      } catch (error) {
-        toast.error("Failed to delete project");
-      }
+  const handleDeleteClick = (project) => {
+    setProjectToDelete(project);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!projectToDelete) return;
+
+    try {
+      await api.delete(`/projects/${projectToDelete._id}`);
+      toast.success("Project deleted");
+      fetchProjects();
+    } catch (error) {
+      toast.error("Failed to delete project");
+    } finally {
+      setProjectToDelete(null);
     }
   };
 
@@ -190,7 +200,7 @@ const ProjectsList = () => {
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={() => handleDelete(project._id)}
+                    onClick={() => handleDeleteClick(project)}
                     className="p-2"
                   >
                     <Trash2 size={16} />
@@ -222,6 +232,13 @@ const ProjectsList = () => {
           />
         )}
       </Modal>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName="Project"
+      />
     </div>
   );
 };

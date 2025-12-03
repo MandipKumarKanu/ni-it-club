@@ -95,6 +95,14 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/tips"
+                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4"
+                >
+                  Blogs
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -140,7 +148,7 @@ const Footer = () => {
           &copy; {new Date().getFullYear()} {settings?.siteName || "NI IT Club"}
           . All rights reserved. Made Brutally by{" "}
           <a
-            href="https://github.com/mandipkumarkanu"
+            href="https://mandipkk.com.np"
             target="_blank"
             rel="noopener noreferrer"
             className="text-ni-neon text-xl"

@@ -66,10 +66,8 @@ subscriberSchema.pre("save", function (next) {
   next();
 });
 
-// Index for faster queries
-subscriberSchema.index({ email: 1 });
+// Index for faster queries (email and unsubscribeToken already indexed via unique:true)
 subscriberSchema.index({ status: 1 });
-subscriberSchema.index({ unsubscribeToken: 1 });
 subscriberSchema.index({ createdAt: -1 });
 
 // Static method to get active subscribers

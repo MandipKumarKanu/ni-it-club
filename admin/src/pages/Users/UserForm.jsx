@@ -19,9 +19,11 @@ const UserForm = () => {
       projects: false,
       team: false,
       contact: false,
-      settings: false,
+      newsletter: false,
+      tips: false,
       users: false,
       view_logs: false,
+      settings: false,
     },
   });
 
@@ -51,6 +53,8 @@ const UserForm = () => {
             team: false,
             contact: false,
             settings: false,
+            newsletter: false,
+            tips: false,
             users: false,
             view_logs: false,
           },

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "./store/useAuthStore";
 import axios from "axios";
@@ -18,10 +18,15 @@ import UserForm from "./pages/Users/UserForm";
 import Logs from "./pages/Logs/Logs";
 import SubscribersList from "./pages/Newsletter/SubscribersList";
 import ComposeNewsletter from "./pages/Newsletter/ComposeNewsletter";
+import TipsList from "./pages/Tips/TipsList";
+import TipForm from "./pages/Tips/TipForm";
 import ChangePassword from "./pages/Auth/ChangePassword";
 import { jwtDecode } from "jwt-decode";
+import useResetScrollPosition from "./components/hooks/useResetScrollPosition";
 
 const ProtectedRoute = ({ children }) => {
+  const location = useLocation();
+  useResetScrollPosition(location);
   const { token, user } = useAuthStore();
 
   if (!token) {
@@ -118,6 +123,9 @@ function App() {
         <Route path="contact" element={<ContactList />} />
         <Route path="newsletter" element={<SubscribersList />} />
         <Route path="newsletter/compose" element={<ComposeNewsletter />} />
+        <Route path="tips" element={<TipsList />} />
+        <Route path="tips/new" element={<TipForm />} />
+        <Route path="tips/:id" element={<TipForm />} />
         <Route path="settings" element={<Settings />} />
         <Route path="users" element={<UsersList />} />
         <Route path="users/new" element={<UserForm />} />
