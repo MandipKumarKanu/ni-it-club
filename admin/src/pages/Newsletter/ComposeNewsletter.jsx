@@ -12,6 +12,7 @@ import {
 import api from "../../services/api";
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
+import Skeleton from "../../components/ui/Skeleton";
 
 const ComposeNewsletter = () => {
   const navigate = useNavigate();
@@ -245,9 +246,9 @@ You can use HTML tags for formatting:
               Recipients
             </h2>
             {loading ? (
-              <div className="animate-pulse space-y-2">
-                <div className="h-8 bg-gray-200"></div>
-                <div className="h-4 bg-gray-200 w-3/4"></div>
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-4 w-3/4" />
               </div>
             ) : (
               <div>
@@ -389,7 +390,8 @@ You can use HTML tags for formatting:
                   className="prose max-w-none"
                   dangerouslySetInnerHTML={{
                     __html:
-                      formData.content || "<p>Your content will appear here...</p>",
+                      formData.content ||
+                      "<p>Your content will appear here...</p>",
                   }}
                 />
                 <div className="mt-8 pt-4 border-t border-gray-200">

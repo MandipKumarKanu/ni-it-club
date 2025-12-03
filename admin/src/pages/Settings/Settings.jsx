@@ -20,6 +20,7 @@ import api from "../../services/api";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
+import Skeleton from "../../components/ui/Skeleton";
 import toast from "react-hot-toast";
 
 const Settings = () => {
@@ -185,7 +186,32 @@ const Settings = () => {
     }
   };
 
-  if (!settings) return <div>Loading...</div>;
+  if (!settings)
+    return (
+      <div className="flex gap-6">
+        <div className="w-64 shrink-0">
+          <Card>
+            <Skeleton className="h-8 w-32 mb-4" />
+            <div className="space-y-2">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
+              ))}
+            </div>
+          </Card>
+        </div>
+        <div className="flex-1">
+          <Card>
+            <Skeleton className="h-8 w-48 mb-6" />
+            <div className="space-y-4">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-32 w-full" />
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
 
   const tabs = [
     { id: "general", label: "General (SEO)", icon: Globe },

@@ -113,7 +113,10 @@ const SubscribersList = () => {
     setError("");
 
     try {
-      await api.put(`/newsletter/subscribers/${selectedSubscriber._id}`, formData);
+      await api.put(
+        `/newsletter/subscribers/${selectedSubscriber._id}`,
+        formData
+      );
       setIsEditModalOpen(false);
       setSelectedSubscriber(null);
       fetchSubscribers();
@@ -325,14 +328,20 @@ const SubscribersList = () => {
       {/* Subscribers Table */}
       <div className="bg-white border-4 border-black shadow-brutal overflow-hidden">
         {loading ? (
-          <div className="p-8">
-            <Skeleton count={10} height={50} />
+          <div className="p-8 space-y-4">
+            {[...Array(10)].map((_, i) => (
+              <Skeleton key={i} className="h-12 w-full" />
+            ))}
           </div>
         ) : subscribers.length === 0 ? (
           <div className="p-12 text-center">
             <Mail size={48} className="mx-auto text-gray-400 mb-4" />
-            <p className="text-xl font-bold text-gray-600">No subscribers found</p>
-            <p className="text-gray-500">Add your first subscriber to get started</p>
+            <p className="text-xl font-bold text-gray-600">
+              No subscribers found
+            </p>
+            <p className="text-gray-500">
+              Add your first subscriber to get started
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto">

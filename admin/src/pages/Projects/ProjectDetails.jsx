@@ -75,10 +75,10 @@ const ProjectDetails = ({ projectId, onClose }) => {
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <div className="border-2 border-black shadow-brutal overflow-hidden mb-6">
-            <ImageWithLoader
+            <img
               src={project.image?.url || project.image}
               alt={project.name}
-              className="w-full h-64"
+              className="w-full h-64 object-cover"
             />
           </div>
 

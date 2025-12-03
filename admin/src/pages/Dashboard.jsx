@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Calendar, Image, Briefcase } from "lucide-react";
 import Card from "../components/ui/Card";
+import Skeleton from "../components/ui/Skeleton";
 import api from "../services/api";
 
 const Dashboard = () => {
@@ -22,12 +23,27 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) return <div className="text-center py-20">Loading...</div>;
+  if (loading)
+    return (
+      <div className="space-y-8">
+        <Skeleton className="h-10 w-48" />
+        <Skeleton className="h-32 w-full" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      </div>
+    );
 
   return (
     <div className="space-y-8">
       <h1 className="text-4xl font-bold">Dashboard</h1>
-      
+
       <Card title="Welcome to the Admin Panel">
         <p className="text-lg">
           Use the sidebar to manage content for the NI-IT Club website.
