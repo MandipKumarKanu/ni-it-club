@@ -24,6 +24,7 @@ const UserForm = () => {
       users: false,
       view_logs: false,
       settings: false,
+      traffic: false,
     },
   });
 
@@ -56,6 +57,7 @@ const UserForm = () => {
             newsletter: false,
             tips: false,
             users: false,
+            traffic: false,
             view_logs: false,
           },
         });

@@ -203,7 +203,10 @@ const TipDetails = () => {
             />
 
             <div className="mt-12 pt-8 border-t-4 border-black flex flex-wrap justify-between items-center gap-4">
-              <div className="font-black uppercase">Share this blog:</div>
+              <div>
+                <div className="font-black uppercase">Share this blog:</div>
+                <p className="text-xs text-gray-500 mt-1">Use share button for best preview on social media</p>
+              </div>
               <div className="relative">
                 <button
                   onClick={(e) => {
