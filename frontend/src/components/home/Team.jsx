@@ -67,7 +67,7 @@ const Team = ({ data, loading }) => {
               rotate={index % 2 === 0 ? 1 : -1}
               className="relative z-10 h-full flex flex-col items-center text-center group-hover:-translate-y-2 transition-transform"
             >
-              <div className="w-24 h-24 rounded-full border-brutal bg-ni-gray mb-6 overflow-hidden relative">
+              <div className="w-28 h-28 rounded-full border-brutal bg-ni-gray mb-6 overflow-hidden relative">
                 <img
                   src={member.image?.thumb || member.image?.url || member.image}
                   alt={member.name}
