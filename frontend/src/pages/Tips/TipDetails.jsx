@@ -49,15 +49,13 @@ const TipDetails = () => {
     const baseUrl = import.meta.env.MODE === "development" 
       ? "http://localhost:5000" 
       : "https://ni-it-club.vercel.app";
-    // Use backend share URL for social media (has OG meta tags)
+    // Use backend share URL (has OG meta tags and redirects to frontend)
     const shareUrl = `${baseUrl}/api/tips/share/${tip.slug}`;
-    // Use direct URL for copy
-    const directUrl = window.location.href;
     const text = "Check out this blog: " + tip.title;
 
     if (platform === "copy") {
       try {
-        await navigator.clipboard.writeText(directUrl);
+        await navigator.clipboard.writeText(shareUrl);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       } catch (err) {
