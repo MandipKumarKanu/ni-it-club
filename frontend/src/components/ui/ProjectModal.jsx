@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { X, Github, ExternalLink, Terminal, Monitor } from "lucide-react";
+import { X, ExternalLink, Terminal, Monitor } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 
 const ProjectModal = ({ project, onClose, onOpenPreview }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -132,7 +133,7 @@ const ProjectModal = ({ project, onClose, onOpenPreview }) => {
                     className="block w-full text-center py-3 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors font-mono uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1"
                   >
                     <div className="flex items-center justify-center gap-2">
-                      <Github size={18} /> Source Code
+                      <FaGithub size={18} /> Source Code
                     </div>
                   </a>
                 )}

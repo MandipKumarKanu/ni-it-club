@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Github,
   ExternalLink,
   Code,
   Terminal,
@@ -10,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 import Button from "../components/ui/Button";
 import {
   Binary,
@@ -228,7 +228,7 @@ const Showcase = () => {
                             rel="noopener noreferrer"
                             className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors text-sm font-mono flex items-center justify-center gap-2"
                           >
-                            <Github size={14} /> SRC
+                            <FaGithub size={14} /> SRC
                           </a>
                         )}
                       </div>

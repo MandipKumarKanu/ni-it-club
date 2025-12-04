@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { Mail, Globe, Send, MessageCircle } from "lucide-react";
 import {
-  Github,
-  Twitter,
-  Linkedin,
-  Mail,
-  Facebook,
-  Instagram,
-  Youtube,
-  Globe,
-  Send,
-  MessageCircle,
-} from "lucide-react";
+  FaGithub,
+  FaTwitter,
+  FaLinkedin,
+  FaFacebook,
+  FaInstagram,
+  FaYoutube,
+  FaTelegram,
+  FaWhatsapp,
+  FaDiscord,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useSettingsStore from "../../store/useSettingsStore";
 import NewsletterSubscribe from "../ui/NewsletterSubscribe";
@@ -19,16 +19,16 @@ const Footer = () => {
   const { settings } = useSettingsStore();
 
   const socialIcons = {
-    github: Github,
-    twitter: Twitter,
-    linkedin: Linkedin,
-    facebook: Facebook,
-    instagram: Instagram,
-    youtube: Youtube,
+    github: FaGithub,
+    twitter: FaTwitter,
+    linkedin: FaLinkedin,
+    facebook: FaFacebook,
+    instagram: FaInstagram,
+    youtube: FaYoutube,
     website: Globe,
-    telegram: Send,
-    whatsapp: MessageCircle,
-    discord: MessageCircle,
+    telegram: FaTelegram,
+    whatsapp: FaWhatsapp,
+    discord: FaDiscord,
     email: Mail,
   };
 

@@ -1,4 +1,4 @@
-import { Github, Linkedin, Twitter, Instagram } from "lucide-react";
+import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 import Button from "../ui/Button";
 import Card from "../ui/Card";
 import { AngleBracket } from "../ui/Doodles";
@@ -122,7 +122,7 @@ const Team = ({ data, loading }) => {
                     rel="noreferrer"
                     className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110"
                   >
-                    <Github size={20} />
+                    <FaGithub size={20} />
                   </a>
                 )}
                 {member.socialLinks?.linkedin && (
@@ -132,7 +132,7 @@ const Team = ({ data, loading }) => {
                     rel="noreferrer"
                     className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110"
                   >
-                    <Linkedin size={20} />
+                    <FaLinkedin size={20} />
                   </a>
                 )}
                 {member.socialLinks?.twitter && (
@@ -142,7 +142,7 @@ const Team = ({ data, loading }) => {
                     rel="noreferrer"
                     className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110"
                   >
-                    <Twitter size={20} />
+                    <FaTwitter size={20} />
                   </a>
                 )}
                 {member.socialLinks?.instagram && (
@@ -152,7 +152,7 @@ const Team = ({ data, loading }) => {
                     rel="noreferrer"
                     className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110"
                   >
-                    <Instagram size={20} />
+                    <FaInstagram size={20} />
                   </a>
                 )}
               </div>

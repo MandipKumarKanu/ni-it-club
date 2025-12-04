@@ -4,12 +4,6 @@ import {
   MapPin,
   Phone,
   Send,
-  Github,
-  Linkedin,
-  Facebook,
-  Instagram,
-  Twitter,
-  Youtube,
   Globe,
   MessageCircle,
   Clock,
@@ -26,6 +20,17 @@ import {
   Code2,
   CheckCircle2,
 } from "lucide-react";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaFacebook,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaTelegram,
+  FaWhatsapp,
+  FaDiscord,
+} from "react-icons/fa";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import {
@@ -151,47 +156,47 @@ const Contact = () => {
 
   const socialConfig = {
     github: {
-      icon: Github,
+      icon: FaGithub,
       bgColor: "bg-[#333]",
       hoverBg: "hover:bg-[#24292e]",
     },
     linkedin: {
-      icon: Linkedin,
+      icon: FaLinkedin,
       bgColor: "bg-[#0077B5]",
       hoverBg: "hover:bg-[#005885]",
     },
     facebook: {
-      icon: Facebook,
+      icon: FaFacebook,
       bgColor: "bg-[#1877F2]",
       hoverBg: "hover:bg-[#0d5bbd]",
     },
     instagram: {
-      icon: Instagram,
+      icon: FaInstagram,
       bgColor: "bg-gradient-to-br from-[#f09433] via-[#e6683c] to-[#dc2743]",
       hoverBg: "hover:opacity-90",
     },
     twitter: {
-      icon: Twitter,
+      icon: FaTwitter,
       bgColor: "bg-[#1DA1F2]",
       hoverBg: "hover:bg-[#0c85d0]",
     },
     youtube: {
-      icon: Youtube,
+      icon: FaYoutube,
       bgColor: "bg-[#FF0000]",
       hoverBg: "hover:bg-[#cc0000]",
     },
     discord: {
-      icon: MessageCircle, 
+      icon: FaDiscord, 
       bgColor: "bg-[#5865F2]",
       hoverBg: "hover:bg-[#4752c4]",
     },
     telegram: {
-      icon: Send,
+      icon: FaTelegram,
       bgColor: "bg-[#0088cc]",
       hoverBg: "hover:bg-[#0077b5]",
     },
     whatsapp: {
-      icon: MessageCircle,
+      icon: FaWhatsapp,
       bgColor: "bg-[#25D366]",
       hoverBg: "hover:bg-[#128c7e]",
     },
