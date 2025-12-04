@@ -22,9 +22,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <Link to="/" className="shrink-0 flex items-center gap-2 group cursor-target">
-            <div className="w-10 h-10 bg-[#076F8C] text-ni-neon flex items-center justify-center font-bold text-xl border-2 border-transparent group-hover:bg-ni-neon group-hover:text-[#076F8C] group-hover:border-ni-black transition-colors">
-              NI
-            </div>
+            <img
+              src="/ni.webp"
+              alt="NI IT Club Logo"
+              className="w-10 h-10 object-contain"
+            />
             <span className="font-bold text-2xl tracking-tighter uppercase">
               IT Club
             </span>
