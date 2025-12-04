@@ -145,17 +145,29 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t-2 border-ni-gray/20 text-center text-ni-gray text-sm font-mono">
-          &copy; {new Date().getFullYear()} {settings?.siteName || "NI IT Club"}
-          . All rights reserved. Made Brutally by{" "}
-          <a
-            href="https://mandipkk.com.np"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-ni-neon text-xl"
-          >
-            Mandy
-          </a>
-          .
+          <p>
+            &copy; {new Date().getFullYear()}{" "}
+            {settings?.siteName || "NI IT Club"} in association with{" "}
+            <a
+              href="https://nationalinfotechcollege.edu.np/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ni-blue text-xl hover:text-ni-neon transition-colors duration-300"
+            >
+              National Infotech College
+            </a>
+          </p>
+          <p className="mt-2">
+            Made Brutally by{" "}
+            <a
+              href="https://mandipkk.com.np"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ni-neon hover:text-ni-blue text-xl transition-colors duration-300"
+            >
+              Mandy
+            </a>
+          </p>
         </div>
       </div>
     </footer>

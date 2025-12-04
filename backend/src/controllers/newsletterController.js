@@ -18,7 +18,6 @@ const subscribe = async (req, res) => {
       return res.status(400).json({ message: "Email is required" });
     }
 
-    // Check if already subscribed
     const existingSubscriber = await Subscriber.findOne({ email: email.toLowerCase() });
 
     if (existingSubscriber) {
@@ -26,7 +25,6 @@ const subscribe = async (req, res) => {
         return res.status(400).json({ message: "You are already subscribed!" });
       }
 
-      // Reactivate unsubscribed user
       existingSubscriber.status = "active";
       existingSubscriber.unsubscribedAt = null;
       existingSubscriber.name = name || existingSubscriber.name;
@@ -36,7 +34,6 @@ const subscribe = async (req, res) => {
       }
       await existingSubscriber.save();
 
-      // Send welcome back email
       try {
         await sendEmail({
           email: existingSubscriber.email,
@@ -56,7 +53,6 @@ const subscribe = async (req, res) => {
       });
     }
 
-    // Create new subscriber
     const subscriber = await Subscriber.create({
       email: email.toLowerCase(),
       name: name || "",
@@ -65,7 +61,6 @@ const subscribe = async (req, res) => {
       source: "website",
     });
 
-    // Send welcome email
     try {
       await sendEmail({
         email: subscriber.email,
@@ -119,7 +114,6 @@ const unsubscribe = async (req, res) => {
     subscriber.unsubscribedAt = new Date();
     await subscriber.save();
 
-    // Send confirmation email
     try {
       await sendEmail({
         email: subscriber.email,
@@ -323,7 +317,6 @@ const sendNewsletter = async (req, res) => {
       return res.status(400).json({ message: "Subject and content are required" });
     }
 
-    // Get active subscribers based on category preference
     const filter = { status: "active" };
     if (category && category !== "all") {
       filter[`preferences.${category}`] = true;
@@ -342,7 +335,6 @@ const sendNewsletter = async (req, res) => {
       errors: [],
     };
 
-    // Send emails in batches to avoid rate limiting
     const batchSize = 10;
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -382,7 +374,6 @@ const sendNewsletter = async (req, res) => {
 
       await Promise.all(emailPromises);
 
-      // Add delay between batches to avoid rate limiting
       if (i + batchSize < subscribers.length) {
         await delay(1000);
       }
@@ -415,7 +406,6 @@ const exportSubscribers = async (req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
-    // Generate CSV
     const headers = [
       "Email",
       "Name",

@@ -26,6 +26,7 @@ import {
 import api from "../services/api";
 import SEO from "../components/SEO";
 import ProjectModal from "../components/ui/ProjectModal";
+import ProjectIframeWindow from "../components/ui/ProjectIframeWindow";
 import Skeleton from "../components/ui/Skeleton";
 
 const WindowHeader = ({
@@ -65,6 +66,7 @@ const Showcase = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [previewProject, setPreviewProject] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -174,7 +176,7 @@ const Showcase = () => {
                       title={`PROJ_0${index + 1}.js`}
                       color={index % 2 === 0 ? "bg-ni-neon" : "bg-ni-cyan"}
                       textColor="text-ni-black"
-                      onMaximize={() => setSelectedProject(project)}
+                      onMaximize={() => setPreviewProject(project)}
                     />
 
                     <div
@@ -286,6 +288,12 @@ const Showcase = () => {
       <ProjectModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
+        onOpenPreview={(project) => setPreviewProject(project)}
+      />
+
+      <ProjectIframeWindow
+        project={previewProject}
+        onClose={() => setPreviewProject(null)}
       />
     </>
   );

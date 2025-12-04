@@ -1,7 +1,16 @@
-import React, { useEffect } from "react";
-import { X, Github, ExternalLink, Terminal } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { X, Github, ExternalLink, Terminal, Monitor } from "lucide-react";
 
-const ProjectModal = ({ project, onClose }) => {
+const ProjectModal = ({ project, onClose, onOpenPreview }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   useEffect(() => {
     if (project) {
       document.body.style.overflow = "hidden";
@@ -13,10 +22,18 @@ const ProjectModal = ({ project, onClose }) => {
 
   if (!project) return null;
 
+  const handleLiveDemo = () => {
+    if (isMobile || !onOpenPreview) {
+      window.open(project.link, "_blank", "noopener,noreferrer");
+    } else {
+      onClose();
+      onOpenPreview(project);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ni-black/80 backdrop-blur-sm">
       <div className="bg-ni-white border-4 border-ni-black shadow-brutal-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto relative animate-in fade-in zoom-in duration-200">
-        {/* Header */}
         <div className="bg-ni-black text-ni-white p-3 flex justify-between items-center sticky top-0 z-10">
           <div className="flex items-center gap-2 font-mono font-bold uppercase">
             <Terminal size={18} />
@@ -93,16 +110,19 @@ const ProjectModal = ({ project, onClose }) => {
 
               <div className="space-y-3">
                 {project.link && (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={handleLiveDemo}
                     className="block w-full text-center py-3 border-2 border-ni-black bg-ni-neon text-ni-black font-bold hover:bg-ni-black hover:text-ni-neon transition-colors font-mono uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1"
                   >
                     <div className="flex items-center justify-center gap-2">
-                      <ExternalLink size={18} /> Live Demo
+                      {isMobile ? (
+                        <ExternalLink size={18} />
+                      ) : (
+                        <Monitor size={18} />
+                      )}
+                      {isMobile ? "Open Site" : "Live Demo"}
                     </div>
-                  </a>
+                  </button>
                 )}
                 {project.github && (
                   <a

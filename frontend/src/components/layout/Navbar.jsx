@@ -45,9 +45,9 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <Button variant="primary" className="ml-4">
+            {/* <Button variant="primary" className="ml-4">
               Join Us
-            </Button>
+            </Button> */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -84,11 +84,11 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <div className="pt-4">
+            {/* <div className="pt-4">
               <Button variant="primary" className="w-full justify-center">
                 Join Us Today
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

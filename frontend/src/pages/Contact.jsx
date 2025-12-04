@@ -406,7 +406,7 @@ const Contact = () => {
                   <h3 className="font-black uppercase text-2xl mb-2 group-hover:text-ni-white transition-colors">
                     {method.title}
                   </h3>
-                  <p className="font-mono font-bold text-lg mb-1 group-hover:text-ni-white transition-colors">
+                  <p className="font-mono font-bold text-sm sm:text-base lg:text-lg mb-1 group-hover:text-ni-white transition-colors break-all">
                     {method.value}
                   </p>
                   <p className="text-sm font-bold text-gray-500 group-hover:text-ni-white/80 transition-colors">
