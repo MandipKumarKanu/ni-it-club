@@ -213,7 +213,7 @@ const TipDetails = () => {
                     e.stopPropagation();
                     setShowShareOptions(!showShareOptions);
                   }}
-                  className="bg-ni-pink border-4 border-black py-3 px-6 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center gap-2"
+                  className="bg-ni-pink border-4 border-black py-3 px-6 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center gap-2 cursor-target"
                 >
                   <Share2 size={20} strokeWidth={3} />
                   Share

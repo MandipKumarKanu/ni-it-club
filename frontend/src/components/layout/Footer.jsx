@@ -66,7 +66,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/events"
-                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4"
+                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4 cursor-target"
                 >
                   Events
                 </Link>
@@ -74,7 +74,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/gallery"
-                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4"
+                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4 cursor-target"
                 >
                   Gallery
                 </Link>
@@ -82,7 +82,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/showcase"
-                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4"
+                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4 cursor-target"
                 >
                   Showcase
                 </Link>
@@ -90,7 +90,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/contact"
-                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4"
+                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4 cursor-target"
                 >
                   Contact
                 </Link>
@@ -98,7 +98,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/tips"
-                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4"
+                  className="hover:text-ni-neon hover:underline decoration-2 underline-offset-4 cursor-target"
                 >
                   Blogs
                 </Link>
@@ -122,7 +122,7 @@ const Footer = () => {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-ni-white text-ni-black p-2 hover:bg-ni-neon hover:-translate-y-1 transition-all border-2 border-transparent hover:border-ni-white"
+                      className="bg-ni-white text-ni-black p-2 hover:bg-ni-neon hover:-translate-y-1 transition-all border-2 border-transparent hover:border-ni-white cursor-target"
                     >
                       <Icon size={24} />
                     </a>
@@ -152,7 +152,7 @@ const Footer = () => {
               href="https://nationalinfotechcollege.edu.np/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-ni-blue text-xl hover:text-ni-neon transition-colors duration-300"
+              className="text-ni-blue text-xl hover:text-ni-neon transition-colors duration-300 cursor-target"
             >
               National Infotech College
             </a>
@@ -163,7 +163,7 @@ const Footer = () => {
               href="https://mandipkk.com.np"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-ni-neon hover:text-ni-blue text-xl transition-colors duration-300"
+              className="text-ni-neon hover:text-ni-blue text-xl transition-colors duration-300 cursor-target"
             >
               Mandy
             </a>

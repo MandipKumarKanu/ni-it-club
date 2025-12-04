@@ -21,7 +21,7 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-ni-white border-b-3 border-ni-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          <Link to="/" className="shrink-0 flex items-center gap-2 group">
+          <Link to="/" className="shrink-0 flex items-center gap-2 group cursor-target">
             <div className="w-10 h-10 bg-[#076F8C] text-ni-neon flex items-center justify-center font-bold text-xl border-2 border-transparent group-hover:bg-ni-neon group-hover:text-[#076F8C] group-hover:border-ni-black transition-colors">
               NI
             </div>
@@ -36,7 +36,7 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className={`text-lg font-bold uppercase tracking-wide hover:text-ni-red transition-colors ${
+                className={`text-lg font-bold uppercase tracking-wide hover:text-ni-red transition-colors  cursor-target ${
                   isActive(link.path)
                     ? "text-ni-red underline decoration-4 underline-offset-4"
                     : "text-ni-black"
@@ -54,7 +54,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-ni-black hover:text-ni-red focus:outline-none"
+              className="text-ni-black hover:text-ni-red focus:outline-none cursor-target"
             >
               {isOpen ? (
                 <X size={32} strokeWidth={3} />
@@ -75,7 +75,7 @@ const Navbar = () => {
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
-                className={`block px-3 py-3 text-xl font-bold uppercase border-2 border-transparent hover:bg-ni-neon hover:border-ni-black transition-all ${
+                className={`block px-3 py-3 text-xl font-bold uppercase border-2 border-transparent hover:bg-ni-neon hover:border-ni-black transition-all cursor-target ${
                   isActive(link.path)
                     ? "bg-ni-black text-ni-neon"
                     : "text-ni-black"

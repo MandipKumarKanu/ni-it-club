@@ -205,7 +205,7 @@ const Events = () => {
                   <button
                     key={type}
                     onClick={() => setCategory(type)}
-                    className={`px-4 py-3 font-black uppercase border-4 border-ni-black transition-all text-sm flex items-center gap-2 ${
+                    className={`px-4 py-3 font-black uppercase border-4 border-ni-black transition-all text-sm flex items-center gap-2 cursor-target ${
                       category === type
                         ? `${config?.color || "bg-ni-black"} ${
                             type === "All" ? "text-ni-white" : "text-ni-black"
@@ -389,7 +389,7 @@ const Events = () => {
                                 href={featuredEvent.registrationLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-ni-black text-ni-white border-4 border-ni-black px-8 py-4 font-black uppercase text-lg shadow-brutal hover:shadow-brutal-lg hover:-translate-y-1 transition-all inline-flex items-center gap-3 group-hover:bg-ni-white group-hover:text-ni-black"
+                                className="bg-ni-black text-ni-white border-4 border-ni-black px-8 py-4 font-black uppercase text-lg shadow-brutal hover:shadow-brutal-lg hover:-translate-y-1 transition-all inline-flex items-center gap-3 group-hover:bg-ni-white group-hover:text-ni-black cursor-target"
                               >
                                 Register Now
                                 <ArrowRight
@@ -400,7 +400,7 @@ const Events = () => {
                             )}
                           <button
                             onClick={() => setSelectedEvent(featuredEvent)}
-                            className="bg-transparent text-ni-black border-4 border-ni-black px-8 py-4 font-black uppercase text-lg hover:bg-ni-black hover:text-ni-white transition-all group-hover:border-ni-white group-hover:text-ni-white group-hover:hover:bg-ni-white group-hover:hover:text-ni-black inline-flex items-center gap-2"
+                            className="bg-transparent text-ni-black border-4 border-ni-black px-8 py-4 font-black uppercase text-lg hover:bg-ni-black hover:text-ni-white transition-all group-hover:border-ni-white group-hover:text-ni-white group-hover:hover:bg-ni-white group-hover:hover:text-ni-black inline-flex items-center gap-2 cursor-target"
                           >
                             <Eye size={20} />
                             View Details
@@ -508,7 +508,7 @@ const Events = () => {
                                   e.stopPropagation();
                                   setSelectedEvent(event);
                                 }}
-                                className="w-full bg-ni-black text-ni-white border-3 border-ni-black py-3 font-bold uppercase text-sm hover:bg-ni-neon hover:text-ni-black transition-all flex items-center justify-center gap-2"
+                                className="w-full bg-ni-black text-ni-white border-3 border-ni-black py-3 font-bold uppercase text-sm hover:bg-ni-neon hover:text-ni-black transition-all flex items-center justify-center gap-2 cursor-target"
                               >
                                 <Eye size={14} />
                                 View Details
@@ -531,7 +531,7 @@ const Events = () => {
                   <button
                     onClick={() => setPage(pagination.page - 1)}
                     disabled={!pagination.hasPrevPage}
-                    className="bg-ni-white border-4 border-ni-black p-3 hover:bg-ni-black hover:text-ni-white disabled:opacity-50 disabled:hover:bg-ni-white disabled:hover:text-ni-black transition-all shadow-brutal disabled:shadow-none"
+                    className="bg-ni-white border-4 border-ni-black p-3 hover:bg-ni-black hover:text-ni-white disabled:opacity-50 disabled:hover:bg-ni-white disabled:hover:text-ni-black transition-all shadow-brutal disabled:shadow-none cursor-target"
                   >
                     <ChevronLeft size={24} strokeWidth={3} />
                   </button>
@@ -541,7 +541,7 @@ const Events = () => {
                   <button
                     onClick={() => setPage(pagination.page + 1)}
                     disabled={!pagination.hasNextPage}
-                    className="bg-ni-white border-4 border-ni-black p-3 hover:bg-ni-black hover:text-ni-white disabled:opacity-50 disabled:hover:bg-ni-white disabled:hover:text-ni-black transition-all shadow-brutal disabled:shadow-none"
+                    className="bg-ni-white border-4 border-ni-black p-3 hover:bg-ni-black hover:text-ni-white disabled:opacity-50 disabled:hover:bg-ni-white disabled:hover:text-ni-black transition-all shadow-brutal disabled:shadow-none cursor-target"
                   >
                     <ChevronRight size={24} strokeWidth={3} />
                   </button>

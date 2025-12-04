@@ -70,7 +70,7 @@ const NewsletterSubscribe = ({ variant = "default" }) => {
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-ni-neon border-3 border-ni-black font-bold hover:shadow-brutal transition-all disabled:opacity-50"
+            className="px-4 py-2 bg-ni-neon border-3 border-ni-black font-bold hover:shadow-brutal transition-all disabled:opacity-50 cursor-target"
           >
             {loading ? (
               <Loader2 className="animate-spin" size={20} />

@@ -104,6 +104,14 @@ const settingsSchema = mongoose.Schema(
       type: String,
       default: "Where Innovation Meets Technology",
     },
+    heroButton1: {
+      name: { type: String, default: "" },
+      link: { type: String, default: "" },
+    },
+    heroButton2: {
+      name: { type: String, default: "" },
+      link: { type: String, default: "" },
+    },
 
     // About section
     aboutTitle: {

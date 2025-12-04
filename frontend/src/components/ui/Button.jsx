@@ -23,7 +23,7 @@ const Button = ({
   return (
     <button
       type={type}
-      className={`${baseStyles} ${variants[variant]} ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${className} cursor-target`}
       onClick={onClick}
       {...props}
     >

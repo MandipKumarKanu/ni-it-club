@@ -111,7 +111,7 @@ const ProjectIframeWindow = ({ project, onClose }) => {
 
           <div className="flex gap-1 md:gap-2 shrink-0">
             <button
-              className="w-6 h-6 md:w-7 md:h-7 border-2 border-ni-white/30 bg-ni-gray-800 flex items-center justify-center hover:bg-ni-gray-600 transition-colors"
+              className="w-6 h-6 md:w-7 md:h-7 border-2 border-ni-white/30 bg-ni-gray-800 flex items-center justify-center hover:bg-ni-gray-600 transition-colors cursor-target"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsMinimized(!isMinimized);
@@ -123,7 +123,7 @@ const ProjectIframeWindow = ({ project, onClose }) => {
             </button>
 
             <button
-              className="w-6 h-6 md:w-7 md:h-7 border-2 border-ni-white/30 bg-ni-gray-800 flex items-center justify-center hover:bg-ni-gray-600 transition-colors"
+              className="w-6 h-6 md:w-7 md:h-7 border-2 border-ni-white/30 bg-ni-gray-800 flex items-center justify-center hover:bg-ni-gray-600 transition-colors cursor-target"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsMaximized(!isMaximized);
@@ -135,7 +135,7 @@ const ProjectIframeWindow = ({ project, onClose }) => {
             </button>
 
             <button
-              className="w-6 h-6 md:w-7 md:h-7 border-2 border-ni-black bg-ni-pink flex items-center justify-center hover:bg-red-500 transition-colors text-ni-black"
+              className="w-6 h-6 md:w-7 md:h-7 border-2 border-ni-black bg-ni-pink flex items-center justify-center hover:bg-red-500 transition-colors text-ni-black cursor-target"
               onClick={(e) => {
                 e.stopPropagation();
                 onClose();
@@ -151,7 +151,7 @@ const ProjectIframeWindow = ({ project, onClose }) => {
         {!isMinimized && (
           <div className="bg-ni-gray-100 border-b-4 border-ni-black p-2 flex items-center gap-2 shrink-0">
             <button
-              className="p-1.5 border-2 border-ni-black bg-ni-white hover:bg-ni-gray-200 transition-colors"
+              className="p-1.5 border-2 border-ni-black bg-ni-white hover:bg-ni-gray-200 transition-colors cursor-target"
               onClick={() => setIsLoading(true)}
               title="Refresh"
             >
@@ -170,7 +170,7 @@ const ProjectIframeWindow = ({ project, onClose }) => {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1.5 border-2 border-ni-black bg-ni-neon hover:bg-ni-cyan transition-colors"
+                className="p-1.5 border-2 border-ni-black bg-ni-neon hover:bg-ni-cyan transition-colors cursor-target"
                 title="Open in new tab"
               >
                 <ExternalLink size={14} />

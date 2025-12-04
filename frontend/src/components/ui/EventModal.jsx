@@ -163,7 +163,7 @@ const EventModal = ({ event, onClose }) => {
               
               <button
                 onClick={onClose}
-                className="bg-ni-white border-4 border-ni-black p-2 sm:p-3 hover:bg-ni-black hover:text-ni-white transition-all shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 shrink-0"
+                className="bg-ni-white border-4 border-ni-black p-2 sm:p-3 hover:bg-ni-black hover:text-ni-white transition-all shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 shrink-0 cursor-target"
               >
                 <X size={24} strokeWidth={3} />
               </button>
@@ -270,7 +270,7 @@ const EventModal = ({ event, onClose }) => {
                   href={event.registrationLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-ni-black text-ni-white border-4 border-ni-black py-4 px-6 font-black uppercase text-center shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 hover:bg-ni-neon hover:text-ni-black transition-all flex items-center justify-center gap-2 group"
+                  className="flex-1 bg-ni-black text-ni-white border-4 border-ni-black py-4 px-6 font-black uppercase text-center shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 hover:bg-ni-neon hover:text-ni-black transition-all flex items-center justify-center gap-2 group cursor-target"
                 >
                   <CheckCircle size={22} strokeWidth={3} />
                   Register Now
@@ -293,7 +293,7 @@ const EventModal = ({ event, onClose }) => {
                     setShowCalendarOptions(!showCalendarOptions);
                     setShowShareOptions(false);
                   }}
-                  className="w-full sm:w-auto bg-ni-cyan border-4 border-ni-black py-4 px-6 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-ni-cyan border-4 border-ni-black py-4 px-6 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2 cursor-target"
                 >
                   <CalendarPlus size={22} strokeWidth={3} />
                   <span className="hidden sm:inline">Calendar</span>
@@ -334,7 +334,7 @@ const EventModal = ({ event, onClose }) => {
                     setShowShareOptions(!showShareOptions);
                     setShowCalendarOptions(false);
                   }}
-                  className="w-full sm:w-auto bg-ni-pink border-4 border-ni-black py-4 px-6 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-ni-pink border-4 border-ni-black py-4 px-6 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2 cursor-target"
                 >
                   <Share2 size={22} strokeWidth={3} />
                   <span className="hidden sm:inline">Share</span>

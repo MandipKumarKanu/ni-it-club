@@ -52,6 +52,8 @@ const updateSettings = async (req, res) => {
       heroTitle1,
       heroTitle2,
       heroSubtitle,
+      heroButton1,
+      heroButton2,
       aboutTitle,
       aboutDescription,
       aboutDescription2,
@@ -75,6 +77,25 @@ const updateSettings = async (req, res) => {
       settings.aboutDescription = aboutDescription;
     if (aboutDescription2 !== undefined)
       settings.aboutDescription2 = aboutDescription2;
+
+    // Handle hero buttons (nested objects from FormData)
+    if (heroButton1) {
+      const parsedButton1 = typeof heroButton1 === "string" ? JSON.parse(heroButton1) : heroButton1;
+      settings.heroButton1 = parsedButton1;
+    } else if (req.body["heroButton1[name]"] !== undefined || req.body["heroButton1[link]"] !== undefined) {
+      if (!settings.heroButton1) settings.heroButton1 = {};
+      if (req.body["heroButton1[name]"] !== undefined) settings.heroButton1.name = req.body["heroButton1[name]"];
+      if (req.body["heroButton1[link]"] !== undefined) settings.heroButton1.link = req.body["heroButton1[link]"];
+    }
+
+    if (heroButton2) {
+      const parsedButton2 = typeof heroButton2 === "string" ? JSON.parse(heroButton2) : heroButton2;
+      settings.heroButton2 = parsedButton2;
+    } else if (req.body["heroButton2[name]"] !== undefined || req.body["heroButton2[link]"] !== undefined) {
+      if (!settings.heroButton2) settings.heroButton2 = {};
+      if (req.body["heroButton2[name]"] !== undefined) settings.heroButton2.name = req.body["heroButton2[name]"];
+      if (req.body["heroButton2[link]"] !== undefined) settings.heroButton2.link = req.body["heroButton2[link]"];
+    }
 
     if (socialLinks) {
       const parsedLinks =

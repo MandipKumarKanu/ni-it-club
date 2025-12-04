@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import Button from "../ui/Button";
 import {
   CurlyBrace,
@@ -38,9 +39,15 @@ const Hero = ({ data, logo, loading }) => {
     title1: data?.title1 || "Welcome to",
     title2: data?.title2 || "NI IT Club",
     subtitle: data?.subtitle || "Where Innovation Meets Community.",
+    button1: data?.button1 || null,
+    button2: data?.button2 || null,
   };
 
   const logoUrl = logo?.url || "/niit-c.png";
+
+  // Check if button should be shown (both name and link must be set)
+  const showButton1 = heroData.button1?.name && heroData.button1?.link;
+  const showButton2 = heroData.button2?.name && heroData.button2?.link;
 
   return (
     <section className="relative  border-b-4 border-ni-black py-24 lg:py overflow-hidden">
@@ -75,21 +82,31 @@ const Hero = ({ data, logo, loading }) => {
             level up your skills and build the future.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 relative">
-            <Arrow className="absolute -left-24 top-4 w-20 text-ni-black hidden lg:block" />
-            <Button
-              variant="primary"
-              className="text-2xl px-10 py-5 transform hover:rotate-2"
-            >
-              Join Us Today <ArrowRight className="ml-2" strokeWidth={3} />
-            </Button>
-            <Button
-              variant="outline"
-              className="text-2xl px-10 py-5 bg-ni-white transform hover:-rotate-2"
-            >
-              View Events
-            </Button>
-          </div>
+          {(showButton1 || showButton2) && (
+            <div className="flex flex-col sm:flex-row gap-6 relative">
+              <Arrow className="absolute -left-24 top-4 w-20 text-ni-black hidden lg:block" />
+              {showButton1 && (
+                <Link to={heroData.button1.link}>
+                  <Button
+                    variant="primary"
+                    className="text-2xl px-10 py-5 transform hover:rotate-2"
+                  >
+                    {heroData.button1.name} <ArrowRight className="ml-2" strokeWidth={3} />
+                  </Button>
+                </Link>
+              )}
+              {showButton2 && (
+                <Link to={heroData.button2.link}>
+                  <Button
+                    variant="outline"
+                    className="text-2xl px-10 py-5 bg-ni-white transform hover:-rotate-2"
+                  >
+                    {heroData.button2.name}
+                  </Button>
+                </Link>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex-1 flex justify-center items-center">

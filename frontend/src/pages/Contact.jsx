@@ -477,7 +477,7 @@ const Contact = () => {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`group relative w-14 h-14 ${social.bgColor} ${social.hoverBg} border-brutal flex items-center justify-center transition-all duration-300 transform hover:-translate-y-2 hover:shadow-brutal`}
+                      className={`group relative w-14 h-14 ${social.bgColor} ${social.hoverBg} border-brutal flex items-center justify-center transition-all duration-300 transform hover:-translate-y-2 hover:shadow-brutal cursor-target`}
                       title={social.label}
                     >
                       <social.icon
@@ -546,7 +546,7 @@ const Contact = () => {
                       <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`group px-5 py-3 font-black uppercase text-sm border-brutal transition-all duration-200 flex items-center gap-2 ${
+                        className={`group px-5 py-3 font-black uppercase text-sm border-brutal transition-all duration-200 flex items-center gap-2 cursor-target ${
                           activeTab === tab.id
                             ? `${tab.color} text-ni-white shadow-none translate-x-1 translate-y-1`
                             : "bg-gray-100 text-ni-black shadow-brutal-sm hover:-translate-y-1 hover:bg-gray-200"
@@ -684,7 +684,7 @@ const Contact = () => {
                     <button
                       type="submit"
                       disabled={submitted}
-                      className={`w-full bg-ni-black text-ni-white border-brutal py-5 text-xl font-black uppercase tracking-wider flex items-center justify-center gap-3 transition-all duration-300 ${
+                      className={`w-full bg-ni-black text-ni-white border-brutal py-5 text-xl font-black uppercase tracking-wider flex items-center justify-center gap-3 transition-all duration-300 cursor-target ${
                         submitted
                           ? "opacity-70 cursor-not-allowed"
                           : "hover:bg-ni-neon hover:text-ni-black shadow-brutal hover:shadow-brutal-lg hover:-translate-y-1"
@@ -741,7 +741,7 @@ const Contact = () => {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className={`w-full p-6 flex items-center gap-4 text-left transition-colors ${
+                  className={`w-full p-6 flex items-center gap-4 text-left transition-colors cursor-target ${
                     openFaq === index ? "bg-ni-neon" : "hover:bg-gray-50"
                   }`}
                 >

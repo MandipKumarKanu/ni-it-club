@@ -169,7 +169,7 @@ const Gallery = () => {
                 <button
                   key={cat.name}
                   onClick={() => setCategory(cat.name)}
-                  className={`px-4 sm:px-6 py-2 sm:py-3 font-black uppercase border-4 border-ni-black transition-all text-sm sm:text-base flex items-center gap-2 ${
+                  className={`px-4 sm:px-6 py-2 sm:py-3 font-black uppercase border-4 border-ni-black transition-all text-sm sm:text-base flex items-center gap-2 cursor-target ${
                     isActive
                       ? `${cat.color} ${cat.name === "All" ? "text-ni-white" : "text-ni-black"} shadow-none translate-x-1 translate-y-1`
                       : "bg-ni-white text-ni-black shadow-brutal hover:-translate-y-1"
@@ -272,7 +272,7 @@ const Gallery = () => {
                   <button
                     onClick={() => setPage(pagination.page - 1)}
                     disabled={!pagination.hasPrevPage}
-                    className="bg-ni-white border-4 border-ni-black p-3 hover:bg-ni-black hover:text-ni-white disabled:opacity-50 disabled:hover:bg-ni-white disabled:hover:text-ni-black transition-all shadow-brutal disabled:shadow-none"
+                    className="bg-ni-white border-4 border-ni-black p-3 hover:bg-ni-black hover:text-ni-white disabled:opacity-50 disabled:hover:bg-ni-white disabled:hover:text-ni-black transition-all shadow-brutal disabled:shadow-none cursor-target"
                   >
                     <ChevronLeft size={24} strokeWidth={3} />
                   </button>
@@ -282,7 +282,7 @@ const Gallery = () => {
                   <button
                     onClick={() => setPage(pagination.page + 1)}
                     disabled={!pagination.hasNextPage}
-                    className="bg-ni-white border-4 border-ni-black p-3 hover:bg-ni-black hover:text-ni-white disabled:opacity-50 disabled:hover:bg-ni-white disabled:hover:text-ni-black transition-all shadow-brutal disabled:shadow-none"
+                    className="bg-ni-white border-4 border-ni-black p-3 hover:bg-ni-black hover:text-ni-white disabled:opacity-50 disabled:hover:bg-ni-white disabled:hover:text-ni-black transition-all shadow-brutal disabled:shadow-none cursor-target"
                   >
                     <ChevronRight size={24} strokeWidth={3} />
                   </button>
@@ -307,7 +307,7 @@ const Gallery = () => {
                     </div>
                     <button
                       onClick={closeAlbum}
-                      className="p-2 hover:bg-ni-gray-800 rounded-full transition-colors"
+                      className="p-2 hover:bg-ni-gray-800 rounded-full transition-colors cursor-target"
                     >
                       <X size={24} />
                     </button>
@@ -328,7 +328,7 @@ const Gallery = () => {
                               e.stopPropagation();
                               prevImage();
                             }}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-ni-black/50 hover:bg-ni-neon hover:text-ni-black text-ni-white border-2 border-ni-white hover:border-ni-black transition-all rounded-full"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-ni-black/50 hover:bg-ni-neon hover:text-ni-black text-ni-white border-2 border-ni-white hover:border-ni-black transition-all rounded-full cursor-target"
                           >
                             <ChevronLeft size={24} strokeWidth={3} />
                           </button>
@@ -337,7 +337,7 @@ const Gallery = () => {
                               e.stopPropagation();
                               nextImage();
                             }}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-ni-black/50 hover:bg-ni-neon hover:text-ni-black text-ni-white border-2 border-ni-white hover:border-ni-black transition-all rounded-full"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-ni-black/50 hover:bg-ni-neon hover:text-ni-black text-ni-white border-2 border-ni-white hover:border-ni-black transition-all rounded-full cursor-target"
                           >
                             <ChevronRight size={24} strokeWidth={3} />
                           </button>

@@ -84,6 +84,8 @@ const Settings = () => {
         "features",
         "seo",
         "socialLinks",
+        "heroButton1",
+        "heroButton2",
         "_id",
         "__v",
         "createdAt",
@@ -118,6 +120,16 @@ const Settings = () => {
           formData.append(key, data[key]);
         }
       });
+
+      // Handle hero buttons as nested FormData fields
+      if (data.heroButton1) {
+        formData.append("heroButton1[name]", data.heroButton1.name || "");
+        formData.append("heroButton1[link]", data.heroButton1.link || "");
+      }
+      if (data.heroButton2) {
+        formData.append("heroButton2[name]", data.heroButton2.name || "");
+        formData.append("heroButton2[link]", data.heroButton2.link || "");
+      }
 
       if (logoFile) {
         formData.append("logo", logoFile);
@@ -330,7 +342,7 @@ const Settings = () => {
                       </div>
                     )}
                     <div className="flex-1">
-                      <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-3 bg-ni-neon border-2 border-black font-bold hover:translate-y-[-2px] hover:shadow-brutal transition-all">
+                      <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-3 bg-ni-neon border-2 border-black font-bold hover:-translate-y-0.5 hover:shadow-brutal transition-all">
                         <Upload size={16} />
                         {logoFile
                           ? "Change Logo"
@@ -386,6 +398,48 @@ const Settings = () => {
                   The hero title is split into two parts for better styling.
                   Part 1 appears first, followed by Part 2.
                 </p>
+
+                {/* Hero Buttons */}
+                <div className="border-t-2 border-black pt-4 mt-4">
+                  <h3 className="font-bold text-lg mb-4">Hero Buttons</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Configure the two action buttons in the hero section. Leave empty to hide a button.
+                  </p>
+
+                  {/* Button 1 */}
+                  <div className="p-4 border-2 border-black bg-gray-50 mb-4">
+                    <h4 className="font-bold mb-3">Primary Button (with arrow)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="Button Name"
+                        placeholder="e.g., Join Us Today"
+                        {...register("heroButton1.name")}
+                      />
+                      <Input
+                        label="Button Link"
+                        placeholder="e.g., /contact-us"
+                        {...register("heroButton1.link")}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Button 2 */}
+                  <div className="p-4 border-2 border-black bg-gray-50">
+                    <h4 className="font-bold mb-3">Secondary Button (outline)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="Button Name"
+                        placeholder="e.g., View Events"
+                        {...register("heroButton2.name")}
+                      />
+                      <Input
+                        label="Button Link"
+                        placeholder="e.g., /events"
+                        {...register("heroButton2.link")}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </Card>
           )}

@@ -42,7 +42,7 @@ const ProjectModal = ({ project, onClose, onOpenPreview }) => {
           </div>
           <button
             onClick={onClose}
-            className="bg-ni-pink text-ni-black hover:bg-red-500 p-1 border-2 border-ni-white transition-colors"
+            className="bg-ni-pink text-ni-black hover:bg-red-500 p-1 border-2 border-ni-white transition-colors cursor-target"
           >
             <X size={16} />
           </button>
@@ -113,7 +113,7 @@ const ProjectModal = ({ project, onClose, onOpenPreview }) => {
                 {project.link && (
                   <button
                     onClick={handleLiveDemo}
-                    className="block w-full text-center py-3 border-2 border-ni-black bg-ni-neon text-ni-black font-bold hover:bg-ni-black hover:text-ni-neon transition-colors font-mono uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1"
+                    className="block w-full text-center py-3 border-2 border-ni-black bg-ni-neon text-ni-black font-bold hover:bg-ni-black hover:text-ni-neon transition-colors font-mono uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 cursor-target"
                   >
                     <div className="flex items-center justify-center gap-2">
                       {isMobile ? (
@@ -130,7 +130,7 @@ const ProjectModal = ({ project, onClose, onOpenPreview }) => {
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full text-center py-3 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors font-mono uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1"
+                    className="block w-full text-center py-3 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors font-mono uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 cursor-target"
                   >
                     <div className="flex items-center justify-center gap-2">
                       <FaGithub size={18} /> Source Code

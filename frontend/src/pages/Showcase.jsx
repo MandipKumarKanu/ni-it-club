@@ -216,7 +216,7 @@ const Showcase = () => {
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-black text-ni-white font-bold hover:bg-ni-white hover:text-ni-black transition-colors text-sm font-mono flex items-center justify-center gap-2"
+                            className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-black text-ni-white font-bold hover:bg-ni-white hover:text-ni-black transition-colors text-sm font-mono flex items-center justify-center gap-2 cursor-target"
                           >
                             <ExternalLink size={14} /> RUN
                           </a>
@@ -226,7 +226,7 @@ const Showcase = () => {
                             href={project.github}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors text-sm font-mono flex items-center justify-center gap-2"
+                            className="flex-1 text-center py-2 border-2 border-ni-black bg-ni-white text-ni-black font-bold hover:bg-ni-gray-100 transition-colors text-sm font-mono flex items-center justify-center gap-2 cursor-target"
                           >
                             <FaGithub size={14} /> SRC
                           </a>
@@ -276,7 +276,7 @@ const Showcase = () => {
                   Submit your project for code review and showcase.
                 </p>
 
-                <button className="text-base sm:text-xl px-6 sm:px-10 py-3 sm:py-4 border-4 border-ni-black bg-ni-white text-ni-black font-black hover:bg-ni-black hover:text-ni-white shadow-[8px_8px_0px_0px_#000000] hover:shadow-none hover:translate-x-1 transition-all font-mono uppercase">
+                <button className="text-base sm:text-xl px-6 sm:px-10 py-3 sm:py-4 border-4 border-ni-black bg-ni-white text-ni-black font-black hover:bg-ni-black hover:text-ni-white shadow-[8px_8px_0px_0px_#000000] hover:shadow-none hover:translate-x-1 transition-all font-mono uppercase cursor-target">
                   &gt; Initialize Submission
                 </button>
               </div>

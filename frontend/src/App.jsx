@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import useResetScrollPosition from "./components/hook/useResetScrollPosition";
 import usePageTracker from "./components/hook/usePageTracker";
 import FullPageLoader from "./components/ui/FullPageLoader";
+import TargetCursor from "./components/ui/TargetCursor";
 
 import useSettingsStore from "./store/useSettingsStore";
 import useHomeStore from "./store/useHomeStore";
@@ -40,6 +41,11 @@ function App() {
 
   return (
     <Layout>
+      <TargetCursor
+        spinDuration={2}
+        hideDefaultCursor={true}
+        parallaxOn={true}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/events" element={<Events />} />

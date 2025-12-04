@@ -50,6 +50,8 @@ const getHomeData = async (req, res) => {
         title1: settings.heroTitle1,
         title2: settings.heroTitle2,
         subtitle: settings.heroSubtitle,
+        button1: settings.heroButton1,
+        button2: settings.heroButton2,
       },
       about: {
         title: settings.aboutTitle,

@@ -1,4 +1,4 @@
-import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaGlobe } from "react-icons/fa";
 import Button from "../ui/Button";
 import Card from "../ui/Card";
 import { AngleBracket } from "../ui/Doodles";
@@ -120,7 +120,7 @@ const Team = ({ data, loading }) => {
                     href={member.socialLinks.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110"
+                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110 cursor-target"
                   >
                     <FaGithub size={20} />
                   </a>
@@ -130,7 +130,7 @@ const Team = ({ data, loading }) => {
                     href={member.socialLinks.linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110"
+                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110 cursor-target"
                   >
                     <FaLinkedin size={20} />
                   </a>
@@ -140,7 +140,7 @@ const Team = ({ data, loading }) => {
                     href={member.socialLinks.twitter}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110"
+                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110 cursor-target"
                   >
                     <FaTwitter size={20} />
                   </a>
@@ -150,9 +150,20 @@ const Team = ({ data, loading }) => {
                     href={member.socialLinks.instagram}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110"
+                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110 cursor-target"
                   >
                     <FaInstagram size={20} />
+                  </a>
+                )}
+                {member.socialLinks?.portfolio && (
+                  <a
+                    href={member.socialLinks.portfolio}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 border-brutal hover:bg-ni-black hover:text-ni-white transition-colors transform hover:scale-110 cursor-target"
+                    title="Portfolio"
+                  >
+                    <FaGlobe size={20} />
                   </a>
                 )}
               </div>
