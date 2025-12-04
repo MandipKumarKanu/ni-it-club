@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { X, Linkedin, Github, Twitter, Instagram } from "lucide-react";
+import { X, Globe } from "lucide-react";
+import { FaLinkedin, FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
 import api from "../../services/api";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
@@ -72,9 +73,9 @@ const TeamDetails = ({ memberId, onClose }) => {
                 href={member.socialLinks.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-ni-blue text-white p-2 border-2 border-black hover:translate-y-[-2px] hover:shadow-brutal transition-all"
+                className="bg-ni-blue text-white p-2 border-2 border-black hover:-translate-y-0.5 hover:shadow-brutal transition-all"
               >
-                <Linkedin size={24} />
+                <FaLinkedin size={24} />
               </a>
             )}
             {member.socialLinks?.github && (
@@ -82,9 +83,9 @@ const TeamDetails = ({ memberId, onClose }) => {
                 href={member.socialLinks.github}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-black text-white p-2 border-2 border-black hover:translate-y-[-2px] hover:shadow-brutal transition-all"
+                className="bg-black text-white p-2 border-2 border-black hover:-translate-y-0.5 hover:shadow-brutal transition-all"
               >
-                <Github size={24} />
+                <FaGithub size={24} />
               </a>
             )}
             {member.socialLinks?.twitter && (
@@ -92,9 +93,9 @@ const TeamDetails = ({ memberId, onClose }) => {
                 href={member.socialLinks.twitter}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-sky-400 text-white p-2 border-2 border-black hover:translate-y-[-2px] hover:shadow-brutal transition-all"
+                className="bg-sky-400 text-white p-2 border-2 border-black hover:-translate-y-0.5 hover:shadow-brutal transition-all"
               >
-                <Twitter size={24} />
+                <FaTwitter size={24} />
               </a>
             )}
             {member.socialLinks?.instagram && (
@@ -102,9 +103,20 @@ const TeamDetails = ({ memberId, onClose }) => {
                 href={member.socialLinks.instagram}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-pink-600 text-white p-2 border-2 border-black hover:translate-y-[-2px] hover:shadow-brutal transition-all"
+                className="bg-pink-600 text-white p-2 border-2 border-black hover:-translate-y-0.5 hover:shadow-brutal transition-all"
               >
-                <Instagram size={24} />
+                <FaInstagram size={24} />
+              </a>
+            )}
+            {member.socialLinks?.portfolio && (
+              <a
+                href={member.socialLinks.portfolio}
+                target="_blank"
+                rel="noreferrer"
+                className="bg-ni-neon text-black p-2 border-2 border-black hover:-translate-y-0.5 hover:shadow-brutal transition-all"
+                title="Portfolio"
+              >
+                <Globe size={24} />
               </a>
             )}
           </div>

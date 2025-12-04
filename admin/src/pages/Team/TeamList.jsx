@@ -3,13 +3,10 @@ import {
   Plus,
   Pencil,
   Trash2,
-  Linkedin,
-  Github,
-  Twitter,
-  Instagram,
   Eye,
   GripVertical,
 } from "lucide-react";
+import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaGlobe } from "react-icons/fa";
 import {
   DndContext,
   closestCenter,
@@ -108,7 +105,7 @@ const SortableRow = ({ member, handleView, handleEdit, handleDelete }) => {
               rel="noreferrer"
               className="hover:text-ni-cyan"
             >
-              <Linkedin size={20} />
+              <FaLinkedin size={20} />
             </a>
           )}
           {member.socialLinks?.github && (
@@ -118,7 +115,7 @@ const SortableRow = ({ member, handleView, handleEdit, handleDelete }) => {
               rel="noreferrer"
               className="hover:text-ni-cyan"
             >
-              <Github size={20} />
+              <FaGithub size={20} />
             </a>
           )}
           {member.socialLinks?.twitter && (
@@ -128,7 +125,7 @@ const SortableRow = ({ member, handleView, handleEdit, handleDelete }) => {
               rel="noreferrer"
               className="hover:text-ni-cyan"
             >
-              <Twitter size={20} />
+              <FaTwitter size={20} />
             </a>
           )}
           {member.socialLinks?.instagram && (
@@ -138,7 +135,18 @@ const SortableRow = ({ member, handleView, handleEdit, handleDelete }) => {
               rel="noreferrer"
               className="hover:text-ni-cyan"
             >
-              <Instagram size={20} />
+              <FaInstagram size={20} />
+            </a>
+          )}
+          {member.socialLinks?.portfolio && (
+            <a
+              href={member.socialLinks.portfolio}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-ni-cyan"
+              title="Portfolio"
+            >
+              <FaGlobe size={20} />
             </a>
           )}
         </div>

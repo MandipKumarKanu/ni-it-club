@@ -22,6 +22,7 @@ const TeamForm = ({ member, onSuccess }) => {
         github: member.socialLinks?.github,
         twitter: member.socialLinks?.twitter,
         instagram: member.socialLinks?.instagram,
+        portfolio: member.socialLinks?.portfolio,
       });
     } else {
       reset({});
@@ -37,10 +38,12 @@ const TeamForm = ({ member, onSuccess }) => {
     if (data.specializedIn)
       formData.append("specializedIn", data.specializedIn);
     
+    // Always send social links (even empty) so they can be cleared
     formData.append("linkedin", data.linkedin || "");
     formData.append("github", data.github || "");
     formData.append("twitter", data.twitter || "");
     formData.append("instagram", data.instagram || "");
+    formData.append("portfolio", data.portfolio || "");
 
     if (data.image && data.image[0]) {
       formData.append("image", data.image[0]);
@@ -119,6 +122,13 @@ const TeamForm = ({ member, onSuccess }) => {
             error={errors.instagram}
           />
         </div>
+
+        <Input
+          label="Portfolio/Website URL"
+          placeholder="https://yourwebsite.com"
+          {...register("portfolio")}
+          error={errors.portfolio}
+        />
 
         <div className="space-y-2">
           <Input
