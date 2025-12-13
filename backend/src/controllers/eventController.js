@@ -94,9 +94,12 @@ const getEvents = async (req, res) => {
 
     if (category && category !== "All") filter.category = category;
     if (featured === "true") filter.isFeatured = true;
+
     if (upcoming === "true") {
       filter.date = { $gte: new Date() };
       filter.status = { $in: ["upcoming", "ongoing"] };
+    } else if (req.query.past === "true") {
+      filter.date = { $lt: new Date() };
     }
 
     if (search) {
@@ -258,7 +261,8 @@ const updateEvent = async (req, res) => {
       event.name = name || event.name;
       event.category = category || event.category;
       event.date = date || event.date;
-      event.endDate = endDate !== undefined ? parseDate(endDate) : event.endDate;
+      event.endDate =
+        endDate !== undefined ? parseDate(endDate) : event.endDate;
       event.timeFrom = timeFrom || event.timeFrom;
       event.timeTo = timeTo || event.timeTo;
       event.details = details || event.details;

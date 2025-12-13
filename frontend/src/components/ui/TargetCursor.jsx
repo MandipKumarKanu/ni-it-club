@@ -33,7 +33,7 @@ const TargetCursor = ({
 
   const constants = useMemo(
     () => ({
-      borderWidth: 3,
+      borderWidth: 5,
       cornerSize: 12
     }),
     []

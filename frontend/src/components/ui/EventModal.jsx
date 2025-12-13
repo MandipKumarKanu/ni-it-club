@@ -21,7 +21,10 @@ import {
   Zap,
 } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
-import { openGoogleCalendar, downloadICalFile } from "../../utils/calendarUtils";
+import {
+  openGoogleCalendar,
+  downloadICalFile,
+} from "../../utils/calendarUtils";
 
 const EventModal = ({ event, onClose }) => {
   const [showCalendarOptions, setShowCalendarOptions] = useState(false);
@@ -91,7 +94,10 @@ const EventModal = ({ event, onClose }) => {
       }
     } else if (platform === "twitter") {
       window.open(
-        "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(eventUrl),
+        "https://twitter.com/intent/tweet?text=" +
+          encodeURIComponent(text) +
+          "&url=" +
+          encodeURIComponent(eventUrl),
         "_blank"
       );
     } else if (platform === "whatsapp") {
@@ -101,7 +107,8 @@ const EventModal = ({ event, onClose }) => {
       );
     } else if (platform === "linkedin") {
       window.open(
-        "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(eventUrl),
+        "https://www.linkedin.com/sharing/share-offsite/?url=" +
+          encodeURIComponent(eventUrl),
         "_blank"
       );
     }
@@ -122,87 +129,65 @@ const EventModal = ({ event, onClose }) => {
   const Icon = config.icon;
 
   return createPortal(
-    <div className="fixed inset-0 z-9999 flex items-center justify-center p-3 sm:p-6">
-      <div className="absolute inset-0 bg-ni-black/90" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center sm:p-4">
+      <div
+        className="absolute inset-0 bg-ni-black/80 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
-      <div className="relative w-full max-w-4xl">
-        <div className="absolute inset-0 bg-ni-black translate-x-3 translate-y-3 sm:translate-x-4 sm:translate-y-4" />
-        
-        <div className="relative bg-ni-white border-4 sm:border-[6px] border-ni-black max-h-[90vh] overflow-hidden flex flex-col">
-          
-          <div className={config.color + " border-b-4 sm:border-b-[6px] border-ni-black p-4 sm:p-6"}>
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="bg-ni-black text-ni-white px-3 py-1.5 font-black uppercase text-xs sm:text-sm flex items-center gap-2 transform -rotate-1">
-                    <Icon size={16} strokeWidth={3} />
-                    {event.category}
-                  </span>
-                  {event.isFeatured && (
-                    <span className="bg-ni-white text-ni-black border-3 border-ni-black px-2 py-1 font-black uppercase text-[10px] sm:text-xs flex items-center gap-1 transform rotate-1 shadow-brutal-sm">
-                      <Star size={12} fill="currentColor" />
-                      Featured
-                    </span>
-                  )}
-                  {event.status && (
-                    <span className={"px-2 py-1 font-black uppercase text-[10px] sm:text-xs border-3 border-ni-black transform -rotate-1 " + (
-                      event.status === "upcoming" ? "bg-ni-neon text-ni-black" :
-                      event.status === "ongoing" ? "bg-ni-cyan text-ni-black" :
-                      "bg-gray-300 text-ni-black"
-                    )}>
-                      <Zap size={10} className="inline mr-1" />
-                      {event.status}
-                    </span>
-                  )}
-                </div>
-                
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase leading-none tracking-tight">
-                  {event.name}
-                </h2>
-              </div>
-              
-              <button
-                onClick={onClose}
-                className="bg-ni-white border-4 border-ni-black p-2 sm:p-3 hover:bg-ni-black hover:text-ni-white transition-all shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 shrink-0 cursor-target"
-              >
-                <X size={24} strokeWidth={3} />
-              </button>
+      <div className="relative w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-4xl bg-ni-white flex flex-col sm:border-4 border-ni-black shadow-brutal animate-in fade-in zoom-in duration-200">
+        {/* Header */}
+        <div
+          className={`${config.color} border-b-4 border-ni-black p-4 flex items-center gap-4 shrink-0`}
+        >
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <span className="bg-ni-black text-ni-white px-2 py-0.5 font-black uppercase text-xs flex items-center gap-1.5">
+                <Icon size={12} strokeWidth={3} />
+                {event.category}
+              </span>
+              {event.isFeatured && (
+                <span className="bg-ni-white text-ni-black px-2 py-0.5 font-black uppercase text-xs flex items-center gap-1 border-2 border-ni-black">
+                  <Star size={10} fill="currentColor" />
+                  Featured
+                </span>
+              )}
             </div>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase leading-tight truncate">
+              {event.name}
+            </h2>
           </div>
+          <button
+            onClick={onClose}
+            className="bg-ni-white border-4 border-ni-black p-2 hover:bg-ni-black hover:text-ni-white transition-all active:translate-y-1 active:shadow-none shadow-brutal-sm shrink-0"
+          >
+            <X size={24} strokeWidth={3} />
+          </button>
+        </div>
 
-          <div className="overflow-y-auto flex-1">
-            {event.image?.url && (
-              <div className="relative border-b-4 sm:border-b-[6px] border-ni-black">
-                <img
-                  src={event.image.url}
-                  alt={event.name}
-                  className="w-full h-48 sm:h-64 md:h-72 object-cover"
-                />
-              </div>
-            )}
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto overscroll-contain">
+          {event.image?.url && (
+            <div className="relative border-b-4 border-ni-black aspect-video sm:aspect-[21/9]">
+              <img
+                src={event.image.url}
+                alt={event.name}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+          )}
 
-            <div className="p-4 sm:p-6 md:p-8 space-y-6">
-              {event.shortDetails && (
-                <p className="text-lg sm:text-xl font-bold text-gray-700 border-l-4 border-ni-neon pl-4">
-                  {event.shortDetails}
-                </p>
-              )}
-
-              {isUpcoming() && (
-                <div className="bg-ni-neon/20 border-4 border-ni-black p-4 sm:p-6 shadow-brutal">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Zap size={20} className="text-ni-black" fill="currentColor" />
-                    <span className="font-black uppercase text-sm tracking-wider">Event Starts In</span>
-                  </div>
-                  <CountdownTimer eventDate={event.date} eventTime={event.timeFrom} />
+          <div className="p-4 sm:p-6 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="bg-gray-50 border-4 border-ni-black p-4 flex items-center gap-4 shadow-brutal-sm">
+                <div className="bg-ni-neon border-2 border-ni-black p-2.5 shrink-0">
+                  <Calendar size={24} strokeWidth={2.5} />
                 </div>
-              )}
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                <div className="bg-ni-neon border-4 border-ni-black p-4 text-center shadow-brutal transform hover:-translate-y-1 transition-transform">
-                  <Calendar className="mx-auto mb-2" size={28} strokeWidth={2.5} />
-                  <p className="font-black uppercase text-xs tracking-wider mb-1">Date</p>
-                  <p className="font-black text-lg sm:text-xl">
+                <div>
+                  <p className="font-black uppercase text-xs text-gray-500 mb-0.5">
+                    Date
+                  </p>
+                  <p className="font-bold text-lg leading-none">
                     {new Date(event.date).toLocaleDateString("en-US", {
                       weekday: "short",
                       month: "short",
@@ -210,178 +195,183 @@ const EventModal = ({ event, onClose }) => {
                     })}
                   </p>
                 </div>
-                <div className="bg-ni-cyan border-4 border-ni-black p-4 text-center shadow-brutal transform hover:-translate-y-1 transition-transform">
-                  <Clock className="mx-auto mb-2" size={28} strokeWidth={2.5} />
-                  <p className="font-black uppercase text-xs tracking-wider mb-1">Time</p>
-                  <p className="font-black text-lg sm:text-xl">
+              </div>
+
+              <div className="bg-gray-50 border-4 border-ni-black p-4 flex items-center gap-4 shadow-brutal-sm">
+                <div className="bg-ni-cyan border-2 border-ni-black p-2.5 shrink-0">
+                  <Clock size={24} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <p className="font-black uppercase text-xs text-gray-500 mb-0.5">
+                    Time
+                  </p>
+                  <p className="font-bold text-lg leading-none">
                     {event.timeFrom} - {event.timeTo}
                   </p>
                 </div>
-                <div className="bg-ni-pink border-4 border-ni-black p-4 text-center shadow-brutal transform hover:-translate-y-1 transition-transform">
-                  <MapPin className="mx-auto mb-2" size={28} strokeWidth={2.5} />
-                  <p className="font-black uppercase text-xs tracking-wider mb-1">Location</p>
-                  <p className="font-black text-lg sm:text-xl truncate" title={event.location}>
+              </div>
+
+              <div className="bg-gray-50 border-4 border-ni-black p-4 flex items-center gap-4 shadow-brutal-sm sm:col-span-2 lg:col-span-1">
+                <div className="bg-ni-pink border-2 border-ni-black p-2.5 shrink-0">
+                  <MapPin size={24} strokeWidth={2.5} />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-black uppercase text-xs text-gray-500 mb-0.5">
+                    Location
+                  </p>
+                  <p className="font-bold text-lg leading-none truncate block w-full">
                     {event.location}
                   </p>
                 </div>
               </div>
+            </div>
 
-              <div className="bg-gray-50 border-4 border-ni-black p-4 sm:p-6">
-                <h3 className="text-xl sm:text-2xl font-black uppercase mb-4 flex items-center gap-2">
-                  <span className="bg-ni-black text-ni-white px-3 py-1">About</span>
-                  <span className="flex-1 h-1 bg-ni-black"></span>
-                </h3>
-                <div className="font-medium text-gray-800 text-base sm:text-lg leading-relaxed">
-                  <p className="whitespace-pre-wrap">
-                    {event.details || event.description || event.shortDetails}
-                  </p>
+            {isUpcoming() && (
+              <div className="bg-ni-black text-ni-neon p-4 sm:p-6 text-center border-4 border-ni-black shadow-brutal bg-[url('/noise.png')]">
+                <p className="font-black uppercase tracking-widest text-sm mb-2 text-ni-white">
+                  Event Starts In
+                </p>
+                <div className="flex justify-center scale-90 sm:scale-100">
+                  <CountdownTimer
+                    eventDate={event.date}
+                    eventTime={event.timeFrom}
+                  />
                 </div>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-1 bg-ni-black/10" />
+                <h3 className="font-black uppercase text-xl text-ni-black">
+                  About Event
+                </h3>
+                <div className="flex-1 h-1 bg-ni-black/10" />
+              </div>
+
+              <div className="prose prose-sm sm:prose-base max-w-none text-gray-800 font-medium">
+                <p className="whitespace-pre-wrap leading-relaxed">
+                  {event.details || event.description || event.shortDetails}
+                </p>
               </div>
 
               {event.tags && event.tags.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2">
-                  <Tag size={18} strokeWidth={3} className="text-ni-black" />
+                <div className="flex flex-wrap gap-2 pt-2">
                   {event.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="bg-ni-white border-3 border-ni-black px-3 py-1.5 font-bold text-sm uppercase shadow-brutal-sm hover:bg-ni-neon transition-colors cursor-default"
+                      className="bg-gray-100 px-3 py-1 font-bold text-xs uppercase border-2 border-ni-black rounded-full"
                     >
                       #{tag}
                     </span>
                   ))}
                 </div>
               )}
-
-              {/* {event.organizer && (
-                <div className="flex items-center gap-3 bg-gray-100 border-3 border-ni-black p-3">
-                  <Users size={20} strokeWidth={2.5} />
-                  <span className="font-bold uppercase text-sm">
-                    Organized by: <span className="text-ni-black">{event.organizer.name || "NI-IT Club"}</span>
-                  </span>
-                </div>
-              )} */}
             </div>
           </div>
+        </div>
 
-          <div className="border-t-4 sm:border-t-[6px] border-ni-black bg-gray-100 p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row gap-3">
-              {event.isRegisterable && event.registrationLink ? (
-                <a
-                  href={event.registrationLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 bg-ni-black text-ni-white border-4 border-ni-black py-4 px-6 font-black uppercase text-center shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 hover:bg-ni-neon hover:text-ni-black transition-all flex items-center justify-center gap-2 group cursor-target"
-                >
-                  <CheckCircle size={22} strokeWidth={3} />
-                  Register Now
-                  <ArrowRight size={22} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
-                </a>
-              ) : event.status === "completed" ? (
-                <div className="flex-1 bg-gray-300 border-4 border-ni-black py-4 px-6 font-black uppercase text-center text-gray-600">
-                  Event Completed
-                </div>
-              ) : (
-                <div className="flex-1 bg-gray-200 border-4 border-ni-black py-4 px-6 font-black uppercase text-center text-gray-500">
-                  Registration Closed
+        {/* Footer Actions */}
+        <div className="border-t-4 border-ni-black bg-white p-4 shrink-0 flex flex-col sm:flex-row gap-3">
+          {event.isRegisterable && event.registrationLink ? (
+            <a
+              href={event.registrationLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 bg-ni-black text-ni-white border-4 border-ni-black py-3.5 px-6 font-black uppercase text-center shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 hover:bg-ni-neon hover:text-ni-black transition-all flex items-center justify-center gap-2 group text-sm sm:text-base"
+            >
+              <CheckCircle size={20} className="sm:w-5 sm:h-5 w-4 h-4" />
+              Register Now
+            </a>
+          ) : (
+            <div className="flex-1 bg-gray-200 border-4 border-ni-black py-3.5 px-6 font-black uppercase text-center text-gray-500 text-sm sm:text-base flex items-center justify-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-gray-500" />
+              {event.status === "completed"
+                ? "Event Completed"
+                : "Registration Closed"}
+            </div>
+          )}
+
+          <div className="flex gap-3">
+            <div className="relative flex-1 sm:flex-none">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowCalendarOptions(!showCalendarOptions);
+                  setShowShareOptions(false);
+                }}
+                className="w-full bg-white border-4 border-ni-black py-3.5 px-4 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 hover:bg-ni-cyan transition-all flex items-center justify-center gap-2 group text-sm sm:text-base"
+                title="Add to Calendar"
+              >
+                <CalendarPlus size={20} className="sm:w-5 sm:h-5 w-4 h-4" />
+                <span className="sm:hidden">Calendar</span>
+              </button>
+
+              {showCalendarOptions && (
+                <div className="absolute bottom-full right-0 mb-2 w-48 bg-ni-white border-4 border-ni-black shadow-brutal z-50 animate-in slide-in-from-bottom-2 duration-200">
+                  <button
+                    onClick={() => {
+                      openGoogleCalendar(event);
+                      setShowCalendarOptions(false);
+                    }}
+                    className="w-full px-4 py-3 text-left font-bold uppercase text-xs hover:bg-ni-neon border-b-2 border-ni-black flex items-center gap-2"
+                  >
+                    <ExternalLink size={14} /> Google Calendar
+                  </button>
+                  <button
+                    onClick={() => {
+                      downloadICalFile(event);
+                      setShowCalendarOptions(false);
+                    }}
+                    className="w-full px-4 py-3 text-left font-bold uppercase text-xs hover:bg-ni-cyan flex items-center gap-2"
+                  >
+                    <Download size={14} /> Download .ics
+                  </button>
                 </div>
               )}
+            </div>
 
-              <div className="relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowCalendarOptions(!showCalendarOptions);
-                    setShowShareOptions(false);
-                  }}
-                  className="w-full sm:w-auto bg-ni-cyan border-4 border-ni-black py-4 px-6 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2 cursor-target"
-                >
-                  <CalendarPlus size={22} strokeWidth={3} />
-                  <span className="hidden sm:inline">Calendar</span>
-                </button>
+            <div className="relative flex-1 sm:flex-none">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowShareOptions(!showShareOptions);
+                  setShowCalendarOptions(false);
+                }}
+                className="w-full bg-white border-4 border-ni-black py-3.5 px-4 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 hover:bg-ni-pink transition-all flex items-center justify-center gap-2 group text-sm sm:text-base"
+                title="Share Event"
+              >
+                <Share2 size={20} className="sm:w-5 sm:h-5 w-4 h-4" />
+                <span className="sm:hidden">Share</span>
+              </button>
 
-                {showCalendarOptions && (
-                  <div className="absolute bottom-full left-0 right-0 sm:left-auto sm:right-0 mb-2 bg-ni-white border-4 border-ni-black shadow-brutal z-20 min-w-[220px]">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openGoogleCalendar(event);
-                        setShowCalendarOptions(false);
-                      }}
-                      className="w-full px-4 py-3 text-left font-bold uppercase text-sm hover:bg-ni-neon transition-colors flex items-center gap-3 border-b-3 border-ni-black"
-                    >
-                      <ExternalLink size={18} strokeWidth={3} />
-                      Google Calendar
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        downloadICalFile(event);
-                        setShowCalendarOptions(false);
-                      }}
-                      className="w-full px-4 py-3 text-left font-bold uppercase text-sm hover:bg-ni-cyan transition-colors flex items-center gap-3"
-                    >
-                      <Download size={18} strokeWidth={3} />
-                      Download .ics
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowShareOptions(!showShareOptions);
-                    setShowCalendarOptions(false);
-                  }}
-                  className="w-full sm:w-auto bg-ni-pink border-4 border-ni-black py-4 px-6 font-black uppercase shadow-brutal hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2 cursor-target"
-                >
-                  <Share2 size={22} strokeWidth={3} />
-                  <span className="hidden sm:inline">Share</span>
-                </button>
-
-                {showShareOptions && (
-                  <div className="absolute bottom-full left-0 right-0 sm:left-auto sm:right-0 mb-2 bg-ni-white border-4 border-ni-black shadow-brutal z-20 min-w-[200px]">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        shareEvent("copy");
-                      }}
-                      className="w-full px-4 py-3 text-left font-bold uppercase text-sm hover:bg-ni-neon transition-colors flex items-center gap-3 border-b-3 border-ni-black"
-                    >
-                      {copied ? <CheckCircle size={18} strokeWidth={3} /> : <ExternalLink size={18} strokeWidth={3} />}
-                      {copied ? "Copied!" : "Copy Link"}
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        shareEvent("twitter");
-                      }}
-                      className="w-full px-4 py-3 text-left font-bold uppercase text-sm hover:bg-ni-cyan transition-colors flex items-center gap-3 border-b-3 border-ni-black"
-                    >
-                      Twitter/X
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        shareEvent("whatsapp");
-                      }}
-                      className="w-full px-4 py-3 text-left font-bold uppercase text-sm hover:bg-ni-neon transition-colors flex items-center gap-3 border-b-3 border-ni-black"
-                    >
-                      WhatsApp
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        shareEvent("linkedin");
-                      }}
-                      className="w-full px-4 py-3 text-left font-bold uppercase text-sm hover:bg-ni-cyan transition-colors flex items-center gap-3"
-                    >
-                      LinkedIn
-                    </button>
-                  </div>
-                )}
-              </div>
+              {showShareOptions && (
+                <div className="absolute bottom-full right-0 mb-2 w-48 bg-ni-white border-4 border-ni-black shadow-brutal z-50 animate-in slide-in-from-bottom-2 duration-200">
+                  <button
+                    onClick={() => shareEvent("copy")}
+                    className="w-full px-4 py-3 text-left font-bold uppercase text-xs hover:bg-ni-neon border-b-2 border-ni-black flex items-center gap-2"
+                  >
+                    {copied ? (
+                      <CheckCircle size={14} />
+                    ) : (
+                      <ExternalLink size={14} />
+                    )}
+                    {copied ? "Copied!" : "Copy Link"}
+                  </button>
+                  <button
+                    onClick={() => shareEvent("twitter")}
+                    className="w-full px-4 py-3 text-left font-bold uppercase text-xs hover:bg-ni-cyan border-b-2 border-ni-black flex items-center gap-2"
+                  >
+                    Twitter / X
+                  </button>
+                  <button
+                    onClick={() => shareEvent("whatsapp")}
+                    className="w-full px-4 py-3 text-left font-bold uppercase text-xs hover:bg-ni-neon flex items-center gap-2"
+                  >
+                    WhatsApp
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
